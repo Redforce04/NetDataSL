@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "ceQ7KGhQTYmEkm4F/FxOx62rLbHJy6Y6YxvBAQhRaW5E3I4U5ZDBIG8g1SBHXVD8s3AGxlHToZhGTkCHn6Dyvg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\redfo\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\7.0.2\\microsoft.netcore.app.runtime.win-x64.7.0.2.nupkg.sha512",
+    "C:\\Users\\redfo\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\7.0.2\\microsoft.windowsdesktop.app.runtime.win-x64.7.0.2.nupkg.sha512",
+    "C:\\Users\\redfo\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\7.0.2\\microsoft.aspnetcore.app.runtime.win-x64.7.0.2.nupkg.sha512",
+    "C:\\Users\\redfo\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\7.0.2\\runtime.win-x64.microsoft.dotnet.ilcompiler.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

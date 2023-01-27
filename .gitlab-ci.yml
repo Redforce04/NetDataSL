@@ -18,6 +18,9 @@
 # Learn more about Docker tags: https://docs.docker.com/glossary/?term=tag
 # and the Docker itself: https://opensource.com/resources/what-docker
 image: mcr.microsoft.com/dotnet/sdk:7.0
+stages:
+  - build
+  - deploy
 
 # ### Define variables
 #
@@ -96,21 +99,8 @@ build:
   # project by explicitly specifying a relative path to the directory
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
-  script:
-    - 'dotnet build --no-restore'
-
-tests:
-  stage: publish
-  # ### Run the tests
-  #
-  # You can either run tests for all test projects that are defined in your solution
-  # with 'dotnet test' or run tests only for specific project by specifying
-  # a relative path to the directory where it is located (e.g. 'dotnet test ./test/UnitTests').
-  #
-  # You may want to define separate testing jobs for different types of testing
-  # (e.g. integration tests, unit tests etc).
-  script:
-    - 'dotnet publish -r linux-arm64 -c Release --no-restore'
+  script: dotnet publish -r linux-arm64 -c Release --no-restore'
+  
 
 deploy:
   stage: deploy

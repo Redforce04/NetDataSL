@@ -35,6 +35,7 @@ for (;;)
 
         foreach (string text in content.Split($"\n"))
         {
+            LogDebug($"read: '{text}'");
             if (text.StartsWith("#"))
                 continue;
             //each line is an entry.

@@ -102,7 +102,8 @@ build:
   script: dotnet publish -r linux-x64 -c Release --no-restore
   artifacts:
     name: "Build Results"
-    path: $SOURCE_CODE_PATH/bin/*
+    paths: 
+      - $SOURCE_CODE_PATH/bin/*
   
 
 deploy:

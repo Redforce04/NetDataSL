@@ -105,8 +105,3 @@ build:
     paths: 
       - $SOURCE_CODE_PATH/bin/Release/net7.0/linux-x64/publish/*
   
-
-deploy:
-  stage: deploy
-  script: echo "Define the deployment redforce!"
-  environment: production

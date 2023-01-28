@@ -88,7 +88,6 @@ cache:
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
-  - 'apk add clang build-base zlib-dev'
 
 build:
   stage: build

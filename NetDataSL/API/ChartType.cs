@@ -1,6 +1,6 @@
 namespace NetDataSL.API;
 
-enum ChartType
+public enum ChartType
 {
     Line = 0,
     Area,

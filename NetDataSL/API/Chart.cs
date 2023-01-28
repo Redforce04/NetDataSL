@@ -1,7 +1,7 @@
 ﻿namespace NetDataSL.API;
 
 
-abstract class Chart
+public abstract class Chart
 {
     internal void InitChart()
     {
@@ -59,9 +59,9 @@ abstract class Chart
     /// Gives the template of the chart. EX: multiple charts present same info for a different family.
     /// Ie. Context = Players, Families = Net 1, Net 2, Test Net etc... 
     /// </summary>
-    private string Context => "Stat";
+    protected virtual string Context => "Stat";
 
-    private ChartType ChartType => ChartType.Line;
+    protected virtual ChartType ChartType => ChartType.Line;
     /// <summary>
     /// Lower Number makes the chart appear higher on the page.
     /// </summary>

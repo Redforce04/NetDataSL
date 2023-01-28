@@ -13,7 +13,7 @@ public class Plugin
             return;
         _singleton = this;
         _refreshTime = refreshRate;
-        InitNetData();
+        InitNetDataIntegration();
         Init();
     }
 
@@ -28,8 +28,21 @@ public class Plugin
         { 9012, "Net 2" },
         { 9017, "Testing Net" }
     };
-    private void InitNetData()
+    
+    private void InitNetDataIntegration()
     {
+        _getServers(out List<KeyValuePair<int, string>> servers);
+        var unused = new ChartIntegration(servers);
+    }
+
+    private void _getServers(out List<KeyValuePair<int, string>> servers)
+    {
+        servers = new List<KeyValuePair<int, string>>();
+        foreach (string filePath in Directory.GetFiles(_tempDirectory))
+        {
+            _getServerInfoFromName(filePath, out KeyValuePair<int, string> server);
+            servers.Add(server);
+        }
         
     }
     private void Init()
@@ -68,15 +81,21 @@ public class Plugin
     {
         return _serverRefreshTime > _refreshTime ? _serverRefreshTime : _refreshTime;
     }
+
+    private void _getServerInfoFromName(string serverString, out KeyValuePair<int, string> server)
+    {
+        if (!int.TryParse(serverString.Substring(serverString.Length - 4), out var serverPort))
+        {
+            Log.Debug($"Server could not be identified for file {serverString}");
+            serverPort = 0;
+        }
+
+        server = !_servers.ContainsKey(serverPort) ? new KeyValuePair<int, string>(serverPort, "unknown") : new KeyValuePair<int, string>(serverPort, _servers[serverPort]);
+    }
     
     private void _processFile(string filePath)
     {
-        if (int.TryParse(filePath.Substring(filePath.Length - 5), out var server))
-        {
-            Log.Debug($"Server could not be identified for file {filePath}");
-        }
-
-        string serverName = _servers[server];
+        _getServerInfoFromName(filePath, out KeyValuePair<int, string> server);
         
         _readFileContent(filePath, out string content);
         
@@ -84,7 +103,7 @@ public class Plugin
         {
             if (text.StartsWith("#"))
                 continue;
-            _processTextEntry(text, server, serverName);
+            _processTextEntry(text, server.Key, server.Value);
             
         }
     }

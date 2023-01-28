@@ -88,6 +88,7 @@ cache:
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  - 'apt-get install clang zlib1g-dev'
 
 build:
   stage: build
@@ -99,7 +100,7 @@ build:
   # project by explicitly specifying a relative path to the directory
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
-  script: apt-get install clang zlib1g-dev && dotnet publish -r linux-x64 -c Release --no-restore
+  script: dotnet publish -r linux-x64 -c Release --no-restore
   
 
 deploy:

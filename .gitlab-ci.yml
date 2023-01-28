@@ -100,6 +100,9 @@ build:
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
   script: dotnet publish -r linux-x64 -c Release --no-restore
+  artifacts:
+    name: "Build Results"
+    path: $SOURCE_CODE_PATH/bin/*
   
 
 deploy:

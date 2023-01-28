@@ -99,7 +99,7 @@ build:
   # project by explicitly specifying a relative path to the directory
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
-  script: dotnet publish -r linux-arm64 -c Release --no-restore
+  script: dotnet publish -r linux-x64 -c Release --no-restore
   
 
 deploy:

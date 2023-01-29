@@ -88,7 +88,7 @@ public class UpdateProcessor
         Log.Debug($"Processing Update: {loggingInfo.DateTime}");
         int server = loggingInfo.Server;
         _addUpdate(ChartImplementationType.Cpu, server, loggingInfo.CpuUsage, true);
-        _addUpdate(ChartImplementationType.Memory, server, loggingInfo.MemoryUsage, true);
+        _addUpdate(ChartImplementationType.Memory, server, (float) loggingInfo.MemoryUsage, true);
         _addUpdate(ChartImplementationType.Tps, server, loggingInfo.AverageFps, true);
         _addUpdate(ChartImplementationType.Players, server, loggingInfo.Players);
     }

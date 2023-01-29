@@ -26,7 +26,7 @@ public class Plugin
         Init();
     }
 
-    public readonly string PluginName = "scpsl.integration";
+    public readonly string PluginName = "scpsl.plugin";
     private float _refreshTime = 5f;
     private readonly float _serverRefreshTime = -1f;
     private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";

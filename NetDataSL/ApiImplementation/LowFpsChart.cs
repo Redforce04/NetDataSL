@@ -1,30 +1,80 @@
-﻿using NetDataSL.API;
+﻿// -----------------------------------------
+//    Solution:         NetDataSL
+//    Project:          NetDataSL
+//    FileName:         LowFpsChart.cs
+//    Author:           Redforce04#4091
+//    Revision Date:    01/28/2023 1:34 PM
+//    Created Date:     01/27/2023 10:43 PM
+// -----------------------------------------
+
+using NetDataSL.API;
+using NetDataSL.API.Enums;
+using NetDataSL.API.Members;
+
 
 namespace NetDataSL.ApiImplementation;
 
 public class LowFpsChart : Chart
 {
-    internal LowFpsChart(int server, string serverName)
+    internal LowFpsChart(List<Dimension> dimensions)
     {
-        _server = server;
-        _serverName = serverName;
+        Dimensions = dimensions;
+        foreach(Dimension dimension in Dimensions)
+            dimension.AssignChart(this);
+        foreach(Variable variable in Variables)
+            variable.AssignChart(this);
+        foreach (CLabel label in CLabels)
+            label.AssignChart(this);
     }
 
-    private readonly int _server;
-    private readonly string _serverName;
+
     private const string ChartInfo = "low_fps";
-    protected override string Type => "scpsl";
-    protected override string Id => $"{ChartInfo}-{_server}";
-    protected override string Name => ChartInfo;
-    protected override string Title => _serverName + $" {ChartInfo}";
-    protected override string Units => "low fps warnings";
-    protected override string Family => $"{_serverName}";
-    protected override string Context => ChartInfo;
-    protected override ChartType ChartType => ChartType.Line;
-    protected override int Priority => 1000;
-    protected override float UpdateEvery => 5f;
-    protected override bool Obsolete => false;
-    protected override bool Detail => false;
-    protected override bool StoreFirst => false;
-    protected override bool Hidden => false;
+
+    public override string Type => "scpsl";
+
+    public override string Id => $"{ChartInfo}";
+
+    public override string Name => ChartInfo;
+
+    public override string Title => $"{ChartInfo}";
+
+    public override string Units => "low fps warnings";
+
+    public override string Family => $"{ChartInfo}";
+
+    public override string Context => ChartInfo;
+
+    public override ChartType ChartType => ChartType.Line;
+
+    public override int Priority => 1000;
+
+    public override float UpdateEvery => 5f;
+
+    public override bool Obsolete => false;
+
+    public override bool Detail => false;
+
+    public override bool StoreFirst => false;
+
+    public override bool Hidden => false;
+    public override string Module => "lowfps";
+
+}
+class LowFpsChartDimensions : Dimension
+{
+    public LowFpsChartDimensions(int server, string serverName)
+    {
+        this.Server = server;
+        this.ServerName = serverName;
+    }
+
+    private int Server { get; }
+    private string ServerName { get; }
+    public override string Id => $"lowfps-{Server}";
+    public override string Name => $"\"{ServerName}\" Low Fps Warnings";
+    public override Algorithm Algorithm => Algorithm.Absolute;
+    public override int Multiplier => 1;
+    public override int Divisor => 1000;
+    public override bool Obsolete => false;
+    public override bool Hidden => false;
 }

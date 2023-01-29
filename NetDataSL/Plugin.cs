@@ -31,7 +31,8 @@ public class Plugin
     private readonly float _serverRefreshTime = -1f;
     private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
 
-    private readonly Dictionary<int, string> _servers = new()
+    /// Todo Make servers autoinitialize port and name via the refresh data transfer method 
+    public readonly Dictionary<int, string> Servers = new()
     {
         { 0, "Unknown Server" },
         { 9011, "Net 1" },
@@ -101,9 +102,9 @@ public class Plugin
             serverPort = 0;
         }
 
-        server = !_servers.ContainsKey(serverPort)
+        server = !Servers.ContainsKey(serverPort)
             ? new KeyValuePair<int, string>(serverPort, "unknown")
-            : new KeyValuePair<int, string>(serverPort, _servers[serverPort]);
+            : new KeyValuePair<int, string>(serverPort, Servers[serverPort]);
     }
 
     private void _processFile(string filePath)
@@ -136,6 +137,8 @@ public class Plugin
         var info = text.Split(" = ");
         try
         {
+            
+            // Todo If refresh isn't found, dont send lowfps data that says 0 lowfps moments.
             switch (info[0].ToLower())
             {
                 case "refresh":

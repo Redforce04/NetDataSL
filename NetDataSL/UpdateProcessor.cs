@@ -39,9 +39,7 @@ public class UpdateProcessor
     {
         List<DataSet>? dataSets = _getLowFpsInstancesDataSets();
         if (dataSets != null)
-        {
             ChartIntegration.Singleton!._updateChartData(ChartImplementationType.LowFps, dataSets);
-        }
 
         foreach (var x in _dataSets)
         {
@@ -54,17 +52,22 @@ public class UpdateProcessor
     private List<DataSet>? _getLowFpsInstancesDataSets()
     {
         List<DataSet> data = new List<DataSet>();
-        foreach (var x in _lowFpsInstances)
+        foreach (var server in Plugin.Singleton!.Servers)
         {
+            int cases = 0;
             Dimension? dimension =
-                ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(ChartImplementationType.LowFps, x.Key);
+                ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(ChartImplementationType.LowFps, server.Key);
             if (dimension == null)
             {
-                Log.Error($"Dimension is null. Cannot process info. ChartType: {ChartImplementationType.LowFps}, Server: {x.Key}");
+                Log.Error($"Dimension is null. Cannot process info. ChartType: {ChartImplementationType.LowFps}, Server: {server.Key}");
                 continue;
             }
-            data.Add(new DataSet(dimension, x.Value));
+
+            if (_lowFpsInstances.ContainsKey(server.Key))
+                cases = _lowFpsInstances[server.Key];
+            data.Add(new DataSet(dimension, cases));
         }
+        
         return data.Count == 0 ? null : data;
     }
 

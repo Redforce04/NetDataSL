@@ -34,11 +34,11 @@ public class Dimension
         return new Dimension(id, name, algorithm, multiplier, divisor, obsolete, hidden);
     }
 
-    private Chart? _chart;
+    public Chart? Chart;
 
     internal void AssignChart(Chart chart)
     {
-        _chart = chart;
+        Chart = chart;
     }
 
     internal void ChartTriggerSend()
@@ -48,7 +48,7 @@ public class Dimension
 
     private void Send(bool localSend = true)
     {
-        if (_chart == null)
+        if (Chart == null)
         {
             Log.Error($"Dimension isn't assigned to a chart! It will not be registered unless assigned to a chart.");
             return;
@@ -73,13 +73,12 @@ public class Dimension
                           $"]";
             Log.Line(content.Replace("[","").Replace("]",""));
             if (localSend)
-                _chart.ReloadOtherTriggerSend();
+                Chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException ex)
+        catch (ArgumentNullException)
         {
             Log.Error("Cannot create the dimension because a value was empty. The dimension will not be sent.");
-            return;
         }
     }
 

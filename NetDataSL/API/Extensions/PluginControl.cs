@@ -7,7 +7,7 @@
 //    Created Date:     01/28/2023 5:15 PM
 // -----------------------------------------
 
-namespace NetDataSL.API;
+namespace NetDataSL.API.Extensions;
 
 public static class PluginControl
 {

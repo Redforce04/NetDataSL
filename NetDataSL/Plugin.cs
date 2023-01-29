@@ -43,6 +43,7 @@ public class Plugin
     {
         _getServers(out var servers);
         var unused = new ChartIntegration(servers);
+        var unused2 = new UpdateProcessor();
     }
 
     private void _getServers(out List<KeyValuePair<int, string>> servers)
@@ -70,19 +71,21 @@ public class Plugin
 
     private void _startMainListenLoop()
     {
-        for (;;)
+        DateTime restartEveryHour = DateTime.UtcNow.AddHours(1);
+        while (DateTime.UtcNow < restartEveryHour)
         {
             var now = DateTime.UtcNow.TimeOfDay;
             now = now.Add(new TimeSpan(0, 0, (int)UsableRefresh()));
             // Get the delay necessary.
             foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);
-
+            
+            UpdateProcessor.Singleton!.SendUpdate();
             var delay = now.Subtract(DateTime.UtcNow.TimeOfDay).TotalMilliseconds;
             if (delay < 1)
                 delay = 1;
             Thread.Sleep((int)delay);
         }
-        // ReSharper disable once FunctionNeverReturns
+        Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
     }
 
     private float UsableRefresh()
@@ -202,10 +205,12 @@ public class Plugin
     private void ProcessLowFps(LowFps lowFps)
     {
         Log.Debug($"Received LowFPS Data");
+        UpdateProcessor.Singleton!.ProcessUpdate(lowFps);
     }
 
     private void ProcessStats(LoggingInfo loggingInfo)
     {
         Log.Debug($"Received Stats Data");
+        UpdateProcessor.Singleton!.ProcessUpdate(loggingInfo);
     }
 }

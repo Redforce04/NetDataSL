@@ -7,6 +7,7 @@
 //    Created Date:     01/28/2023 5:47 PM
 // -----------------------------------------
 
+using System.Diagnostics;
 using NetDataSL.API.Members;
 
 namespace NetDataSL.API.Structs;
@@ -15,6 +16,15 @@ public struct Data
 {
     public Data(Chart chart, List<DataSet> dataSet, uint microseconds = 5000)
     {
+        if (dataSet.Count == 0)
+        {
+            var trace = new StackTrace();
+            string caller = "";
+                caller += $"        {trace.GetFrame(1)?.GetMethod()} \n";
+                caller += $"        {trace.GetFrame(2)?.GetMethod()} \n";
+            Log.Error($"Date constructor doesnt have any DataSets! Cannot call Data.Call unless data is present! \n Called from: \n{caller}");
+            return;
+        }
         ChartTypeId = chart.TypeId;
         Microseconds = microseconds;
         DataSet = dataSet;
@@ -62,7 +72,7 @@ public struct Data
 
     private bool _sent;
     private bool _cancel;
-    private string ChartTypeId { get; }
+    private string ChartTypeId { get; } = null!;
     private uint Microseconds { get; }
-    private List<DataSet> DataSet { get; }
+    private List<DataSet> DataSet { get; } = null!;
 }

@@ -7,7 +7,7 @@
 //    Created Date:     01/28/2023 6:13 PM
 // -----------------------------------------
 
-namespace NetDataSL.API;
+namespace NetDataSL.API.Builders;
 
 public class DimensionBuilder
 {

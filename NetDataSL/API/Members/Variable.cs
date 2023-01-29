@@ -34,10 +34,9 @@ public class Variable
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException ex)
+        catch (ArgumentNullException)
         {
             Log.Error("Cannot create the variable because a value was empty. The variable will not be sent.");
-            return;
         }
     }
     

@@ -49,10 +49,9 @@ public class CLabel
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException ex)
+        catch (ArgumentNullException)
         {
             Log.Error("Cannot create the clabel because a value was empty. The clabel will not be sent.");
-            return;
         }
 
     }

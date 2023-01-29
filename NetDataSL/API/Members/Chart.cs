@@ -103,7 +103,7 @@ public class Chart
                           $"]";
             Log.Line(content.Replace("[","").Replace("]",""));
         }
-        catch (ArgumentNullException ex)
+        catch (ArgumentNullException)
         {
             Log.Error("Cannot create the chart because a value was empty. The chart will not be sent.");
             return;

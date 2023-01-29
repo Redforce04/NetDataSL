@@ -21,6 +21,7 @@ public class Plugin
         if (Singleton != null)
             return;
         Singleton = this;
+        var unused = new Log();
         _refreshTime = refreshRate;
         InitNetDataIntegration();
         Init();
@@ -81,10 +82,12 @@ public class Plugin
             foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);
             
             UpdateProcessor.Singleton!.SendUpdate();
+            Log.Singleton!.LogMessages();
             var delay = now.Subtract(DateTime.UtcNow.TimeOfDay).TotalMilliseconds;
             if (delay < 1)
                 delay = 1;
             Thread.Sleep((int)delay);
+            Log.Debug($"Iteration Time: {new TimeSpan(0, 0,0,0,(int)(UsableRefresh() * 1000) - (int)delay):g}");
         }
         Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
     }

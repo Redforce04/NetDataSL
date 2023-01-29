@@ -54,6 +54,8 @@ public class UpdateProcessor
         List<DataSet> data = new List<DataSet>();
         foreach (var server in Plugin.Singleton!.Servers)
         {
+            if (server.Key == 0)
+                continue;
             int cases = 0;
             Dimension? dimension =
                 ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(ChartImplementationType.LowFps, server.Key);

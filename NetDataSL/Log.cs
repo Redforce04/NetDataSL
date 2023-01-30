@@ -20,11 +20,11 @@ public class Log
         _init();
     }
 
-    private string _logPath = null!;
+    private string _logPath = "";
     private void _init()
     {
         if (API.Extensions.EnvironmentalVariables.NetDataLogDir == null)
-            _logPath = AppDomain.CurrentDomain + "ScpslPlugin.log";
+            _logPath = AppDomain.CurrentDomain.BaseDirectory + "ScpslPlugin.log";
         else
             _logPath = API.Extensions.EnvironmentalVariables.NetDataLogDir + "ScpslPlugin.log";
         _logMessages = new List<string>();
@@ -41,7 +41,21 @@ public class Log
         {
             concatLog += log + Environment.NewLine;
         }
-        File.WriteAllText(_logPath, concatLog);
+
+        try
+        {
+            using FileStream fs = new FileStream(_logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.Write(concatLog);
+            sw.Close();
+            fs.Close();
+            //File.WriteAllText(_logPath, concatLog);
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Could not write to logfile. Error: \n{e}");
+        }
+
         _logMessages.Clear();
     }
     

@@ -77,6 +77,7 @@ public class Log
         {
             // ReSharper disable once HeuristicUnreachableCode
             Singleton!._stdOut.WriteLine(log);
+            Singleton!._stdOut.Flush();
         }
 #pragma warning restore CS0162
         
@@ -87,11 +88,14 @@ public class Log
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
         Singleton!._stdErr.WriteLine(log);
+        Singleton!._stdErr.Flush();
+        
         Singleton!._logMessages.Add(log);
     }
 
     public static void Line(string x)
     {
         Singleton!._stdOut.WriteLine(x);
+        Singleton!._stdOut.Flush();
     }
 }

@@ -32,11 +32,14 @@ public class Log
         _logMessages = new List<string>();
         if (!File.Exists(_logPath))
             File.Create(_logPath).Close();
+        _stdOut = new StreamWriter(Console.OpenStandardOutput());
+        _stdErr = new StreamWriter(Console.OpenStandardError());
         Log.Error($"Info: Log filepath: {_logPath}");
     }
 
     private List<string> _logMessages = null!;
-
+    private StreamWriter _stdOut;
+    private StreamWriter _stdErr;
     internal void LogMessages()
     {
         string concatLog = "";
@@ -73,22 +76,22 @@ public class Log
         if (DebugModeEnabled)
         {
             // ReSharper disable once HeuristicUnreachableCode
-            Console.WriteLine(log);
+            Singleton!._stdOut.Write(log + Environment.NewLine);
         }
 #pragma warning restore CS0162
         
-        Log.Singleton!._logMessages.Add(log);
+        Singleton!._logMessages.Add(log);
     }
     
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
-        Console.Error.WriteLine($"{x}");
-        Log.Singleton!._logMessages.Add(log);
+        Singleton!._stdErr.Write(log + Environment.NewLine);
+        Singleton!._logMessages.Add(log);
     }
 
     public static void Line(string x)
     {
-        Console.WriteLine(x);
+        Singleton!._stdOut.Write(x + Environment.NewLine);
     }
 }

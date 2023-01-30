@@ -7,6 +7,8 @@
 //    Created Date:     01/27/2023 9:47 PM
 // -----------------------------------------
 
+using System.Text;
+
 namespace NetDataSL;
 
 public class Log
@@ -29,7 +31,8 @@ public class Log
             _logPath = API.Extensions.EnvironmentalVariables.NetDataLogDir + "ScpslPlugin.log";
         _logMessages = new List<string>();
         if (!File.Exists(_logPath))
-            File.Create(_logPath);
+            File.Create(_logPath).Close();
+        Log.Error($"Info: Log filepath: {_logPath}");
     }
 
     private List<string> _logMessages = null!;
@@ -45,7 +48,7 @@ public class Log
         try
         {
             using FileStream fs = new FileStream(_logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
-            StreamWriter sw = new StreamWriter(fs);
+            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(concatLog);
             sw.Close();
             fs.Close();

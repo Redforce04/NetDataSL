@@ -112,15 +112,23 @@ public class Plugin
 
     private void _processFile(string filePath)
     {
-        _getServerInfoFromName(filePath, out var server);
-
-        _readFileContent(filePath, out var content);
-
-        foreach (var text in content.Split($"\n"))
+        try
         {
-            if (text.StartsWith("#"))
-                continue;
-            _processTextEntry(text, server.Key, server.Value);
+
+            _getServerInfoFromName(filePath, out var server);
+
+            _readFileContent(filePath, out var content);
+
+            foreach (var text in content.Split($"\n"))
+            {
+                if (text.StartsWith("#"))
+                    continue;
+                _processTextEntry(text, server.Key, server.Value);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Could not read file '{filePath}'. Exception \n{e}");
         }
     }
 

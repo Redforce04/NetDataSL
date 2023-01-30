@@ -87,15 +87,15 @@ public class Log
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
-        Singleton!._stdErr.WriteLine(log);
-        Singleton!._stdErr.Flush();
+        //Singleton!._stdErr.WriteLine(log);
+        //Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
     }
 
     public static void Line(string x)
     {
-        Singleton!._stdOut.WriteLine(x);
-        Singleton!._stdOut.Flush();
+        //Singleton!._stdOut.WriteLine(x);
+        //Singleton!._stdOut.Flush();
     }
 }

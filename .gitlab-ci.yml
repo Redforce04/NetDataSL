@@ -99,9 +99,11 @@ build:
   # project by explicitly specifying a relative path to the directory
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
-  script: dotnet publish -r linux-x64 -c Release --no-restore
+  script: 
+  - 'dotnet publish -r linux-x64 -c Release --no-restore'
+  - 'mv $SOURCE_CODE_PATH/bin/Release/net7.0/linux-x64/publish/NetDataSL $SOURCE_CODE_PATH/../scpsl.plugin'
   artifacts:
     name: "Build Results"
     paths: 
-      - $SOURCE_CODE_PATH/bin/Release/net7.0/linux-x64/publish/*
+      - $SOURCE_CODE_PATH/scpsl.plugin
   

@@ -8,9 +8,19 @@
 // -----------------------------------------
 
 using NetDataSL;
-
+Thread.Sleep(1000);
 var refreshTime = 5f;
 if (args.Length > 0)
-    float.TryParse(args[0], out refreshTime);
+{
+
+    try
+    {
+        float.TryParse(args[0], out refreshTime);
+    }
+    catch (Exception e)
+    {
+        Log.Error($"Could not parse startup args. Args: {args[0]} Exception: \n{e}");
+    }
+}
 
 var unused = new Plugin(refreshTime);

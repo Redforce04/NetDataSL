@@ -76,7 +76,7 @@ public class Log
         if (DebugModeEnabled)
         {
             // ReSharper disable once HeuristicUnreachableCode
-            Singleton!._stdOut.Write(log + Environment.NewLine);
+            Singleton!._stdOut.WriteLine(log);
         }
 #pragma warning restore CS0162
         
@@ -86,12 +86,12 @@ public class Log
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
-        Singleton!._stdErr.Write(log + Environment.NewLine);
+        Singleton!._stdErr.WriteLine(log);
         Singleton!._logMessages.Add(log);
     }
 
     public static void Line(string x)
     {
-        Singleton!._stdOut.Write(x + Environment.NewLine);
+        Singleton!._stdOut.WriteLine(x);
     }
 }

@@ -9,6 +9,7 @@
 
 using System.Text;
 using NetDataSL.Structs;
+using Newtonsoft.Json;
 
 namespace NetDataSL;
 
@@ -53,8 +54,17 @@ public class Plugin
         servers = new List<KeyValuePair<int, string>>();
         foreach (var filePath in Directory.GetFiles(_tempDirectory))
         {
-            _getServerInfoFromName(filePath, out var server);
-            servers.Add(server);
+            _readFileContent(filePath, out var content);
+            try
+            {
+                NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
+                servers.Add(new KeyValuePair<int, string>(packet.Port, packet.ServerName));
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Could not deserialize content of File {filePath}. {e}");
+                continue;
+            }
         }
     }
 
@@ -96,39 +106,22 @@ public class Plugin
     {
         return _serverRefreshTime > _refreshTime ? _serverRefreshTime : _refreshTime;
     }
-
-    private void _getServerInfoFromName(string serverString, out KeyValuePair<int, string> server)
-    {
-        if (!int.TryParse(serverString.Substring(serverString.Length - 4), out var serverPort))
-        {
-            Log.Debug($"Server could not be identified for file {serverString}");
-            serverPort = 0;
-        }
-
-        server = !Servers.ContainsKey(serverPort)
-            ? new KeyValuePair<int, string>(serverPort, "unknown")
-            : new KeyValuePair<int, string>(serverPort, Servers[serverPort]);
-    }
+    
 
     private void _processFile(string filePath)
     {
         try
         {
-
-            _getServerInfoFromName(filePath, out var server);
-
+            // Use this instead of file.ReadAllText() because it has FileShare settings.
             _readFileContent(filePath, out var content);
+            NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
+            packet.DateTime = DateTimeOffset.FromUnixTimeSeconds(packet.Epoch).DateTime;
+            _processTextEntry(packet);
 
-            foreach (var text in content.Split($"\n"))
-            {
-                if (text.StartsWith("#"))
-                    continue;
-                _processTextEntry(text, server.Key, server.Value);
-            }
         }
         catch (Exception e)
         {
-            Log.Error($"Could not read file '{filePath}'. Exception \n{e}");
+            Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
         }
     }
 
@@ -141,31 +134,18 @@ public class Plugin
         fs.Close();
     }
 
-    private void _processTextEntry(string text, int server, string serverName)
-    {
-        //LogDebug($"read: '{text}'");
-        // each line is an entry.
-        var info = text.Split(" = ");
+    private void _processTextEntry(NetDataPacket packet)
+    { 
         try
         {
-            
-            // Todo If refresh isn't found, dont send lowfps data that says 0 lowfps moments.
-            switch (info[0].ToLower())
+            if(packet.Epoch + UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             {
-                case "refresh":
-                    _updateRefreshTime(info);
-                    break;
-                case "lowfps":
-                    if (long.Parse(info[2]) + UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-                        return;
-                    _processLowFps(info, server, serverName);
-                    break;
-                case "stats":
-                    if (long.Parse(info[2]) + UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-                        return;
-                    _processStats(info, server, serverName);
-                    break;
+                Log.Debug($"Server {packet.Port} cannot be refreshed, as it hasn't refreshed in 5 seconds.");
+                return;
             }
+            _updateRefreshTime(packet.RefreshSpeed);
+            ProcessStats(packet);
+            
         }
         catch (Exception e)
         {
@@ -173,58 +153,18 @@ public class Plugin
         }
     }
 
-    private void _updateRefreshTime(string[] info)
+    private void _updateRefreshTime(float updateTime)
     {
-        var time = float.Parse(info[1]);
-        if (Math.Abs(time - _refreshTime) > .1f)
+        if (Math.Abs(updateTime - _refreshTime) > .1f)
         {
             Log.Debug($"Updated Refresh Speed.");
-            _refreshTime = time;
+            _refreshTime = updateTime;
         }
     }
 
-    private void _processLowFps(string[] info, int server, string serverName)
-    {
-        var lowfps = new LowFps()
-        {
-            DateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(info[2])).DateTime,
-            Epoch = long.Parse(info[2]),
-            InstanceNumber = int.Parse(info[3]),
-            Fps = float.Parse(info[4]),
-            DeltaTime = float.Parse(info[5]),
-            Players = int.Parse(info[6]),
-            Server = server,
-            ServerName = serverName
-        };
-        ProcessLowFps(lowfps);
-    }
-
-    private void _processStats(string[] info, int server, string serverName)
-    {
-        var loggingInfo = new LoggingInfo()
-        {
-            DateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(info[2])).DateTime,
-            Epoch = long.Parse(info[2]),
-            AverageFps = float.Parse(info[3]),
-            AverageDeltaTime = float.Parse(info[4]),
-            MemoryUsage = long.Parse(info[5]),
-            CpuUsage = float.Parse(info[6]),
-            Players = int.Parse(info[7]),
-            Server = server,
-            ServerName = serverName
-        };
-        ProcessStats(loggingInfo);
-    }
-
-    private void ProcessLowFps(LowFps lowFps)
-    {
-        Log.Debug($"Received LowFPS Data");
-        UpdateProcessor.Singleton!.ProcessUpdate(lowFps);
-    }
-
-    private void ProcessStats(LoggingInfo loggingInfo)
+    private void ProcessStats(NetDataPacket packet)
     {
         Log.Debug($"Received Stats Data");
-        UpdateProcessor.Singleton!.ProcessUpdate(loggingInfo);
+        UpdateProcessor.Singleton!.ProcessUpdate(packet);
     }
 }

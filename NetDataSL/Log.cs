@@ -26,7 +26,8 @@ public class Log
     private void _init()
     {
         string directory = "/var/log/NetDataSL/";
-            _logPath = directory + "ScpslPlugin.log";
+        _logPath = directory + "ScpslPlugin.log";
+        
         _logMessages = new List<string>();
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
@@ -89,7 +90,7 @@ public class Log
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
-        Singleton!._stdErr.Write(log+ "    ");
+        Singleton!._stdErr.Write(log);
         Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
@@ -98,7 +99,7 @@ public class Log
 
     public static void Line(string x)
     {
-        Singleton!._stdOut.Write(x + "    ");
+        Singleton!._stdOut.Write(x );
         Singleton!._stdOut.Flush();
         Thread.Sleep(50);
         

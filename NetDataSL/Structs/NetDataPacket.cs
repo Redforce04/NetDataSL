@@ -15,6 +15,7 @@ internal struct NetDataPacket
     internal string ServerName;
     internal float RefreshSpeed;
     internal long Epoch;
+    internal DateTime DateTime;
     internal float AverageTps;
     internal float AverageDeltaTime;
     internal long MemoryUsage;

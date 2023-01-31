@@ -36,7 +36,7 @@ public class ChartIntegration
         _buildTpsCharts();
         _buildMemoryCharts();
         _buildCpuCharts();
-        _buildLowFpsCharts();
+        _buildLowTpsCharts();
         Chart.RegisterAllCharts();
     }
 
@@ -99,11 +99,11 @@ public class ChartIntegration
         _charts.Add(ChartImplementationType.Cpu, new CpuChart(dimensions));    
     }
 
-    private void _buildLowFpsCharts()
+    private void _buildLowTpsCharts()
     {
         List<Dimension> dimensions = new List<Dimension>();
         foreach (var server in _servers) 
-            dimensions.Add(new LowFpsChartDimensions(server.Key, server.Value));
-        _charts.Add(ChartImplementationType.LowFps, new LowFpsChart(dimensions));    
+            dimensions.Add(new LowTpsChartDimensions(server.Key, server.Value));
+        _charts.Add(ChartImplementationType.LowTps, new LowTpsChart(dimensions));    
     }
 }

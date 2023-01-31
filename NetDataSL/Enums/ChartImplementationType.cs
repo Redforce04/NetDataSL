@@ -14,6 +14,6 @@ public enum ChartImplementationType
     Cpu,
     Memory,
     Tps,
-    LowFps,
+    LowTps,
     Players,
 }

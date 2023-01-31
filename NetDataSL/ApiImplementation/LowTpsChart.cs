@@ -13,9 +13,9 @@ using NetDataSL.API.Members;
 
 namespace NetDataSL.ApiImplementation;
 
-public class LowFpsChart : Chart
+public class LowTpsChart : Chart
 {
-    internal LowFpsChart(List<Dimension> dimensions)
+    internal LowTpsChart(List<Dimension> dimensions)
     {
         Dimensions = dimensions;
         foreach(Dimension dimension in Dimensions)
@@ -27,7 +27,7 @@ public class LowFpsChart : Chart
     }
 
 
-    private const string ChartInfo = "low_fps";
+    private const string ChartInfo = "low_tps";
 
     public override string Type => "scpsl";
 
@@ -37,7 +37,7 @@ public class LowFpsChart : Chart
 
     public override string Title => $"{ChartInfo}";
 
-    public override string Units => "low fps warnings";
+    public override string Units => "low tps warnings";
 
     public override string Family => $"{ChartInfo}";
 
@@ -56,12 +56,12 @@ public class LowFpsChart : Chart
     public override bool StoreFirst => false;
 
     public override bool Hidden => false;
-    public override string Module => "lowfps";
+    public override string Module => "lowtps";
 
 }
-class LowFpsChartDimensions : Dimension
+class LowTpsChartDimensions : Dimension
 {
-    public LowFpsChartDimensions(int server, string serverName)
+    public LowTpsChartDimensions(int server, string serverName)
     {
         this.Server = server;
         this.ServerName = serverName;
@@ -69,8 +69,8 @@ class LowFpsChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"lowfps-{Server}";
-    public override string Name => $"\"{ServerName}\" Low Fps Warnings";
+    public override string Id => $"lowtps-{Server}";
+    public override string Name => $"\"{ServerName}\" Low Tps Warnings";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;

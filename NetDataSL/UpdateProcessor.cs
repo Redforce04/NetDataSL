@@ -27,75 +27,30 @@ public class UpdateProcessor
             { ChartImplementationType.Cpu, new List<DataSet>() },
             { ChartImplementationType.Memory, new List<DataSet>() },
             { ChartImplementationType.Tps, new List<DataSet>() },
-            { ChartImplementationType.LowFps, new List<DataSet>() },
+            { ChartImplementationType.LowTps, new List<DataSet>() },
             { ChartImplementationType.Players, new List<DataSet>() },
         };
-        _lowFpsInstances = new Dictionary<int, int>();
     }
 
     private readonly Dictionary<ChartImplementationType, List<DataSet>> _dataSets = null!;
-    private readonly Dictionary<int, int> _lowFpsInstances = null!;
     internal void SendUpdate()
     {
-        List<DataSet>? dataSets = _getLowFpsInstancesDataSets();
-        if (dataSets != null)
-            ChartIntegration.Singleton!._updateChartData(ChartImplementationType.LowFps, dataSets);
-
         foreach (var x in _dataSets)
         {
             if(x.Value.Count != 0)
                 ChartIntegration.Singleton!._updateChartData(x.Key, x.Value);
         }
-        _clearDataSets();
     }
 
-    private List<DataSet>? _getLowFpsInstancesDataSets()
-    {
-        List<DataSet> data = new List<DataSet>();
-        foreach (var server in Plugin.Singleton!.Servers)
-        {
-            if (server.Key == 0)
-                continue;
-            int cases = 0;
-            Dimension? dimension =
-                ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(ChartImplementationType.LowFps, server.Key);
-            if (dimension == null)
-            {
-                Log.Error($"Dimension is null. Cannot process info. ChartType: {ChartImplementationType.LowFps}, Server: {server.Key}");
-                continue;
-            }
 
-            if (_lowFpsInstances.ContainsKey(server.Key))
-                cases = _lowFpsInstances[server.Key];
-            data.Add(new DataSet(dimension, cases));
-        }
+    internal void ProcessUpdate(NetDataPacket packet)
+    {
+        _addUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true);
+        _addUpdate(ChartImplementationType.Memory, packet.Port, (float) packet.MemoryUsage, true);
+        _addUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true);
+        _addUpdate(ChartImplementationType.Players, packet.Port, packet.Players);
+        _addUpdate(ChartImplementationType.LowTps, packet.Port, packet.AverageTps);
         
-        return data.Count == 0 ? null : data;
-    }
-
-    private void _clearDataSets()
-    {
-        foreach (List<DataSet> set in _dataSets.Values)
-            set.Clear();
-        _lowFpsInstances.Clear();
-    }
-    internal void ProcessUpdate(LowFps lowFps)
-    {
-        Log.Debug($"Processing Update: {lowFps.DateTime}");
-        int server = lowFps.Server;
-        if(!_lowFpsInstances.ContainsKey(server))
-            _lowFpsInstances.Add(server, 0);
-        _lowFpsInstances[server] = lowFps.InstanceNumber + 1;
-    }
-
-    internal void ProcessUpdate(LoggingInfo loggingInfo)
-    {
-        Log.Debug($"Processing Update: {loggingInfo.DateTime}");
-        int server = loggingInfo.Server;
-        _addUpdate(ChartImplementationType.Cpu, server, loggingInfo.CpuUsage, true);
-        _addUpdate(ChartImplementationType.Memory, server, (float) loggingInfo.MemoryUsage, true);
-        _addUpdate(ChartImplementationType.Tps, server, loggingInfo.AverageFps, true);
-        _addUpdate(ChartImplementationType.Players, server, loggingInfo.Players);
     }
 
     private void _addUpdate(ChartImplementationType type, int server, object value, bool isFloat = false)

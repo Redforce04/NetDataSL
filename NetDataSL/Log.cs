@@ -32,7 +32,7 @@ public class Log
         _logMessages = new List<string>();
         if (!File.Exists(_logPath))
             File.Create(_logPath).Close();
-        //_stdOut = new StreamWriter(Console.OpenStandardOutput(), Encoding.UTF32);
+        _stdOut = new StreamWriter(Console.OpenStandardOutput(), Encoding.UTF32);
         _stdErr = new StreamWriter(Console.OpenStandardError(), Encoding.UTF32);
         Log.Error($"Info: Log filepath: {_logPath}");
     }
@@ -76,7 +76,7 @@ public class Log
         if (DebugModeEnabled)
         {
             // ReSharper disable once HeuristicUnreachableCode
-            Singleton!._stdOut.WriteLine(log);
+            Singleton!._stdOut.Write(log + "    ");
             Singleton!._stdOut.Flush();
         }
 #pragma warning restore CS0162
@@ -86,8 +86,8 @@ public class Log
     
     public static void Error(string x)
     {
-        string log = $"[{DateTime.Now:G}] [Error] {x} ";
-        Singleton!._stdErr.Write(log);
+        string log = $"[{DateTime.Now:G}] [Error] {x}";
+        Singleton!._stdErr.Write(log+ "    ");
         Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
@@ -95,8 +95,8 @@ public class Log
 
     public static void Line(string x)
     {
-        //Singleton!._stdOut.WriteLine(x);
-        //Singleton!._stdOut.Flush();
+        Singleton!._stdOut.Write(x + "    ");
+        Singleton!._stdOut.Flush();
         
     }
 }

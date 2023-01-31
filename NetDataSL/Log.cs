@@ -25,15 +25,16 @@ public class Log
     private string _logPath = "";
     private void _init()
     {
-        if (API.Extensions.EnvironmentalVariables.NetDataLogDir == null)
-            _logPath = AppDomain.CurrentDomain.BaseDirectory + "ScpslPlugin.log";
-        else
-            _logPath = API.Extensions.EnvironmentalVariables.NetDataLogDir + "ScpslPlugin.log";
+        string directory = "/var/log/NetDataSL/";
+            _logPath = directory + "ScpslPlugin.log";
         _logMessages = new List<string>();
+        if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
         if (!File.Exists(_logPath))
             File.Create(_logPath).Close();
-        _stdOut = new StreamWriter(Console.OpenStandardOutput(), Encoding.UTF32);
-        _stdErr = new StreamWriter(Console.OpenStandardError(), Encoding.UTF32);
+        
+        _stdOut = new StreamWriter(Console.OpenStandardOutput());
+        _stdErr = new StreamWriter(Console.OpenStandardError());
         Log.Error($"Info: Log filepath: {_logPath}");
     }
 
@@ -78,6 +79,7 @@ public class Log
             // ReSharper disable once HeuristicUnreachableCode
             Singleton!._stdOut.Write(log + "    ");
             Singleton!._stdOut.Flush();
+            Thread.Sleep(50);
         }
 #pragma warning restore CS0162
         
@@ -91,12 +93,14 @@ public class Log
         Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
+        Thread.Sleep(50);
     }
 
     public static void Line(string x)
     {
         Singleton!._stdOut.Write(x + "    ");
         Singleton!._stdOut.Flush();
+        Thread.Sleep(50);
         
     }
 }

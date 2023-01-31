@@ -32,8 +32,8 @@ public class Log
         _logMessages = new List<string>();
         if (!File.Exists(_logPath))
             File.Create(_logPath).Close();
-        _stdOut = new StreamWriter(Console.OpenStandardOutput());
-        _stdErr = new StreamWriter(Console.OpenStandardError());
+        _stdOut = new StreamWriter(Console.OpenStandardOutput(), Encoding.UTF32);
+        _stdErr = new StreamWriter(Console.OpenStandardError(), Encoding.UTF32);
         Log.Error($"Info: Log filepath: {_logPath}");
     }
 
@@ -55,7 +55,7 @@ public class Log
             sw.Write(concatLog);
             sw.Close();
             fs.Close();
-            //File.WriteAllText(_logPath, concatLog);
+            File.WriteAllText(_logPath, concatLog);
         }
         catch (Exception e)
         {
@@ -87,15 +87,15 @@ public class Log
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}";
-        //Singleton!._stdErr.WriteLine(log);
-        //Singleton!._stdErr.Flush();
+        Singleton!._stdErr.WriteLine(log);
+        Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
     }
 
     public static void Line(string x)
     {
-        //Singleton!._stdOut.WriteLine(x);
-        //Singleton!._stdOut.Flush();
+        Singleton!._stdOut.WriteLine(x);
+        Singleton!._stdOut.Flush();
     }
 }

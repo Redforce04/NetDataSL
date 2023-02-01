@@ -55,6 +55,8 @@ public class Plugin
         foreach (var filePath in Directory.GetFiles(_tempDirectory))
         {
             _readFileContent(filePath, out var content);
+            if (content.Length < 2)
+                return;
             try
             {
                 NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
@@ -114,6 +116,8 @@ public class Plugin
         {
             // Use this instead of file.ReadAllText() because it has FileShare settings.
             _readFileContent(filePath, out var content);
+            if (content.Length < 2)
+                return;
             NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
             packet.DateTime = DateTimeOffset.FromUnixTimeSeconds(packet.Epoch).DateTime;
             _processTextEntry(packet);

@@ -36,7 +36,7 @@ public class Log
         
         _stdOut = new StreamWriter(Console.OpenStandardOutput());
         _stdErr = new StreamWriter(Console.OpenStandardError());
-        Log.Error($"Info: Log filepath: {_logPath}");
+        //Log.Error($"Info: Log filepath: {_logPath}");
     }
 
     private List<string> _logMessages = null!;
@@ -73,12 +73,12 @@ public class Log
     private const bool DebugModeEnabled = false;
     public static void Debug(string x)
     {
-        string log = $"[{DateTime.Now:G}] [Debug] {x}";
+        string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
         if (DebugModeEnabled)
         {
             // ReSharper disable once HeuristicUnreachableCode
-            Singleton!._stdOut.Write(log + "    ");
+            Singleton!._stdOut.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
             Singleton!._stdOut.Flush();
             Thread.Sleep(50);
         }
@@ -89,8 +89,8 @@ public class Log
     
     public static void Error(string x)
     {
-        string log = $"[{DateTime.Now:G}] [Error] {x}";
-        Singleton!._stdErr.Write(log);
+        string log = $"[{DateTime.Now:G}] [Error] {x}    ";
+        Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
         Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
@@ -99,7 +99,7 @@ public class Log
 
     public static void Line(string x)
     {
-        Singleton!._stdOut.Write(x );
+        Singleton!._stdOut.Write($"{x}    ".Replace("\n", "").Replace(Environment.NewLine, ""));
         Singleton!._stdOut.Flush();
         Thread.Sleep(50);
         

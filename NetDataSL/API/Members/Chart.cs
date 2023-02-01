@@ -79,29 +79,22 @@ public class Chart
         try
         {
 
-            var content = $"CHART {Process(TypeId, FieldType.TypeId)} " +
-                          $"{Process(Name, FieldType.Name)} " +
-                          $"{Process(Title, FieldType.Title)} " +
-                          $"{Process(Units, FieldType.Units)} " +
-                          $"{Process(Family, FieldType.Family)} [" +
-                          $"{Process(Context, FieldType.Context)} [" +
-                          $"{Process(ChartType, FieldType.ChartType)} [" +
-                          $"{Process(Priority, FieldType.Priority)} [" +
-                          $"{Process(UpdateEvery, FieldType.UpdateEvery)} [" +
+            var content = $"CHART '{Process(TypeId, FieldType.TypeId)}' " +
+                          $"'{Process(Name, FieldType.Name)}' " +
+                          $"'{Process(Title, FieldType.Title)}' " +
+                          $"'{Process(Units, FieldType.Units)}' " +
+                          $"'{Process(Family, FieldType.Family)}' " +
+                          $"'{Process(Context, FieldType.Context)}' " +
+                          $"'{Process(ChartType, FieldType.ChartType)}' " +
+                          $"'{Process(Priority, FieldType.Priority)}' " +
+                          $"'{Process(UpdateEvery, FieldType.UpdateEvery)}' '" +
                           Process(Obsolete, FieldType.Obsolete) +
                           Process(Obsolete, FieldType.Detail) +
                           Process(Obsolete, FieldType.StoreFirst) +
                           Process(Obsolete, FieldType.Hidden) +
-                          $" [" +
-                          $"{Process(_plugin, FieldType.Plugin)} [" +
-                          $"{Process(Module, FieldType.Module)}]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]";
-            Log.Line(content.Replace("[","").Replace("]",""));
+                          $"' '{Process(_plugin, FieldType.Plugin)}' " +
+                          $"'{Process(Module, FieldType.Module)}'";
+                          Log.Line(content);
         }
         catch (ArgumentNullException)
         {

@@ -40,9 +40,9 @@ public class CLabel
         try
         {
 
-            var content = $"CLABEL {Process(Name, FieldType.CLabelName)} " +
-                          $"{Process(Value, FieldType.CLabelValue)} " +
-                          $"{Process(Source, FieldType.CLabelSource)}";
+            var content = $"CLABEL '{Process(Name, FieldType.CLabelName)}' " +
+                          $"'{Process(Value, FieldType.CLabelValue)}' " +
+                          $"'{Process(Source, FieldType.CLabelSource)}'";
             Log.Line(content.Replace("[","").Replace("]",""));
             Commit();
             if (localSend)

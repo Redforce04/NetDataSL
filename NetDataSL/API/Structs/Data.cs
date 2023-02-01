@@ -20,9 +20,9 @@ public struct Data
         {
             var trace = new StackTrace();
             string caller = "";
-                caller += $"        {trace.GetFrame(1)?.GetMethod()} \n";
-                caller += $"        {trace.GetFrame(2)?.GetMethod()} \n";
-            Log.Error($"Date constructor doesnt have any DataSets! Cannot call Data.Call unless data is present! \n Called from: \n{caller}");
+                caller += $"        {trace.GetFrame(1)?.GetMethod()} ";
+                caller += $"        {trace.GetFrame(2)?.GetMethod()} ";
+            Log.Error($"Date constructor doesnt have any DataSets! Cannot call Data.Call unless data is present!  Called from: {caller}  ");
             return;
         }
         ChartTypeId = chart.TypeId;
@@ -42,14 +42,14 @@ public struct Data
     }
     private void Begin()
     {
-        var context = $"BEGIN {ChartTypeId} {Microseconds}";
+        var context = $"BEGIN '{ChartTypeId}' {Microseconds}";
         Log.Line(context);
     }
     private void Set()
     {
         foreach (DataSet data in DataSet)
         {
-            var context = $"SET {data.DimensionId} = {(data.Value.HasValue ? data.Value : "")}";
+            var context = $"SET '{data.DimensionId}' = {(data.Value.HasValue ? data.Value : "0")}";
             _sent = true;
             Log.Line(context);
         }

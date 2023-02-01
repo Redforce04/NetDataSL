@@ -25,10 +25,10 @@ public class Variable
         try
         {
             // VARIABLE [SCOPE] name = value
-            var content = $"VARIABLE [{Process(Scope, FieldType.Scope)}] " +
-                          $"{Process(Name, FieldType.VariableName)} = " +
-                          $"{Process(Value, FieldType.Value)}";
-            Log.Line(content.Replace("[","").Replace("]",""));
+            var content = $"VARIABLE '{Process(Scope, FieldType.Scope)}' " +
+                          $"'{Process(Name, FieldType.VariableName)}' = " +
+                          $"'{Process(Value, FieldType.Value)}'";
+            Log.Line(content);
 
             if (localSend && (int)this.Scope == 0 && _chart != null)
                 _chart.ReloadOtherTriggerSend();

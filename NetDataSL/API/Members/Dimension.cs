@@ -59,19 +59,15 @@ public class Dimension
 
             // Needs to send the chart first
             // DIMENSION id [name [algorithm [multiplier [divisor [options]]]]]
-            var content = $"DIMENSION {Field.Process(Id, FieldType.DimensionId)} [" +
-                          $"{Process(Name, FieldType.Name)} [" +
-                          $"{Process(Algorithm, FieldType.Algorithm)} [" +
-                          $"{Process(Multiplier, FieldType.Multiplier)} [" +
-                          $"{Process(Divisor, FieldType.Divisor)} [" +
+            var content = $"DIMENSION '{Field.Process(Id, FieldType.DimensionId)}' " +
+                          $"'{Process(Name, FieldType.Name)}' " +
+                          $"'{Process(Algorithm, FieldType.Algorithm)}' " +
+                          $"'{Process(Multiplier, FieldType.Multiplier)}' " +
+                          $"'{Process(Divisor, FieldType.Divisor)}' '" +
                           Process(Obsolete, FieldType.Obsolete) +
                           Process(Hidden, FieldType.Hidden) +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]";
-            Log.Line(content.Replace("[","").Replace("]",""));
+                          $"'";
+            Log.Line(content);
             if (localSend)
                 Chart.ReloadOtherTriggerSend();
 

@@ -56,7 +56,7 @@ public class Plugin
         {
             _readFileContent(filePath, out var content);
             if (content.Length < 2)
-                return;
+                continue;
             try
             {
                 NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
@@ -64,7 +64,7 @@ public class Plugin
             }
             catch (Exception e)
             {
-                Log.Error($"Could not deserialize content of File {filePath}. {e}");
+                //Log.Error($"Could not deserialize content of File {filePath}. {e}");
                 continue;
             }
         }

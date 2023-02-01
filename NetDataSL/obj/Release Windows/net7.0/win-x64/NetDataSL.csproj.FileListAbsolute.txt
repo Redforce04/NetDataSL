@@ -197,3 +197,5 @@ C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.genruntimeconfig.cache
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\ref\NetDataSL.dll
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Newtonsoft.Json.dll
+C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Sentry.dll
+C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\Sentry.Attributes.cs

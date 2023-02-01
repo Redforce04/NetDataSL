@@ -90,8 +90,8 @@ public class Log
     public static void Error(string x)
     {
         string log = $"[{DateTime.Now:G}] [Error] {x}    ";
-        Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
-        Singleton!._stdErr.Flush();
+        //Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
+        //Singleton!._stdErr.Flush();
         
         Singleton!._logMessages.Add(log);
         Thread.Sleep(50);

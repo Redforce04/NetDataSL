@@ -7,9 +7,11 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
+using System.Reflection;
 using System.Text;
 using NetDataSL.Structs;
 using Newtonsoft.Json;
+using Sentry;
 
 namespace NetDataSL;
 
@@ -24,6 +26,7 @@ public class Plugin
         Singleton = this;
         var unused = new Log();
         _refreshTime = refreshRate;
+        
         InitNetDataIntegration();
         Init();
     }
@@ -32,7 +35,7 @@ public class Plugin
     private float _refreshTime = 5f;
     private readonly float _serverRefreshTime = -1f;
     private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
-
+    
     /// Todo Make servers autoinitialize port and name via the refresh data transfer method 
     public readonly Dictionary<int, string> Servers = new()
     {
@@ -41,7 +44,9 @@ public class Plugin
         { 9012, "Net 2" },
         { 9017, "Testing Net" }
     };
-
+    
+    
+    
     private void InitNetDataIntegration()
     {
         _getServers(out var servers);

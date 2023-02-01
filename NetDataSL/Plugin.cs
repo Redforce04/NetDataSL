@@ -125,7 +125,7 @@ public class Plugin
         }
         catch (Exception e)
         {
-            Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
+            //Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
         }
     }
 

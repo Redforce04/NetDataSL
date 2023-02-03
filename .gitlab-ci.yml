@@ -87,8 +87,11 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
+  - 'echo ${CI_COMMIT_SHORT_SHA} > NetDataSL/version.txt'
+  - 'echo ${CI_COMMIT_BRANCH} > NetDataSL/versionIndentifier.txt'
+  - 'cat NetDataSL/version.txt'
+  - 'cat NetDataSL/versionIdentifier.txt'
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
-
 build:
   stage: build
   # ### Build all projects discovered from solution file.
@@ -100,8 +103,6 @@ build:
   # where it is located (e.g. 'dotnet build ./src/ConsoleApp').
   # Only one project path can be passed as a parameter to 'dotnet build' command.
   script: 
-  - 'echo ${CI_COMMIT_SHORT_SHA} > NetDataSL/version.txt'
-  - 'cat NetDataSL/version.txt'
   - 'dotnet publish -r linux-x64 -c Release --no-restore'
   - 'mv $SOURCE_CODE_PATH/bin/Release/net7.0/linux-x64/publish/NetDataSL scpsl.plugin'
   artifacts:

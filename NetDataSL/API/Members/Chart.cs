@@ -1,9 +1,12 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         Chart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 9:21 PM
 // -----------------------------------------
 
@@ -323,10 +326,9 @@ public class Chart
     /// ebpf.plugin,
     /// go.d
     /// </example>
-    private readonly string _plugin = Plugin.Singleton != null ? Plugin.Singleton.PluginName : "plugin";
+    private readonly string _plugin = Plugin.Singleton != null ? Plugin.Singleton.pluginName : "plugin";
 
     /// <summary>
-    /// 
     /// </summary>
     /// <example>
     /// /proc/meminfo,

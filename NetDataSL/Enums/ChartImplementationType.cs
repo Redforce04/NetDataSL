@@ -1,10 +1,13 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
-//    FileName:         ChartType.cs
+//    FileName:         ChartImplementationType.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/29/2023 2:51 PM
-//    Created Date:     01/29/2023 2:51 PM
+//    Revision Date:    02/03/2023 1:18 PM
+//    Created Date:     01/31/2023 12:16 PM
 // -----------------------------------------
 
 namespace NetDataSL.Enums;

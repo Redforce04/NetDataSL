@@ -1,55 +1,71 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         Plugin.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
-using System.Reflection;
-using System.Text;
-using NetDataSL.Structs;
-using Newtonsoft.Json;
-using Sentry;
+using NetDataService;
+using NetDataSL.Networking;
 
 namespace NetDataSL;
 
+using System.Reflection;
+using System.Text;
+using Newtonsoft.Json;
+using Sentry;
+
+
 public class Plugin
 {
+    /// <summary>
+    /// The Plugin Singleton
+    /// </summary>
+#pragma warning disable SA1401
     public static Plugin? Singleton;
+#pragma warning restore SA1401
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Plugin"/> class.
+    /// </summary>
+    /// <param name="refreshRate">The refresh rate of the plugin.</param>
     public Plugin(float refreshRate = 5f)
     {
         if (Singleton != null)
+        {
             return;
+        }
+
         Singleton = this;
         var unused = new Log();
-        _refreshTime = refreshRate;
-        
-        InitNetDataIntegration();
-        Init();
+        var unused2 = new NetworkHandler();
+        this.refreshTime = refreshRate;
+        this.InitNetDataIntegration();
+        this.Init();
     }
 
-    public readonly string PluginName = "scpsl.plugin";
-    private float _refreshTime = 5f;
+
+    internal readonly string pluginName = "scpsl.plugin";
+    private float refreshTime = 5f;
     private readonly float _serverRefreshTime = -1f;
     private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
-    
-    /// Todo Make servers autoinitialize port and name via the refresh data transfer method 
+
     public readonly Dictionary<int, string> Servers = new()
     {
         { 0, "Unknown Server" },
         { 9011, "Net 1" },
         { 9012, "Net 2" },
-        { 9017, "Testing Net" }
+        { 9017, "Testing Net" },
     };
-    
-    
-    
+
     private void InitNetDataIntegration()
     {
-        _getServers(out var servers);
+        this._getServers(out var servers);
         var unused = new ChartIntegration(servers);
         var unused2 = new UpdateProcessor();
     }
@@ -57,11 +73,14 @@ public class Plugin
     private void _getServers(out List<KeyValuePair<int, string>> servers)
     {
         servers = new List<KeyValuePair<int, string>>();
-        foreach (var filePath in Directory.GetFiles(_tempDirectory))
+        foreach (var filePath in Directory.GetFiles(this._tempDirectory))
         {
-            _readFileContent(filePath, out var content);
+            this._readFileContent(filePath, out var content);
             if (content.Length < 2)
+            {
                 continue;
+            }
+
             try
             {
                 NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
@@ -69,7 +88,7 @@ public class Plugin
             }
             catch (Exception e)
             {
-                //Log.Error($"Could not deserialize content of File {filePath}. {e}");
+                // Log.Error($"Could not deserialize content of File {filePath}. {e}");
                 continue;
             }
         }
@@ -78,14 +97,16 @@ public class Plugin
     private void Init()
     {
         Log.Debug($"Starting Net-data Integration");
-        _createDirectories();
-        _startMainListenLoop();
+        this.CreateDirectories();
+        this._startMainListenLoop();
     }
 
-    private void _createDirectories()
+    private void CreateDirectories()
     {
-        if (!Directory.Exists(_tempDirectory))
-            Directory.CreateDirectory(_tempDirectory);
+        if (!Directory.Exists(this._tempDirectory))
+        {
+            Directory.CreateDirectory(this._tempDirectory);
+        }
     }
 
     private void _startMainListenLoop()
@@ -111,7 +132,7 @@ public class Plugin
 
     private float UsableRefresh()
     {
-        return _serverRefreshTime > _refreshTime ? _serverRefreshTime : _refreshTime;
+        return _serverRefreshTime > refreshTime ? _serverRefreshTime : refreshTime;
     }
     
 
@@ -124,7 +145,6 @@ public class Plugin
             if (content.Length < 2)
                 return;
             NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
-            packet.DateTime = DateTimeOffset.FromUnixTimeSeconds(packet.Epoch).DateTime;
             _processTextEntry(packet);
 
         }
@@ -164,10 +184,10 @@ public class Plugin
 
     private void _updateRefreshTime(float updateTime)
     {
-        if (Math.Abs(updateTime - _refreshTime) > .1f)
+        if (Math.Abs(updateTime - refreshTime) > .1f)
         {
             Log.Debug($"Updated Refresh Speed.");
-            _refreshTime = updateTime;
+            refreshTime = updateTime;
         }
     }
 

@@ -1,16 +1,19 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         UpdateProcessor.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/29/2023 3:09 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/29/2023 3:09 PM
 // -----------------------------------------
 
+using NetDataService;
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
 using NetDataSL.Enums;
-using NetDataSL.Structs;
 
 namespace NetDataSL;
 

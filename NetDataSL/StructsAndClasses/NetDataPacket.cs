@@ -15,8 +15,15 @@ namespace NetDataSL.Structs;
 
 internal class NetDataPacketHandler
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NetDataPacketHandler"/> class.
+    /// </summary>
+    public NetDataPacketHandler()
+    {
+    }
+
     internal int Port;
-    internal string ServerName;
+    internal string ServerName = null!;
     internal float RefreshSpeed;
     internal long Epoch;
     internal DateTime DateTime;

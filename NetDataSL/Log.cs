@@ -29,7 +29,7 @@ public class Log
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
-    private const bool DebugModeEnabled = false;
+    private const bool DebugModeEnabled = true;
     private string _logPath = string.Empty;
     private List<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;
@@ -48,6 +48,7 @@ public class Log
         Singleton = this;
         this.Init();
     }
+
 
     /// <summary>
     /// Logs a debug message.
@@ -100,6 +101,20 @@ public class Log
     }
 
     /// <summary>
+    /// Adds a log message to the file log.
+    /// </summary>
+    /// <param name="message">The message to add to the file log
+    /// </param>
+    public void AddLogMessage(string message)
+    {
+        this._logMessages.Add(message);
+        if(DebugModeEnabled)
+        {
+            Line(message);
+        }
+    }
+
+    /// <summary>
     /// Logs Messages.
     /// </summary>
     internal void LogMessages()
@@ -129,7 +144,7 @@ public class Log
 
     private void Init()
     {
-        string directory = "/var/log/NetDataSL/";
+        string directory = "/var/log/";
         this._logPath = directory + "ScpslPlugin.log";
 
         this._logMessages = new List<string>();

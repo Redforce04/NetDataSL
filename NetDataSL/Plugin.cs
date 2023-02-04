@@ -115,42 +115,48 @@ public class Plugin
         while (DateTime.UtcNow < restartEveryHour)
         {
             var now = DateTime.UtcNow.TimeOfDay;
-            now = now.Add(new TimeSpan(0, 0, (int)UsableRefresh()));
+            now = now.Add(new TimeSpan(0, 0, (int)this.UsableRefresh()));
+
             // Get the delay necessary.
-            foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);
-            
+            // foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);
             UpdateProcessor.Singleton!.SendUpdate();
             Log.Singleton!.LogMessages();
             var delay = now.Subtract(DateTime.UtcNow.TimeOfDay).TotalMilliseconds;
             if (delay < 1)
+            {
                 delay = 1;
+            }
+
             Thread.Sleep((int)delay);
-            Log.Debug($"Iteration Time: {new TimeSpan(0, 0,0,0,(int)(UsableRefresh() * 1000) - (int)delay):g}");
+            //Log.Debug($"Iteration Time: {new TimeSpan(0, 0, 0, 0, (int)(this.UsableRefresh() * 1000) - (int)delay):g}");
         }
+
         Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
     }
 
     private float UsableRefresh()
     {
-        return _serverRefreshTime > refreshTime ? _serverRefreshTime : refreshTime;
+        return this._serverRefreshTime > this.refreshTime ? this._serverRefreshTime : this.refreshTime;
     }
-    
+
 
     private void _processFile(string filePath)
     {
         try
         {
             // Use this instead of file.ReadAllText() because it has FileShare settings.
-            _readFileContent(filePath, out var content);
+            this._readFileContent(filePath, out var content);
             if (content.Length < 2)
+            {
                 return;
-            NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
-            _processTextEntry(packet);
+            }
 
+            NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
+            this._processTextEntry(packet);
         }
         catch (Exception e)
         {
-            //Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
+            // Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
         }
     }
 

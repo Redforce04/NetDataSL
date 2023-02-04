@@ -12,9 +12,28 @@
 
 namespace NetDataSL.API.Builders;
 
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.API.Members;
+
+/// <summary>
+/// Builds a dimension.
+/// </summary>
 public class DimensionBuilder
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DimensionBuilder"/> class.
+    /// </summary>
     public DimensionBuilder()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Builds the dimension.
+    /// </summary>
+    /// <returns>The newly built dimension.</returns>
+    /// <exception cref="NotImplementedException">The dimension is not implemented.</exception>
+    public Dimension Build()
     {
         throw new NotImplementedException();
     }

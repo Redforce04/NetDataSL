@@ -12,11 +12,33 @@
 
 namespace NetDataSL.Enums;
 
+/// <summary>
+/// The type of chart.
+/// </summary>
 public enum ChartImplementationType
 {
-    Cpu,
-    Memory,
-    Tps,
-    LowTps,
-    Players,
+    /// <summary>
+    /// The chart is the cpu chart.
+    /// </summary>
+    Cpu = 0,
+
+    /// <summary>
+    /// The chart is the memory chart.
+    /// </summary>
+    Memory = 1,
+
+    /// <summary>
+    /// The chart is the tps chart.
+    /// </summary>
+    Tps = 2,
+
+    /// <summary>
+    /// The chart is the lowtps chart.
+    /// </summary>
+    LowTps = 3,
+
+    /// <summary>
+    /// The chart is the players chart.
+    /// </summary>
+    Players = 4,
 }

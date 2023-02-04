@@ -10,10 +10,12 @@
 //    Created Date:     01/28/2023 5:22 PM
 // -----------------------------------------
 
+namespace NetDataSL.API.Members;
+
+#pragma warning disable
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Extensions;
-
-namespace NetDataSL.API.Members;
 
 public class CLabel
 {
@@ -85,3 +87,4 @@ public class CLabel
     
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
+#pragma warning restore

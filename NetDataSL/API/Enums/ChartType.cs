@@ -12,9 +12,23 @@
 
 namespace NetDataSL.API.Enums;
 
+/// <summary>
+/// The type of chart.
+/// </summary>
 public enum ChartType
 {
+    /// <summary>
+    /// A line chart.
+    /// </summary>
     Line = 0,
-    Area,
-    Stacked
+
+    /// <summary>
+    /// The chart is an area.
+    /// </summary>
+    Area = 1,
+
+    /// <summary>
+    /// The chart is stacked.
+    /// </summary>
+    Stacked = 2,
 }

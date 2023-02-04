@@ -12,8 +12,14 @@
 
 namespace NetDataSL.API.Extensions;
 
+/// <summary>
+/// The class for controlling a plugin.
+/// </summary>
 public static class PluginControl
 {
+    /// <summary>
+    /// Disables a plugin.
+    /// </summary>
     internal static void DisablePlugin()
     {
         Log.Debug($"Disabling Plugin.");

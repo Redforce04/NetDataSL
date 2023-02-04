@@ -10,11 +10,12 @@
 //    Created Date:     01/28/2023 2:55 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
-
 namespace NetDataSL.API.Members;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
+#pragma warning disable
 public class Variable
 {
     private void Send(bool localSend = true)
@@ -97,3 +98,4 @@ public class Variable
     private double _value;
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
+#pragma warning restore

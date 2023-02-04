@@ -12,6 +12,10 @@
 
 namespace NetDataSL.API.Enums;
 
+/// <summary>
+/// The type of field for the field processor.
+/// </summary>
+#pragma warning disable SA1649, SA1602
 public enum FieldType
 {
     TypeId,
@@ -42,3 +46,4 @@ public enum FieldType
     CLabelValue,
     CLabelSource,
 }
+#pragma warning restore SA1649, SA1602

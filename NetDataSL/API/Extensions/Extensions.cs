@@ -12,7 +12,9 @@
 
 namespace NetDataSL.API.Extensions;
 
+/// <summary>
+/// Extensions for the api.
+/// </summary>
 public static class Extensions
 {
-    
 }

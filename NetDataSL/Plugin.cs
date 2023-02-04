@@ -10,30 +10,53 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
-using NetDataService;
-using NetDataSL.Networking;
-
 namespace NetDataSL;
 
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using NetDataService;
+
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.Networking;
 using Newtonsoft.Json;
-using Sentry;
 
-
+/// <summary>
+/// The main plugin. Does all of the processing and is instantiated via <see cref="Program"/>.
+/// </summary>
 public class Plugin
 {
     /// <summary>
-    /// The Plugin Singleton
+    /// The Plugin Singleton.
     /// </summary>
 #pragma warning disable SA1401
     public static Plugin? Singleton;
+
+    /// <summary>
+    /// A list of all servers present.
+    /// </summary>
+    // ReSharper disable once UnusedMember.Global
+    public readonly Dictionary<int, string> Servers = new()
+    {
+        { 0, "Unknown Server" },
+        { 9011, "Net 1" },
+        { 9012, "Net 2" },
+        { 9017, "Testing Net" },
+    };
+
+    /// <summary>
+    /// The name of the netdata plugin.
+    /// </summary>
+    internal static readonly string PluginName = "scpsl.plugin";
+    private readonly float _serverRefreshTime = -1f;
+    private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
+    private float _refreshTime = 5f;
 #pragma warning restore SA1401
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Plugin"/> class.
     /// </summary>
     /// <param name="refreshRate">The refresh rate of the plugin.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
     public Plugin(float refreshRate = 5f)
     {
         if (Singleton != null)
@@ -44,38 +67,33 @@ public class Plugin
         Singleton = this;
         var unused = new Log();
         var unused2 = new NetworkHandler();
-        this.refreshTime = refreshRate;
+        this._refreshTime = refreshRate;
         this.InitNetDataIntegration();
         this.Init();
     }
 
-
-    internal readonly string pluginName = "scpsl.plugin";
-    private float refreshTime = 5f;
-    private readonly float _serverRefreshTime = -1f;
-    private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
-
-    public readonly Dictionary<int, string> Servers = new()
+    private static void ReadFileContent(string filePath, out string content)
     {
-        { 0, "Unknown Server" },
-        { 9011, "Net 1" },
-        { 9012, "Net 2" },
-        { 9017, "Testing Net" },
-    };
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var sr = new StreamReader(fs, Encoding.UTF8);
+        content = sr.ReadToEnd();
+        sr.Close();
+        fs.Close();
+    }
 
     private void InitNetDataIntegration()
     {
-        this._getServers(out var servers);
+        this.GetServers(out var servers);
         var unused = new ChartIntegration(servers);
         var unused2 = new UpdateProcessor();
     }
 
-    private void _getServers(out List<KeyValuePair<int, string>> servers)
+    private void GetServers(out List<KeyValuePair<int, string>> servers)
     {
         servers = new List<KeyValuePair<int, string>>();
         foreach (var filePath in Directory.GetFiles(this._tempDirectory))
         {
-            this._readFileContent(filePath, out var content);
+            ReadFileContent(filePath, out var content);
             if (content.Length < 2)
             {
                 continue;
@@ -86,10 +104,9 @@ public class Plugin
                 NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
                 servers.Add(new KeyValuePair<int, string>(packet.Port, packet.ServerName));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Log.Error($"Could not deserialize content of File {filePath}. {e}");
-                continue;
             }
         }
     }
@@ -98,7 +115,7 @@ public class Plugin
     {
         Log.Debug($"Starting Net-data Integration");
         this.CreateDirectories();
-        this._startMainListenLoop();
+        this.StartMainListenLoop();
     }
 
     private void CreateDirectories()
@@ -109,7 +126,7 @@ public class Plugin
         }
     }
 
-    private void _startMainListenLoop()
+    private void StartMainListenLoop()
     {
         DateTime restartEveryHour = DateTime.UtcNow.AddHours(1);
         while (DateTime.UtcNow < restartEveryHour)
@@ -128,7 +145,8 @@ public class Plugin
             }
 
             Thread.Sleep((int)delay);
-            //Log.Debug($"Iteration Time: {new TimeSpan(0, 0, 0, 0, (int)(this.UsableRefresh() * 1000) - (int)delay):g}");
+
+            // Log.Debug($"Iteration Time: {new TimeSpan(0, 0, 0, 0, (int)(this.UsableRefresh() * 1000) - (int)delay):g}");
         }
 
         Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
@@ -136,51 +154,45 @@ public class Plugin
 
     private float UsableRefresh()
     {
-        return this._serverRefreshTime > this.refreshTime ? this._serverRefreshTime : this.refreshTime;
+        return this._serverRefreshTime > this._refreshTime ? this._serverRefreshTime : this._refreshTime;
     }
 
+#pragma warning disable SA1300
 
+    // ReSharper disable once UnusedMember.Local
     private void _processFile(string filePath)
+#pragma warning restore SA1300
     {
         try
         {
             // Use this instead of file.ReadAllText() because it has FileShare settings.
-            this._readFileContent(filePath, out var content);
+            ReadFileContent(filePath, out var content);
             if (content.Length < 2)
             {
                 return;
             }
 
             NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
-            this._processTextEntry(packet);
+            this.ProcessTextEntry(packet);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
         }
     }
 
-    private void _readFileContent(string filePath, out string content)
+    private void ProcessTextEntry(NetDataPacket packet)
     {
-        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var sr = new StreamReader(fs, Encoding.UTF8);
-        content = sr.ReadToEnd();
-        sr.Close();
-        fs.Close();
-    }
-
-    private void _processTextEntry(NetDataPacket packet)
-    { 
         try
         {
-            if(packet.Epoch + UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            if (packet.Epoch + this.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             {
                 Log.Debug($"Server {packet.Port} cannot be refreshed, as it hasn't refreshed in 5 seconds.");
                 return;
             }
-            _updateRefreshTime(packet.RefreshSpeed);
-            ProcessStats(packet);
-            
+
+            this.UpdateRefreshTime(packet.RefreshSpeed);
+            this.ProcessStats(packet);
         }
         catch (Exception e)
         {
@@ -188,12 +200,12 @@ public class Plugin
         }
     }
 
-    private void _updateRefreshTime(float updateTime)
+    private void UpdateRefreshTime(float updateTime)
     {
-        if (Math.Abs(updateTime - refreshTime) > .1f)
+        if (Math.Abs(updateTime - this._refreshTime) > .1f)
         {
             Log.Debug($"Updated Refresh Speed.");
-            refreshTime = updateTime;
+            this._refreshTime = updateTime;
         }
     }
 

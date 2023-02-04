@@ -33,6 +33,8 @@ public class Log
     private string _logPath = string.Empty;
     private List<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;
+
+    // ReSharper disable once NotAccessedField.Local
     private StreamWriter _stdErr = null!;
 
     /// <summary>
@@ -49,7 +51,6 @@ public class Log
         this.Init();
     }
 
-
     /// <summary>
     /// Logs a debug message.
     /// </summary>
@@ -62,12 +63,12 @@ public class Log
         {
             // ReSharper disable once HeuristicUnreachableCode
             Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
-            Singleton!._stdOut.Flush();
+            Singleton._stdOut.Flush();
             Thread.Sleep(50);
         }
 #pragma warning restore CS0162
 
-        Singleton!._logMessages.Add(log);
+        Singleton._logMessages.Add(log);
     }
 
     /// <summary>
@@ -103,12 +104,12 @@ public class Log
     /// <summary>
     /// Adds a log message to the file log.
     /// </summary>
-    /// <param name="message">The message to add to the file log
+    /// <param name="message">The message to add to the file log.
     /// </param>
     public void AddLogMessage(string message)
     {
         this._logMessages.Add(message);
-        if(DebugModeEnabled)
+        if (DebugModeEnabled)
         {
             Line(message);
         }

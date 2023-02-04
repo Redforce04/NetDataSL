@@ -10,18 +10,32 @@
 //    Created Date:     01/28/2023 2:16 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-
 namespace NetDataSL.API.Extensions;
 
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.API.Enums;
+
+/// <summary>
+/// The processor for field information.
+/// </summary>
+#pragma warning disable SA1649
 public static class Field
+#pragma warning restore SA1649
 {
+    /// <summary>
+    /// Process a value for a netdata safe string of data.
+    /// </summary>
+    /// <param name="value">The value to process.</param>
+    /// <param name="field">The type of field the value is.</param>
+    /// <returns>The netdata safe string of data.</returns>
+    /// <exception cref="ArgumentNullException">If the argument is invalid or empty this is thrown.</exception>
     public static string Process(object value, FieldType field)
     {
-        if (value is string &&(string)value == "")
+        if (value is string && (string)value == string.Empty)
         {
             throw new ArgumentNullException(nameof(value), "All values must not be empty.");
         }
+
         try
         {
             switch (field)
@@ -31,25 +45,25 @@ public static class Field
                     or FieldType.Family or FieldType.Context or FieldType.Plugin
                     or FieldType.Module:
                     return ((string)value).Replace(" ", "_");
-                
+
                 case FieldType.Priority or FieldType.Multiplier
                     or FieldType.Divisor:
                     return ((int)value).ToString();
-                
+
                 case FieldType.UpdateEvery:
                     return ((float)value).ToString("0.00");
-                
+
                 case FieldType.ChartType:
                     return ((ChartType)value).ToString().ToLower();
 
                 case FieldType.Obsolete or FieldType.Detail or FieldType.Hidden:
-                    return (bool)value ? $" \"{field.ToString().ToLower()}\"" : "";
+                    return (bool)value ? $" \"{field.ToString().ToLower()}\"" : string.Empty;
 
                 case FieldType.StoreFirst:
-                    return (bool)value ? " \"store_first\"" : "";
-                
+                    return (bool)value ? " \"store_first\"" : string.Empty;
+
                 case FieldType.Algorithm:
-                    switch ((Algorithm) value)
+                    switch ((Algorithm)value)
                     {
                         case Algorithm.PercentageOfAbsoluteRow:
                             return "percentage-of-absolute-row";
@@ -58,6 +72,7 @@ public static class Field
                         default:
                             return ((Algorithm)value).ToString().ToLower();
                     }
+
                 case FieldType.Scope:
                     return ((FieldType)value).ToString().ToUpper();
                 case FieldType.VariableName:
@@ -68,7 +83,7 @@ public static class Field
                     return ((double)value).ToString("0.00000");
                 case FieldType.DimensionId:
                     return ((string)value)
-                        .Replace(".", "");
+                        .Replace(".", string.Empty);
                 case FieldType.CLabelName:
                     return ((string)value)
                         .Replace("+", "_")
@@ -86,7 +101,7 @@ public static class Field
                         .Replace(";", ":")
                         .Replace("=", ":")
                         .Replace(",", ".")
-                        .Replace("\\","/");
+                        .Replace("\\", "/");
                 case FieldType.CLabelSource:
                     return ((int)(LabelSource)value).ToString();
                 default:
@@ -96,7 +111,7 @@ public static class Field
         catch (Exception e)
         {
             Log.Error($"Could not process field {field}, from \'{value}\' \n{e}");
-            return "";
+            return string.Empty;
         }
     }
 }

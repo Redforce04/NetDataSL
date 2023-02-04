@@ -10,24 +10,31 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 namespace NetDataSL.Networking;
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetDataService;
 
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.Networking.Classes;
+
+/// <summary>
+/// The network handler for starting gRPC events.
+/// </summary>
 public class NetworkHandler
 {
     private static NetworkHandler? _singleton;
-    private static Thread gRPCThread;
+
+    // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+    private static Thread _gRpcThread = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
     /// </summary>
+    [RequiresUnreferencedCode("Calls NetDataSL.Networking.NetworkHandler.InitSocket()")]
     internal NetworkHandler()
     {
         if (_singleton != null)
@@ -38,12 +45,13 @@ public class NetworkHandler
         Log.Debug($"Starting App");
 
         _singleton = this;
-        gRPCThread = new Thread(this.InitSocket);
-        gRPCThread.Start();
-        gRPCThread.IsBackground = false;
+        _gRpcThread = new Thread(this.InitSocket);
+        _gRpcThread.Start();
+        _gRpcThread.IsBackground = false;
         Log.Debug($"Running App");
     }
 
+    [RequiresUnreferencedCode("Calls Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGet(String, Delegate)")]
     private void InitSocket()
     {
         Log.Debug($"Creating Builder");
@@ -58,78 +66,3 @@ public class NetworkHandler
         app.Run("http://localhost:11011");
     }
 }
-
-
-/// <summary>
-/// A logger without StdOut logging to prevent conflicts.
-/// </summary>
-[ProviderAlias("NoStdOutLogger")]
-public class NoStdOutLoggerProvider : ILoggerProvider
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NoStdOutLoggerProvider"/> class.
-    /// </summary>
-    internal NoStdOutLoggerProvider()
-    {
-    }
-
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-    }
-
-    /// <inheritdoc/>
-    public ILogger CreateLogger(string categoryName)
-    {
-        return new NoStdOutLogger(this);
-    }
-}
-
-public class NoStdOutLogger : ILogger
-{
-    protected readonly NoStdOutLoggerProvider _noStdOutLoggerProvider;
-
-    /// <summary>
-    /// The log level that will be logged.
-    /// </summary>
-    public LogLevel LogLevel;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NoStdOutLogger"/> class.
-    /// </summary>
-    /// <param name="noStdOutLoggerProvider">The provider</param>
-    public NoStdOutLogger([NotNull] NoStdOutLoggerProvider noStdOutLoggerProvider)
-    {
-        _noStdOutLoggerProvider = noStdOutLoggerProvider;
-        LogLevel = LogLevel.Information;
-    }
-
-    /// <inheritdoc/>
-    public IDisposable BeginScope<TState>(TState state)
-    {
-        return null;
-    }
-
-    /// <inheritdoc/>
-    public bool IsEnabled(LogLevel logLevel)
-    {
-        return (int)logLevel < (int)this.LogLevel;
-    }
-
-    /// <inheritdoc/>
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter)
-    {
-        if (!this.IsEnabled(logLevel))
-        {
-            return;
-        }
-
-        NetDataSL.Log.Debug("log");
-        NetDataSL.Log.Singleton.AddLogMessage($"[{DateTime.Now:G}] [AspNet] ({logLevel}) {formatter(state, exception)} {(exception != null ? exception.StackTrace : string.Empty)}");
-    }
-}
-
-
-
-

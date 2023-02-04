@@ -10,12 +10,35 @@
 //    Created Date:     01/25/2023 12:20 PM
 // -----------------------------------------
 
-using System.Reflection;
-using Sentry;
 namespace NetDataSL
 {
-    class Program
+    using System.Reflection;
+    using Sentry;
+
+    /// <summary>
+    /// The main program. Where everything is started.
+    /// </summary>
+    internal class Program
     {
+        /// <summary>
+        /// The hash of the git commit when this plugin was built. Used for API reference, update tracking, and error tracking.
+        /// </summary>
+#pragma warning disable SA1401
+        public static string GitCommitHash = string.Empty;
+#pragma warning restore SA1401
+
+        /// <summary>
+        /// The version identifier. This is the branch that this build was made with.
+        /// </summary>
+        // ReSharper disable once NotAccessedField.Global
+#pragma warning disable SA1401
+        public static string VersionIdentifier = string.Empty;
+#pragma warning restore SA1401
+
+        /// <summary>
+        /// The main startup method.
+        /// </summary>
+        /// <param name="args">The arguments. Should be one float for the refresh rate.</param>
         public static void Main(string[] args)
         {
             Thread.Sleep(1000);
@@ -23,7 +46,6 @@ namespace NetDataSL
             var refreshTime = 5f;
             if (args.Length > 0)
             {
-
                 try
                 {
                     float.TryParse(args[0], out refreshTime);
@@ -34,10 +56,11 @@ namespace NetDataSL
                 }
             }
 
-            _getVersionInstances();
+            GetVersionInstances();
             using (SentrySdk.Init(o =>
                    {
                        o.Dsn = "https://841ce728bc284365be420b1fce6e133e@sentry.peanutworshipers.net/2";
+
                        // When configuring for the first time, to see what the SDK is doing:
                        o.Debug = false;
                        o.Release = GitCommitHash;
@@ -47,6 +70,7 @@ namespace NetDataSL
                        // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
                        // We recommend adjusting this value in production.
                        o.TracesSampleRate = 1.0;
+
                        // Enable Global Mode if running in a client app
                        o.IsGlobalModeEnabled = true;
                    }))
@@ -56,7 +80,7 @@ namespace NetDataSL
             }
         }
 
-        private static void _getVersionInstances()
+        private static void GetVersionInstances()
         {
             try
             {
@@ -69,17 +93,14 @@ namespace NetDataSL
 
                 using (Stream stream = assembly.GetManifestResourceStream("PWProfiler.versionIdentifier.txt")!)
                 using (StreamReader reader = new StreamReader(stream))
+                {
                     VersionIdentifier = reader.ReadToEnd();
-
+                }
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
             }
-
         }
-
-        public static string GitCommitHash = String.Empty;
-        public static string VersionIdentifier = String.Empty;
     }
 }

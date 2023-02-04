@@ -10,12 +10,12 @@
 //    Created Date:     01/27/2023 10:43 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Members;
-
-
 namespace NetDataSL.ApiImplementation;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Members;
+#pragma warning disable
 public class MemoryChart : Chart
 {
     internal MemoryChart(List<Dimension> dimensions)
@@ -81,3 +81,4 @@ class MemoryChartDimensions : Dimension
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

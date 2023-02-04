@@ -12,15 +12,29 @@
 
 namespace NetDataSL.API.Builders;
 
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.API.Members;
+
+/// <summary>
+/// Builds a chart.
+/// </summary>
 public class ChartBuilder
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChartBuilder"/> class.
+    /// </summary>
+    /// <exception cref="NotImplementedException">Not currently implemented.</exception>
     public ChartBuilder()
     {
         throw new NotImplementedException();
     }
 
-    public void BuildChart()
+    /// <summary>
+    /// Builds the chart.
+    /// </summary>
+    /// <returns>Returns the chart that is built.</returns>
+    public Chart BuildChart()
     {
-        
+        throw new NotImplementedException();
     }
 }

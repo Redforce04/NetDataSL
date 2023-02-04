@@ -12,10 +12,28 @@
 
 namespace NetDataSL.API.Enums;
 
+/// <summary>
+/// The types of algorithms possible for dimensions.
+/// </summary>
 public enum Algorithm
 {
+    /// <summary>
+    /// An absolute algorithm.
+    /// </summary>
     Absolute = 0,
-    Incremental,
-    PercentageOfAbsoluteRow,
-    PercentageOfIncrementalRow
+
+    /// <summary>
+    /// An incremental algorithm.
+    /// </summary>
+    Incremental = 1,
+
+    /// <summary>
+    /// The algorithm is a percentage of an absolute row.
+    /// </summary>
+    PercentageOfAbsoluteRow = 2,
+
+    /// <summary>
+    /// The algorithm is a percentage of an incremental row.
+    /// </summary>
+    PercentageOfIncrementalRow = 3,
 }

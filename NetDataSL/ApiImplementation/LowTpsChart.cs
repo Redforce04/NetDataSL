@@ -10,11 +10,12 @@
 //    Created Date:     01/27/2023 10:43 PM
 // -----------------------------------------
 
+#pragma warning disable
+namespace NetDataSL.ApiImplementation;
+
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Members;
-
-
-namespace NetDataSL.ApiImplementation;
 
 public class LowTpsChart : Chart
 {
@@ -80,3 +81,4 @@ class LowTpsChartDimensions : Dimension
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

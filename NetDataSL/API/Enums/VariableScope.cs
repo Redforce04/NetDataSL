@@ -12,10 +12,28 @@
 
 namespace NetDataSL.API.Enums;
 
+/// <summary>
+/// The scope of a variable.
+/// </summary>
 public enum VariableScope
 {
+    /// <summary>
+    /// The variable is non chart dependent.
+    /// </summary>
     Global = 0,
+
+    /// <summary>
+    /// The variable is non chart dependent.
+    /// </summary>
     Host = 0,
+
+    /// <summary>
+    /// The variable is tied to a chart.
+    /// </summary>
     Local = 1,
-    Chart =1
+
+    /// <summary>
+    /// The variable is tied to a chart.
+    /// </summary>
+    Chart = 1,
 }

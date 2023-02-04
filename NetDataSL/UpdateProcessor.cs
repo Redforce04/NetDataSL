@@ -10,22 +10,39 @@
 //    Created Date:     01/29/2023 3:09 PM
 // -----------------------------------------
 
+namespace NetDataSL;
+
+// ReSharper disable three RedundantNameQualifier
 using NetDataService;
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
 using NetDataSL.Enums;
 
-namespace NetDataSL;
-
+/// <summary>
+/// Process Server Updates.
+/// </summary>
 public class UpdateProcessor
 {
-    public static UpdateProcessor? Singleton;
+    /// <summary>
+    /// Instance of the Update Processor to use.
+    /// </summary>
+#pragma warning disable SA1401
+    internal static UpdateProcessor? Singleton;
+#pragma warning restore SA1401
+    private readonly Dictionary<ChartImplementationType, List<DataSet>> _dataSets = null!;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateProcessor"/> class.
+    /// </summary>
     public UpdateProcessor()
     {
-        if(Singleton != null)
+        if (Singleton != null)
+        {
             return;
+        }
+
         Singleton = this;
-        _dataSets = new Dictionary<ChartImplementationType, List<DataSet>>()
+        this._dataSets = new Dictionary<ChartImplementationType, List<DataSet>>()
         {
             { ChartImplementationType.Cpu, new List<DataSet>() },
             { ChartImplementationType.Memory, new List<DataSet>() },
@@ -35,28 +52,34 @@ public class UpdateProcessor
         };
     }
 
-    private readonly Dictionary<ChartImplementationType, List<DataSet>> _dataSets = null!;
+    /// <summary>
+    /// Sends an update.
+    /// </summary>
     internal void SendUpdate()
     {
-        foreach (var x in _dataSets)
+        foreach (var x in this._dataSets)
         {
-            if(x.Value.Count != 0)
-                ChartIntegration.Singleton!._updateChartData(x.Key, x.Value);
+            if (x.Value.Count != 0)
+            {
+                ChartIntegration.Singleton!.UpdateChartData(x.Key, x.Value);
+            }
         }
     }
 
-
+    /// <summary>
+    /// Process updates for netdata packets.
+    /// </summary>
+    /// <param name="packet">the packet to update.</param>
     internal void ProcessUpdate(NetDataPacket packet)
     {
-        _addUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true);
-        _addUpdate(ChartImplementationType.Memory, packet.Port, (float) packet.MemoryUsage, true);
-        _addUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true);
-        _addUpdate(ChartImplementationType.Players, packet.Port, packet.Players);
-        _addUpdate(ChartImplementationType.LowTps, packet.Port, packet.AverageTps);
-        
+        this.AddUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true);
+        this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true);
+        this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true);
+        this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players);
+        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.AverageTps);
     }
 
-    private void _addUpdate(ChartImplementationType type, int server, object value, bool isFloat = false)
+    private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false)
     {
         Dimension? dimension =
             ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(type, server);
@@ -67,6 +90,6 @@ public class UpdateProcessor
             return;
         }
 
-        _dataSets[type].Add(isFloat ? new DataSet(dimension, (float)value) : new DataSet(dimension, (int)value));
+        this._dataSets[type].Add(isFloat ? new DataSet(dimension, (float)value) : new DataSet(dimension, (int)value));
     }
 }

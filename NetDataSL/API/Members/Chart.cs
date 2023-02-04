@@ -10,10 +10,13 @@
 //    Created Date:     01/27/2023 9:21 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
+#pragma warning disable
 
 namespace NetDataSL.API.Members;
+
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
 
 /// <summary>
 /// Creates or updates a chart.
@@ -326,7 +329,7 @@ public class Chart
     /// ebpf.plugin,
     /// go.d
     /// </example>
-    private readonly string _plugin = Plugin.Singleton != null ? Plugin.Singleton.pluginName : "plugin";
+    private readonly string _plugin = Plugin.Singleton != null ? Plugin.PluginName : "plugin";
 
     /// <summary>
     /// </summary>
@@ -377,3 +380,4 @@ public class Chart
         return Charts.FirstOrDefault(x => x.Type == type && x.Id == id);
     }
 }
+#pragma warning restore

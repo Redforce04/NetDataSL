@@ -10,11 +10,12 @@
 //    Created Date:     01/28/2023 12:54 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
-
 namespace NetDataSL.API.Members;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
+#pragma warning disable
 public class Dimension
 {
     public Dimension(string id, string name = "", Algorithm algorithm = Algorithm.Absolute, int multiplier = 1, int divisor = 1, bool obsolete = false, bool hidden = false)
@@ -155,5 +156,4 @@ public class Dimension
     
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
-
-
+#pragma warning restore

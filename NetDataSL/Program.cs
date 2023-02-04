@@ -52,7 +52,7 @@ namespace NetDataSL
                 {
                     for (int i = 0; i < args.Length; i++)
                     {
-                        if (i == 1)
+                        if (i == 0)
                         {
                             float.TryParse(args[0], out refreshTime);
                         }

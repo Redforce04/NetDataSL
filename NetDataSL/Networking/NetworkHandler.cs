@@ -10,6 +10,9 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
+using NetDataSL.Structs;
+using Newtonsoft.Json;
+
 namespace NetDataSL.Networking;
 
 using System.Diagnostics.CodeAnalysis;
@@ -66,6 +69,21 @@ public class NetworkHandler
         var app = builder.Build();
         app.MapGrpcService<NetDataPacketSender.NetDataPacketSenderBase>();
         app.MapGet("/", () => "{ \"status\": 200, \"message\": \"app running normally\" }");
+        app.MapGet("/packet", (httpContext) =>
+        {
+            try
+            {
+                httpContext.Request.Body.Flush();
+                StreamReader reader = new StreamReader(httpContext.Request.Body);
+                var body = reader.ReadToEnd();
+                var packet = JsonConvert.DeserializeObject<NetDataPacketHandler>(body);
+                return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
+            }
+            catch (Exception)
+            {
+                return Task.FromResult("{ \"status\": 400, \"message\": \"bad packet\" }");
+            }
+        });
         app.Run(host);
     }
 }

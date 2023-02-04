@@ -10,10 +10,10 @@
 //    Created Date:     01/30/2023 2:08 PM
 // -----------------------------------------
 
-/*
+
 namespace NetDataSL.Structs;
 
-internal class NetDataPacket
+internal class NetDataPacketHandler
 {
     internal int Port;
     internal string ServerName;
@@ -27,4 +27,3 @@ internal class NetDataPacket
     internal int Players;
     internal int LowTpsWarnCount;
 }
-*/

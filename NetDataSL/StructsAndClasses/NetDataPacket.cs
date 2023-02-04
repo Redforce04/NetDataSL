@@ -11,6 +11,8 @@
 // -----------------------------------------
 
 
+using System.Text.Json.Serialization;
+
 namespace NetDataSL.Structs;
 
 public class NetDataPacketHandler
@@ -75,7 +77,10 @@ public class NetDataPacketHandler
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacketHandler"/> class.
     /// </summary>
+#pragma warning disable SA1201
+    [JsonConstructor]
     public NetDataPacketHandler()
+#pragma warning restore SA1201
     {
     }
 }

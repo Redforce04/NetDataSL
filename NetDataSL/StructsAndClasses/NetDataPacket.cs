@@ -22,6 +22,16 @@ public class NetDataPacket
 #pragma warning disable SA1401
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
+    /// </summary>
+#pragma warning disable SA1201
+    [JsonConstructor]
+    public NetDataPacket()
+    {
+    }
+#pragma warning restore SA1201
+
+    /// <summary>
     /// Gets or sets the port of the sending server.
     /// </summary>
     public int Port { get; set; }
@@ -77,13 +87,5 @@ public class NetDataPacket
     public int LowTpsWarnCount { get; set; }
 
 #pragma warning restore SA1401
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
-    /// </summary>
-#pragma warning disable SA1201
-    [JsonConstructor]
-    public NetDataPacket()
-#pragma warning restore SA1201
-    {
-    }
+
 }

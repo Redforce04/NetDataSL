@@ -21,7 +21,9 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking.Classes;
 using NetDataSL.StructsAndClasses;
-using Newtonsoft.Json;
+
+// using Newtonsoft.Json;
+using System.Text.Json;
 
 /// <summary>
 /// The network handler for starting gRPC events.
@@ -70,6 +72,8 @@ public class NetworkHandler
         app.Run(host);
     }
 
+    [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
+    [RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
     private async Task ProcessPostRequest(HttpContext httpContext)
     {
         try
@@ -83,7 +87,9 @@ public class NetworkHandler
             Log.Debug($"body: {body}");
 
             // Get the packet.
-            var packet = JsonConvert.DeserializeObject<NetDataPacket>(body);
+            NetDataPacket? packet = JsonSerializer.Deserialize<NetDataPacket>(body);
+
+            // NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(body);
             Log.Debug($"Packet Received.");
 
             // Return the status.

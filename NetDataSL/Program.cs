@@ -75,8 +75,14 @@ namespace NetDataSL
                        o.IsGlobalModeEnabled = true;
                    }))
             {
+                string host = string.Empty;
+                for (int i = 1; i < args.Length - 1; i++)
+                {
+                    host += args[i] + " ";
+                }
+
                 // App code goes here. Dispose the SDK before exiting to flush events.
-                var unused = new Plugin(refreshTime);
+                var unused = new Plugin(refreshTime, host);
             }
         }
 

@@ -56,8 +56,9 @@ public class Plugin
     /// Initializes a new instance of the <see cref="Plugin"/> class.
     /// </summary>
     /// <param name="refreshRate">The refresh rate of the plugin.</param>
+    /// <param name="host">The host that gRPC should use.</param>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
-    public Plugin(float refreshRate = 5f)
+    public Plugin(float refreshRate = 5f, string host = "")
     {
         if (Singleton != null)
         {
@@ -65,8 +66,9 @@ public class Plugin
         }
 
         Singleton = this;
+
         var unused = new Log();
-        var unused2 = new NetworkHandler();
+        var unused2 = new NetworkHandler(host);
         this._refreshTime = refreshRate;
         this.InitNetDataIntegration();
         this.Init();

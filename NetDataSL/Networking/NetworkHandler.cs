@@ -34,8 +34,9 @@ public class NetworkHandler
     /// <summary>
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
     /// </summary>
+    /// <param name="host">The host to bind to.</param>
     [RequiresUnreferencedCode("Calls NetDataSL.Networking.NetworkHandler.InitSocket()")]
-    internal NetworkHandler()
+    internal NetworkHandler(string host = "")
     {
         if (_singleton != null)
         {
@@ -45,16 +46,18 @@ public class NetworkHandler
         Log.Debug($"Starting App");
 
         _singleton = this;
-        _gRpcThread = new Thread(this.InitSocket);
+        ParameterizedThreadStart start = o => { this.InitSocket(host == string.Empty ? "http://localhost:11011" : host); };
+        _gRpcThread = new Thread(start);
         _gRpcThread.Start();
         _gRpcThread.IsBackground = false;
         Log.Debug($"Running App");
     }
 
-    [RequiresUnreferencedCode("Calls Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGet(String, Delegate)")]
-    private void InitSocket()
+    [RequiresUnreferencedCode(
+        "Calls Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGet(String, Delegate)")]
+    private void InitSocket(string host = "http://localhost:11011")
     {
-        Log.Debug($"Creating Builder");
+        Log.Debug($"Creating Builder with host {host}");
         var builder = WebApplication.CreateBuilder();
         builder.Services.AddGrpc();
 
@@ -63,6 +66,6 @@ public class NetworkHandler
         var app = builder.Build();
         app.MapGrpcService<NetDataPacketSender.NetDataPacketSenderBase>();
         app.MapGet("/", () => "{ \"status\": 200, \"message\": \"app running normally\" }");
-        app.Run("http://localhost:11011");
+        app.Run(host);
     }
 }

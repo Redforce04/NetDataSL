@@ -84,7 +84,7 @@ public class NetworkHandler
                 data.Add("message", "packet receieved");
                 await Results.Json(data).ExecuteAsync(httpContext);
                 return;
-                return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
+                //return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
             }
             catch (Exception e)
             {

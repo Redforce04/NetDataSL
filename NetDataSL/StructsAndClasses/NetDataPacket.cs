@@ -10,12 +10,14 @@
 //    Created Date:     01/30/2023 2:08 PM
 // -----------------------------------------
 
+namespace NetDataSL.StructsAndClasses;
 
 using System.Text.Json.Serialization;
 
-namespace NetDataSL.Structs;
-
-public class NetDataPacketHandler
+/// <summary>
+/// The packet of information sent from the sl server to the NetData integration.
+/// </summary>
+public class NetDataPacket
 {
 #pragma warning disable SA1401
 
@@ -73,13 +75,14 @@ public class NetDataPacketHandler
     /// Gets or sets how many low tps warnings have gone off since the last time packets were collected.
     /// </summary>
     public int LowTpsWarnCount { get; set; }
+
 #pragma warning restore SA1401
     /// <summary>
-    /// Initializes a new instance of the <see cref="NetDataPacketHandler"/> class.
+    /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
 #pragma warning disable SA1201
     [JsonConstructor]
-    public NetDataPacketHandler()
+    public NetDataPacket()
 #pragma warning restore SA1201
     {
     }

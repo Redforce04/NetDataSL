@@ -17,11 +17,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetDataService;
 
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking.Classes;
-using NetDataSL.Structs;
+using NetDataSL.StructsAndClasses;
 using Newtonsoft.Json;
 
 /// <summary>
@@ -67,32 +66,43 @@ public class NetworkHandler
         builder.Logging.ClearProviders();
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         var app = builder.Build();
-        app.MapGrpcService<NetDataPacketSender.NetDataPacketSenderBase>();
-        app.MapPost("/packet", async (httpContext) =>
-        {
-            try
-            {
-                httpContext.Request.Body.Flush();
-                StreamReader reader = new StreamReader(httpContext.Request.Body);
-                var body = await reader.ReadToEndAsync();
-                Log.Debug($"body: {body}");
-                var packet = JsonConvert.DeserializeObject<NetDataPacketHandler>(body);
-                Log.Debug($"Packet Received.");
-                var data = new Dictionary<string, object>();
-                data.Add("status", 200);
-                data.Add("message", "packet receieved");
-                await Results.Json(data).ExecuteAsync(httpContext);
-            }
-            catch (Exception e)
-            {
-                Log.Debug($"Invalid Packet Received.");
-                Log.Debug(e.ToString());
-                var data = new Dictionary<string, object>();
-                data.Add("status", 400);
-                data.Add("message", "bad packet");
-                await Results.Json(data).ExecuteAsync(httpContext);
-            }
-        });
+        app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
         app.Run(host);
+    }
+
+    private async Task ProcessPostRequest(HttpContext httpContext)
+    {
+        try
+        {
+            // Flush the stream and make the stream reader.
+            httpContext.Request.Body.Flush();
+            StreamReader reader = new StreamReader(httpContext.Request.Body);
+
+            // Get the body.
+            var body = await reader.ReadToEndAsync();
+            Log.Debug($"body: {body}");
+
+            // Get the packet.
+            var packet = JsonConvert.DeserializeObject<NetDataPacket>(body);
+            Log.Debug($"Packet Received.");
+
+            // Return the status.
+            var data = new Dictionary<string, object>();
+            data.Add("status", 200);
+            data.Add("message", "packet receieved");
+            await Results.Json(data).ExecuteAsync(httpContext);
+        }
+        catch (Exception)
+        {
+            // If an error occurs.
+            Log.Debug($"Invalid Packet Received.");
+
+            // Log.Debug(e.ToString());
+            // Return the status.
+            var data = new Dictionary<string, object>();
+            data.Add("status", 400);
+            data.Add("message", "bad packet");
+            await Results.Json(data).ExecuteAsync(httpContext);
+        }
     }
 }

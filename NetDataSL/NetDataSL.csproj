@@ -41,9 +41,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    <ItemGroup>
-        <Protobuf Include="Protos\NetDataPacket.proto" />
-    </ItemGroup>
 
     <ItemGroup>
       <None Remove="Version.txt" />

@@ -13,10 +13,10 @@
 namespace NetDataSL;
 
 // ReSharper disable three RedundantNameQualifier
-using NetDataService;
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
 using NetDataSL.Enums;
+using NetDataSL.StructsAndClasses;
 
 /// <summary>
 /// Process Server Updates.

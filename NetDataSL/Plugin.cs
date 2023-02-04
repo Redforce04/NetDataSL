@@ -14,10 +14,10 @@ namespace NetDataSL;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using NetDataService;
 
-// ReSharper disable once RedundantNameQualifier
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking;
+using NetDataSL.StructsAndClasses;
 using Newtonsoft.Json;
 
 /// <summary>

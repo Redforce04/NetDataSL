@@ -10,20 +10,19 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
-using Microsoft.AspNetCore.Http;
-using NetDataSL.Structs;
-using Newtonsoft.Json;
-
 namespace NetDataSL.Networking;
 
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetDataService;
 
-// ReSharper disable once RedundantNameQualifier
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking.Classes;
+using NetDataSL.Structs;
+using Newtonsoft.Json;
 
 /// <summary>
 /// The network handler for starting gRPC events.
@@ -50,7 +49,7 @@ public class NetworkHandler
         Log.Debug($"Starting App");
 
         _singleton = this;
-        ParameterizedThreadStart start = o => { this.InitSocket(host == string.Empty ? "http://localhost:11011" : host); };
+        ParameterizedThreadStart start = _ => { this.InitSocket(host == string.Empty ? "http://localhost:11011" : host); };
         _gRpcThread = new Thread(start);
         _gRpcThread.Start();
         _gRpcThread.IsBackground = false;
@@ -83,8 +82,6 @@ public class NetworkHandler
                 data.Add("status", 200);
                 data.Add("message", "packet receieved");
                 await Results.Json(data).ExecuteAsync(httpContext);
-                return;
-                //return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
             }
             catch (Exception e)
             {
@@ -94,7 +91,6 @@ public class NetworkHandler
                 data.Add("status", 400);
                 data.Add("message", "bad packet");
                 await Results.Json(data).ExecuteAsync(httpContext);
-                return;
             }
         });
         app.Run(host);

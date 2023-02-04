@@ -69,8 +69,7 @@ public class NetworkHandler
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         var app = builder.Build();
         app.MapGrpcService<NetDataPacketSender.NetDataPacketSenderBase>();
-        app.MapGet("/", () => "{ \"status\": 200, \"message\": \"app running normally\" }");
-        app.MapGet("/packet", (httpContext) =>
+        app.MapPost("/packet", (httpContext) =>
         {
             try
             {

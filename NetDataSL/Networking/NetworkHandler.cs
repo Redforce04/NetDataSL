@@ -69,20 +69,21 @@ public class NetworkHandler
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         var app = builder.Build();
         app.MapGrpcService<NetDataPacketSender.NetDataPacketSenderBase>();
-        app.MapPost("/packet", (httpContext) =>
+        app.MapPost("/packet", async (httpContext) =>
         {
             try
             {
                 httpContext.Request.Body.Flush();
                 StreamReader reader = new StreamReader(httpContext.Request.Body);
-                var body = reader.ReadToEnd();
+                var body = await reader.ReadToEndAsync();
                 Log.Debug($"body: {body}");
                 var packet = JsonConvert.DeserializeObject<NetDataPacketHandler>(body);
                 Log.Debug($"Packet Received.");
                 var data = new Dictionary<string, object>();
                 data.Add("status", 200);
                 data.Add("message", "packet receieved");
-                return Results.Json(data).ExecuteAsync(httpContext);
+                await Results.Json(data).ExecuteAsync(httpContext);
+                return;
                 return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
             }
             catch (Exception e)
@@ -92,7 +93,8 @@ public class NetworkHandler
                 var data = new Dictionary<string, object>();
                 data.Add("status", 400);
                 data.Add("message", "bad packet");
-                return Results.Json(data).ExecuteAsync(httpContext);
+                await Results.Json(data).ExecuteAsync(httpContext);
+                return;
             }
         });
         app.Run(host);

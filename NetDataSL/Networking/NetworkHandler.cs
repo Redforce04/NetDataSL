@@ -92,12 +92,13 @@ public class NetworkHandler
             data.Add("message", "packet receieved");
             await Results.Json(data).ExecuteAsync(httpContext);
         }
-        catch (Exception)
+        catch (Exception e)
         {
             // If an error occurs.
             Log.Debug($"Invalid Packet Received.");
 
-            // Log.Debug(e.ToString());
+            Log.Debug(e.ToString());
+
             // Return the status.
             var data = new Dictionary<string, object>();
             data.Add("status", 400);

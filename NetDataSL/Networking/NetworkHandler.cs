@@ -10,6 +10,7 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
+using Microsoft.AspNetCore.Http;
 using NetDataSL.Structs;
 using Newtonsoft.Json;
 
@@ -77,11 +78,20 @@ public class NetworkHandler
                 StreamReader reader = new StreamReader(httpContext.Request.Body);
                 var body = reader.ReadToEnd();
                 var packet = JsonConvert.DeserializeObject<NetDataPacketHandler>(body);
+                Log.Debug($"Packet Received.");
+                var data = new Dictionary<string, object>();
+                data.Add("status", 200);
+                data.Add("message", "packet receieved");
+                return Results.Json(data).ExecuteAsync(httpContext);
                 return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
             }
             catch (Exception)
             {
-                return Task.FromResult("{ \"status\": 400, \"message\": \"bad packet\" }");
+                Log.Debug($"Invalid Packet Received.");
+                var data = new Dictionary<string, object>();
+                data.Add("status", 400);
+                data.Add("message", "bad packet");
+                return Results.Json(data).ExecuteAsync(httpContext);
             }
         });
         app.Run(host);

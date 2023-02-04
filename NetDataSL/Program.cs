@@ -44,11 +44,23 @@ namespace NetDataSL
             Thread.Sleep(1000);
 
             var refreshTime = 5f;
+            string host = string.Empty;
+
             if (args.Length > 0)
             {
                 try
                 {
-                    float.TryParse(args[0], out refreshTime);
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        if (i == 1)
+                        {
+                            float.TryParse(args[0], out refreshTime);
+                        }
+                        else
+                        {
+                            host += args[i] + " ";
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -75,12 +87,6 @@ namespace NetDataSL
                        o.IsGlobalModeEnabled = true;
                    }))
             {
-                string host = string.Empty;
-                for (int i = 1; i < args.Length - 1; i++)
-                {
-                    host += args[i] + " ";
-                }
-
                 // App code goes here. Dispose the SDK before exiting to flush events.
                 var unused = new Plugin(refreshTime, host);
             }

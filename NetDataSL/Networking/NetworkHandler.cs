@@ -76,6 +76,7 @@ public class NetworkHandler
                 httpContext.Request.Body.Flush();
                 StreamReader reader = new StreamReader(httpContext.Request.Body);
                 var body = reader.ReadToEnd();
+                Log.Debug($"body: {body}");
                 var packet = JsonConvert.DeserializeObject<NetDataPacketHandler>(body);
                 Log.Debug($"Packet Received.");
                 var data = new Dictionary<string, object>();
@@ -84,9 +85,10 @@ public class NetworkHandler
                 return Results.Json(data).ExecuteAsync(httpContext);
                 return Task.FromResult("{ \"status\": 200, \"message\": \"packet received\" }");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Log.Debug($"Invalid Packet Received.");
+                Log.Debug(e.ToString());
                 var data = new Dictionary<string, object>();
                 data.Add("status", 400);
                 data.Add("message", "bad packet");

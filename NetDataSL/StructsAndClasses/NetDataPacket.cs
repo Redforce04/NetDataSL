@@ -18,59 +18,59 @@ public class NetDataPacketHandler
 #pragma warning disable SA1401
 
     /// <summary>
-    /// The port of the sending server.
+    /// Gets or sets the port of the sending server.
     /// </summary>
-    public int Port;
+    public int Port { get; set; }
 
     /// <summary>
-    /// The name of the sending server.
+    /// Gets or sets the name of the sending server.
     /// </summary>
-    public string ServerName = null!;
+    public string ServerName { get; set; } = null!;
 
     /// <summary>
-    /// The refresh speed of the sending server.
+    /// Gets or sets the refresh speed of the sending server.
     /// </summary>
-    public float RefreshSpeed;
+    public float RefreshSpeed { get; set; }
 
     /// <summary>
-    /// The epoch of when this packet was made.
+    /// Gets or sets the epoch of when this packet was made.
     /// </summary>
-    public long Epoch;
+    public long Epoch { get; set; }
 
     /// <summary>
-    /// The datetime of when this packet was made.
+    /// Gets or sets the datetime of when this packet was made.
     /// </summary>
-    public DateTime DateTime;
+    public DateTime DateTime { get; set; }
 
     /// <summary>
-    /// The average tps of when this packet was made.
+    /// Gets or sets the average tps of when this packet was made.
     /// </summary>
-    public float AverageTps;
+    public float AverageTps { get; set; }
 
     /// <summary>
-    /// The average delta time of when this packet was made.
+    /// Gets or sets the average delta time of when this packet was made.
     /// </summary>
-    public float AverageDeltaTime;
+    public float AverageDeltaTime { get; set; }
 
     /// <summary>
-    /// The memory usage at the time this packet was made.
+    /// Gets or sets the memory usage at the time this packet was made.
     /// </summary>
-    public long MemoryUsage;
+    public long MemoryUsage { get; set; }
 
     /// <summary>
-    /// The cpu usage at the time this packet was made.
+    /// Gets or sets the cpu usage at the time this packet was made.
     /// </summary>
-    public float CpuUsage;
+    public float CpuUsage { get; set; }
 
     /// <summary>
-    /// The amount of players on the server at the time this packet was made.
+    /// Gets or sets the amount of players on the server at the time this packet was made.
     /// </summary>
-    public int Players;
+    public int Players { get; set; }
 
     /// <summary>
-    /// How many low tps warnings have gone off since the last time packets were collected.
+    /// Gets or sets how many low tps warnings have gone off since the last time packets were collected.
     /// </summary>
-    public int LowTpsWarnCount;
+    public int LowTpsWarnCount { get; set; }
 #pragma warning restore SA1401
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacketHandler"/> class.
@@ -78,6 +78,4 @@ public class NetDataPacketHandler
     public NetDataPacketHandler()
     {
     }
-
-
 }

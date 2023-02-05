@@ -89,7 +89,7 @@ public class NetworkHandler
 
             // Get the packet.
             Debug.Assert(PacketSerializerContext.Default.NetDataPacket != null, "PacketSerializerContext.Default.NetDataPacket != null");
-            NetDataPacket? packet = System.Text.Json.JsonSerializer.Deserialize<NetDataPacket>(httpContext.Request.Body, PacketSerializerContext.Default.NetDataPacket);
+            NetDataPacket? packet = System.Text.Json.JsonSerializer.Deserialize<NetDataPacket>(body, PacketSerializerContext.Default.NetDataPacket);
 
             // JsonSerializer.Deserialize<WeatherForecast>(jsonString, SourceGenerationContext.Default.WeatherForecast);
 

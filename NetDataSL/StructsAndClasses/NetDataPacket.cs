@@ -24,7 +24,7 @@ public class NetDataPacket
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
-#pragma warning disable SA1201
+#pragma warning disable SA1201, SA1313, SA1114
     public NetDataPacket()
     {
     }
@@ -32,102 +32,115 @@ public class NetDataPacket
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
-    /// <param name="port">port.</param>
-    /// <param name="serverName">server name.</param>
-    /// <param name="refreshSpeed">refresh speed.</param>
-    /// <param name="epoch">epoch.</param>
-    /// <param name="averageTps">average tps.</param>
-    /// <param name="averageDeltaTime">average delta time.</param>
-    /// <param name="memoryUsage">memory usage.</param>
-    /// <param name="cpuUsage">cpu usage.</param>
-    /// <param name="players">players.</param>
-    /// <param name="lowTpsWarnCount">low tps warn count.</param>
+    /// <param name="Port">port.</param>
+    /// <param name="ServerName">server name.</param>
+    /// <param name="RefreshSpeed">refresh speed.</param>
+    /// <param name="Epoch">epoch.</param>
+    /// <param name="AverageTps">average tps.</param>
+    /// <param name="AverageDeltaTime">average delta time.</param>
+    /// <param name="MemoryUsage">memory usage.</param>
+    /// <param name="CpuUsage">cpu usage.</param>
+    /// <param name="Players">players.</param>
+    /// <param name="LowTpsWarnCount">low tps warn count.</param>
     [JsonConstructor]
     public NetDataPacket(
-        int port,
-        string serverName,
-        double refreshSpeed,
-        int epoch,
-        double averageTps,
-        double averageDeltaTime,
-        int memoryUsage,
-        double cpuUsage,
-        int players,
-        int lowTpsWarnCount)
+
+        // ReSharper disable InconsistentNaming
+        int Port,
+        string ServerName,
+        double RefreshSpeed,
+        int Epoch,
+        double AverageTps,
+        double AverageDeltaTime,
+        int MemoryUsage,
+        double CpuUsage,
+        int Players,
+        int LowTpsWarnCount)
     {
-        this.Port = port;
-        this.ServerName = serverName;
-        this.RefreshSpeed = (float)refreshSpeed;
-        this.Epoch = epoch;
-        this.AverageTps = (float)averageTps;
-        this.AverageDeltaTime = (float)averageDeltaTime;
-        this.MemoryUsage = memoryUsage;
-        this.CpuUsage = (float)cpuUsage;
-        this.Players = players;
-        this.LowTpsWarnCount = lowTpsWarnCount;
+        this.Port = Port;
+        this.ServerName = ServerName;
+        this.RefreshSpeed = (float)RefreshSpeed;
+        this.Epoch = Epoch;
+        this.AverageTps = (float)AverageTps;
+        this.AverageDeltaTime = (float)AverageDeltaTime;
+        this.MemoryUsage = MemoryUsage;
+        this.CpuUsage = (float)CpuUsage;
+        this.Players = Players;
+        this.LowTpsWarnCount = LowTpsWarnCount;
     }
-#pragma warning restore SA1201
+#pragma warning restore SA1201, SA1313, SA1114
 
     /// <summary>
     /// Gets or sets the port of the sending server.
     /// </summary>
+    [JsonPropertyName("Port")]
     public int Port { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the sending server.
     /// </summary>
+    [JsonPropertyName("ServerName")]
     public string ServerName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the refresh speed of the sending server.
     /// </summary>
+    [JsonPropertyName("RefreshSpeed")]
     public float RefreshSpeed { get; set; }
 
     /// <summary>
     /// Gets or sets the epoch of when this packet was made.
     /// </summary>
+    [JsonPropertyName("Epoch")]
     public long Epoch { get; set; }
 
     /// <summary>
     /// Gets or sets the datetime of when this packet was made.
     /// </summary>
+    [JsonPropertyName("DateTime")]
     public DateTime DateTime { get; set; }
 
     /// <summary>
     /// Gets or sets the average tps of when this packet was made.
     /// </summary>
+    [JsonPropertyName("AverageTps")]
     public float AverageTps { get; set; }
 
     /// <summary>
     /// Gets or sets the average delta time of when this packet was made.
     /// </summary>
+    [JsonPropertyName("AverageDeltaTime")]
     public float AverageDeltaTime { get; set; }
 
     /// <summary>
     /// Gets or sets the memory usage at the time this packet was made.
     /// </summary>
+    [JsonPropertyName("MemoryUsage")]
     public long MemoryUsage { get; set; }
 
     /// <summary>
     /// Gets or sets the cpu usage at the time this packet was made.
     /// </summary>
+    [JsonPropertyName("CpuUsage")]
     public float CpuUsage { get; set; }
 
     /// <summary>
     /// Gets or sets the amount of players on the server at the time this packet was made.
     /// </summary>
+    [JsonPropertyName("Players")]
     public int Players { get; set; }
 
     /// <summary>
     /// Gets or sets how many low tps warnings have gone off since the last time packets were collected.
     /// </summary>
+    [JsonPropertyName("LowTpsWarnCount")]
     public int LowTpsWarnCount { get; set; }
 
 #pragma warning restore SA1401
 
 }
 
-[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSourceGenerationOptions(WriteIndented = true, IncludeFields = true)]
 [JsonSerializable(typeof(NetDataPacket))]
 #pragma warning disable SA1402, SA1601
 

@@ -12,7 +12,10 @@
 
 namespace NetDataSL.Networking;
 
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+
+// using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,9 +24,6 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking.Classes;
 using NetDataSL.StructsAndClasses;
-
-// using Newtonsoft.Json;
-using System.Text.Json;
 
 /// <summary>
 /// The network handler for starting gRPC events.
@@ -68,12 +68,13 @@ public class NetworkHandler
         builder.Logging.ClearProviders();
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         var app = builder.Build();
+
+        // ReSharper disable once ArrangeThisQualifier
         app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
         app.Run(host);
     }
 
     [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
-    [RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
     private async Task ProcessPostRequest(HttpContext httpContext)
     {
         try
@@ -87,7 +88,10 @@ public class NetworkHandler
             Log.Debug($"body: {body}");
 
             // Get the packet.
-            NetDataPacket? packet = JsonSerializer.Deserialize<NetDataPacket>(body);
+            Debug.Assert(PacketSerializerContext.Default.NetDataPacket != null, "PacketSerializerContext.Default.NetDataPacket != null");
+            NetDataPacket? packet = System.Text.Json.JsonSerializer.Deserialize<NetDataPacket>(httpContext.Request.Body, PacketSerializerContext.Default.NetDataPacket);
+
+            // JsonSerializer.Deserialize<WeatherForecast>(jsonString, SourceGenerationContext.Default.WeatherForecast);
 
             // NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(body);
             Log.Debug($"Packet Received.");

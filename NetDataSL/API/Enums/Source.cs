@@ -13,6 +13,7 @@
 namespace NetDataSL.API.Enums;
 
 #pragma warning disable SA1649
+
 /// <summary>
 /// The type of label.
 /// </summary>

@@ -25,9 +25,46 @@ public class NetDataPacket
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
 #pragma warning disable SA1201
-    [JsonConstructor]
     public NetDataPacket()
     {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
+    /// </summary>
+    /// <param name="port">port.</param>
+    /// <param name="serverName">server name.</param>
+    /// <param name="refreshSpeed">refresh speed.</param>
+    /// <param name="epoch">epoch.</param>
+    /// <param name="averageTps">average tps.</param>
+    /// <param name="averageDeltaTime">average delta time.</param>
+    /// <param name="memoryUsage">memory usage.</param>
+    /// <param name="cpuUsage">cpu usage.</param>
+    /// <param name="players">players.</param>
+    /// <param name="lowTpsWarnCount">low tps warn count.</param>
+    [JsonConstructor]
+    public NetDataPacket(
+        int port,
+        string serverName,
+        double refreshSpeed,
+        int epoch,
+        double averageTps,
+        double averageDeltaTime,
+        int memoryUsage,
+        double cpuUsage,
+        int players,
+        int lowTpsWarnCount)
+    {
+        this.Port = port;
+        this.ServerName = serverName;
+        this.RefreshSpeed = (float)refreshSpeed;
+        this.Epoch = epoch;
+        this.AverageTps = (float)averageTps;
+        this.AverageDeltaTime = (float)averageDeltaTime;
+        this.MemoryUsage = memoryUsage;
+        this.CpuUsage = (float)cpuUsage;
+        this.Players = players;
+        this.LowTpsWarnCount = lowTpsWarnCount;
     }
 #pragma warning restore SA1201
 
@@ -89,3 +126,13 @@ public class NetDataPacket
 #pragma warning restore SA1401
 
 }
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(NetDataPacket))]
+#pragma warning disable SA1402, SA1601
+
+// ReSharper disable once UnusedType.Global
+internal partial class PacketSerializerContext : JsonSerializerContext
+{
+}
+#pragma warning restore SA1402, SA1601

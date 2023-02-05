@@ -25,9 +25,11 @@ public class NetDataPacket
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
 #pragma warning disable SA1201, SA1313, SA1114
+    [JsonConstructor]
     public NetDataPacket()
     {
     }
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
@@ -42,7 +44,6 @@ public class NetDataPacket
     /// <param name="CpuUsage">cpu usage.</param>
     /// <param name="Players">players.</param>
     /// <param name="LowTpsWarnCount">low tps warn count.</param>
-    [JsonConstructor]
     public NetDataPacket(
 
         // ReSharper disable InconsistentNaming
@@ -61,6 +62,7 @@ public class NetDataPacket
         this.ServerName = ServerName;
         this.RefreshSpeed = (float)RefreshSpeed;
         this.Epoch = Epoch;
+        this.DateTime = DateTimeOffset.FromUnixTimeSeconds(Epoch).DateTime;
         this.AverageTps = (float)AverageTps;
         this.AverageDeltaTime = (float)AverageDeltaTime;
         this.MemoryUsage = MemoryUsage;
@@ -97,7 +99,6 @@ public class NetDataPacket
     /// <summary>
     /// Gets or sets the datetime of when this packet was made.
     /// </summary>
-    [JsonPropertyName("DateTime")]
     public DateTime DateTime { get; set; }
 
     /// <summary>
@@ -145,7 +146,10 @@ public class NetDataPacket
 #pragma warning disable SA1402, SA1601
 
 // ReSharper disable once UnusedType.Global
-internal partial class PacketSerializerContext : JsonSerializerContext
+internal partial class PacketSerializerContext
+    
+    
+    : JsonSerializerContext
 {
 }
 #pragma warning restore SA1402, SA1601

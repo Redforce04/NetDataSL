@@ -10,14 +10,13 @@
 //    Created Date:     01/28/2023 5:22 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL.API.Members;
 
 #pragma warning disable
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Extensions;
+using Sentry;
 
 public class CLabel
 {

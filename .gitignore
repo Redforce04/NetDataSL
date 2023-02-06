@@ -3,7 +3,9 @@
 
 
 /NetDataSL/bin/*
+/NetDataSL/bin/
 /NetDataSL/obj/*
+/NetDataSL/obj/
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -11,6 +13,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .vs/*
+.vs/
 
 # AWS User-specific
 .idea/**/aws.xml

@@ -10,8 +10,6 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL.Networking;
 
 using System.Diagnostics;
@@ -26,6 +24,7 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking.Classes;
 using NetDataSL.StructsAndClasses;
+using Sentry;
 
 /// <summary>
 /// The network handler for starting gRPC events.

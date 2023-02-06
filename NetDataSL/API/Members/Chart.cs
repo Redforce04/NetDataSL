@@ -10,8 +10,6 @@
 //    Created Date:     01/27/2023 9:21 PM
 // -----------------------------------------
 
-using Sentry;
-
 #pragma warning disable
 
 namespace NetDataSL.API.Members;
@@ -19,6 +17,7 @@ namespace NetDataSL.API.Members;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Extensions;
+using Sentry;
 
 /// <summary>
 /// Creates or updates a chart.

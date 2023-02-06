@@ -10,8 +10,6 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -19,6 +17,7 @@ using System.Collections.Concurrent;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking;
 using NetDataSL.StructsAndClasses;
+using Sentry;
 
 /// <summary>
 /// The main plugin. Does all of the processing and is instantiated via <see cref="Program"/>.

@@ -10,12 +10,11 @@
 //    Created Date:     01/28/2023 2:16 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL.API.Extensions;
 
 // ReSharper disable once RedundantNameQualifier
 using NetDataSL.API.Enums;
+using Sentry;
 
 /// <summary>
 /// The processor for field information.

@@ -344,3 +344,12 @@ C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\System.Security.Cryptography.Xml.dll
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\System.Threading.RateLimiting.dll
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\aspnetcorev2_inprocess.dll
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.csproj.AssemblyReference.cache
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\Sentry.Attributes.cs
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.AssemblyInfoInputs.cache
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.AssemblyInfo.cs
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.csproj.CoreCompileInputs.cache
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.dll
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\refint\NetDataSL.dll
+C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.pdb

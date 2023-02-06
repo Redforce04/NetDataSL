@@ -10,11 +10,10 @@
 //    Created Date:     01/27/2023 9:47 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL;
 
 using System.Text;
+using Sentry;
 
 /// <summary>
 /// The logging system.

@@ -10,13 +10,13 @@
 //    Created Date:     01/28/2023 12:54 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL.API.Members;
 
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Extensions;
+using Sentry;
+
 #pragma warning disable
 public class Dimension
 {

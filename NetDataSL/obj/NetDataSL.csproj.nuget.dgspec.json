@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {}
+    "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {
+    "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+        "projectUniqueName": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
         "projectName": "NetDataSL",
-        "projectPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
-        "packagesPath": "C:\\Users\\redfo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
+        "projectPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+        "packagesPath": "C:\\Users\\AJ Blessing\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\redfo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\AJ Blessing\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -56,7 +56,7 @@
             },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[9.0.1, )"
+              "version": "[13.0.2, )"
             },
             "Sentry.AspNetCore": {
               "target": "Package",

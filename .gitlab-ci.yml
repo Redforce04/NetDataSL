@@ -87,10 +87,7 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
-  - 'echo ${CI_COMMIT_SHORT_SHA} > NetDataSL/version.txt'
-  - 'echo ${CI_COMMIT_BRANCH} > NetDataSL/versionIndentifier.txt'
-  - 'cat NetDataSL/version.txt'
-  - 'cat NetDataSL/versionIdentifier.txt'
+  - 'envsubst < NetDataSL/AssemblyInfo.cs'
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 build:
   stage: build

@@ -10,6 +10,8 @@
 //    Created Date:     01/28/2023 12:54 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL.API.Members;
 
 // ReSharper disable twice RedundantNameQualifier
@@ -76,8 +78,9 @@ public class Dimension
                 Chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the dimension because a value was empty. The dimension will not be sent.");
         }
     }

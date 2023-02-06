@@ -10,6 +10,8 @@
 //    Created Date:     01/27/2023 9:21 PM
 // -----------------------------------------
 
+using Sentry;
+
 #pragma warning disable
 
 namespace NetDataSL.API.Members;
@@ -102,8 +104,9 @@ public class Chart
                           $"'{Process(Module, FieldType.Module)}'";
                           Log.Line(content);
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the chart because a value was empty. The chart will not be sent.");
             return;
         }

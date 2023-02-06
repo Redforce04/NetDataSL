@@ -10,6 +10,8 @@
 //    Created Date:     01/28/2023 5:22 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL.API.Members;
 
 #pragma warning disable
@@ -54,8 +56,10 @@ public class CLabel
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
+
             Log.Error("Cannot create the clabel because a value was empty. The clabel will not be sent.");
         }
 

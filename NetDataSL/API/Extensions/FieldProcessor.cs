@@ -10,6 +10,8 @@
 //    Created Date:     01/28/2023 2:16 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL.API.Extensions;
 
 // ReSharper disable once RedundantNameQualifier
@@ -110,6 +112,7 @@ public static class Field
         }
         catch (Exception e)
         {
+            SentrySdk.CaptureException(e);
             Log.Error($"Could not process field {field}, from \'{value}\' \n{e}");
             return string.Empty;
         }

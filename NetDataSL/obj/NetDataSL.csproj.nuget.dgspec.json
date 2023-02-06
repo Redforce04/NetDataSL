@@ -58,9 +58,9 @@
               "target": "Package",
               "version": "[9.0.1, )"
             },
-            "Sentry": {
+            "Sentry.AspNetCore": {
               "target": "Package",
-              "version": "[3.27.0, )"
+              "version": "[3.27.1, )"
             },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

@@ -10,6 +10,8 @@
 //    Created Date:     01/28/2023 2:55 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL.API.Members;
 
 // ReSharper disable twice RedundantNameQualifier
@@ -38,8 +40,9 @@ public class Variable
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the variable because a value was empty. The variable will not be sent.");
         }
     }

@@ -10,15 +10,15 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Collections.Concurrent;
 
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking;
 using NetDataSL.StructsAndClasses;
-using Newtonsoft.Json;
 
 /// <summary>
 /// The main plugin. Does all of the processing and is instantiated via <see cref="Program"/>.
@@ -35,13 +35,7 @@ public class Plugin
     /// A list of all servers present.
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public readonly Dictionary<int, string> Servers = new()
-    {
-        { 0, "Unknown Server" },
-        { 9011, "Net 1" },
-        { 9012, "Net 2" },
-        { 9017, "Testing Net" },
-    };
+    public readonly ConcurrentDictionary<int, ServerConfig> Servers = new();
 
     /// <summary>
     /// The name of the netdata plugin.
@@ -57,7 +51,6 @@ public class Plugin
     /// </summary>
     /// <param name="refreshRate">The refresh rate of the plugin.</param>
     /// <param name="host">The host that gRPC should use.</param>
-    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
     public Plugin(float refreshRate = 5f, string host = "")
     {
         if (Singleton != null)
@@ -66,7 +59,6 @@ public class Plugin
         }
 
         Singleton = this;
-
         var unused = new Log();
         var unused2 = new NetworkHandler(host);
         this._refreshTime = refreshRate;
@@ -74,13 +66,27 @@ public class Plugin
         this.Init();
     }
 
-    private static void ReadFileContent(string filePath, out string content)
+    /// <summary>
+    /// Sends a NetData update for a packet.
+    /// </summary>
+    /// <param name="packet">The packet to update.</param>
+    internal void ProcessPacket(NetDataPacket packet)
     {
-        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var sr = new StreamReader(fs, Encoding.UTF8);
-        content = sr.ReadToEnd();
-        sr.Close();
-        fs.Close();
+        try
+        {
+            if (packet.Epoch + this.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            {
+                Log.Debug($"Packet from port {packet.Port} is an old packet (older than {this.UsableRefresh()} seconds). This packet will not be processed.");
+                return;
+            }
+
+            this.UpdateRefreshTime(packet.RefreshSpeed);
+            this.ProcessStats(packet);
+        }
+        catch (Exception e)
+        {
+            SentrySdk.CaptureException(e);
+        }
     }
 
     private void InitNetDataIntegration()
@@ -92,24 +98,13 @@ public class Plugin
 
     private void GetServers(out List<KeyValuePair<int, string>> servers)
     {
+        Thread.Sleep(7500);
         servers = new List<KeyValuePair<int, string>>();
-        foreach (var filePath in Directory.GetFiles(this._tempDirectory))
-        {
-            ReadFileContent(filePath, out var content);
-            if (content.Length < 2)
-            {
-                continue;
-            }
 
-            try
-            {
-                NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
-                servers.Add(new KeyValuePair<int, string>(packet.Port, packet.ServerName));
-            }
-            catch (Exception)
-            {
-                // Log.Error($"Could not deserialize content of File {filePath}. {e}");
-            }
+        foreach (ServerConfig conf in Config.Singleton!.ServerInstances)
+        {
+            this.Servers.TryAdd(conf.Port, conf);
+            servers.Add(new KeyValuePair<int, string>(conf.Port, conf.ServerName));
         }
     }
 
@@ -117,7 +112,7 @@ public class Plugin
     {
         Log.Debug($"Starting Net-data Integration");
         this.CreateDirectories();
-        this.StartMainListenLoop();
+        this.StartMainRunningLoop();
     }
 
     private void CreateDirectories()
@@ -128,7 +123,7 @@ public class Plugin
         }
     }
 
-    private void StartMainListenLoop()
+    private void StartMainRunningLoop()
     {
         DateTime restartEveryHour = DateTime.UtcNow.AddHours(1);
         while (DateTime.UtcNow < restartEveryHour)
@@ -157,49 +152,6 @@ public class Plugin
     private float UsableRefresh()
     {
         return this._serverRefreshTime > this._refreshTime ? this._serverRefreshTime : this._refreshTime;
-    }
-
-#pragma warning disable SA1300
-
-    // ReSharper disable once UnusedMember.Local
-    private void _processFile(string filePath)
-#pragma warning restore SA1300
-    {
-        try
-        {
-            // Use this instead of file.ReadAllText() because it has FileShare settings.
-            ReadFileContent(filePath, out var content);
-            if (content.Length < 2)
-            {
-                return;
-            }
-
-            NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(content);
-            this.ProcessTextEntry(packet);
-        }
-        catch (Exception)
-        {
-            // Log.Error($"Could not read or deserialize file '{filePath}'. Exception {e}");
-        }
-    }
-
-    private void ProcessTextEntry(NetDataPacket packet)
-    {
-        try
-        {
-            if (packet.Epoch + this.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-            {
-                Log.Debug($"Server {packet.Port} cannot be refreshed, as it hasn't refreshed in 5 seconds.");
-                return;
-            }
-
-            this.UpdateRefreshTime(packet.RefreshSpeed);
-            this.ProcessStats(packet);
-        }
-        catch (Exception e)
-        {
-            Log.Error($"could not parse structs.\n{e}");
-        }
     }
 
     private void UpdateRefreshTime(float updateTime)

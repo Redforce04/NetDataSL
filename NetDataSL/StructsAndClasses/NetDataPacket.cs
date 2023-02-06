@@ -24,12 +24,12 @@ public class NetDataPacket
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
     /// </summary>
-#pragma warning disable SA1201, SA1313, SA1114
+#pragma warning disable SA1201, SA1313, SA1114, CS8618
     [JsonConstructor]
     public NetDataPacket()
+#pragma warning restore CS8618, CS8618
     {
     }
-
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
@@ -44,6 +44,9 @@ public class NetDataPacket
     /// <param name="CpuUsage">cpu usage.</param>
     /// <param name="Players">players.</param>
     /// <param name="LowTpsWarnCount">low tps warn count.</param>
+    /// <param name="ApiKey">The api key of the sl server plugin.</param>
+    /// <param name="ApiVersion">The api version on the sl server plugin.</param>
+    /// <param name="PluginVersion">The version of the plugin on the sl server.</param>
     public NetDataPacket(
 
         // ReSharper disable InconsistentNaming
@@ -56,7 +59,10 @@ public class NetDataPacket
         int MemoryUsage,
         double CpuUsage,
         int Players,
-        int LowTpsWarnCount)
+        int LowTpsWarnCount,
+        string ApiKey,
+        string ApiVersion,
+        string PluginVersion)
     {
         this.Port = Port;
         this.ServerName = ServerName;
@@ -69,6 +75,9 @@ public class NetDataPacket
         this.CpuUsage = (float)CpuUsage;
         this.Players = Players;
         this.LowTpsWarnCount = LowTpsWarnCount;
+        this.ApiKey = ApiKey;
+        this.ApiVersion = ApiVersion;
+        this.PluginVersion = PluginVersion;
     }
 #pragma warning restore SA1201, SA1313, SA1114
 
@@ -137,6 +146,24 @@ public class NetDataPacket
     [JsonPropertyName("LowTpsWarnCount")]
     public int LowTpsWarnCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets the API Key of the server.
+    /// </summary>
+    [JsonPropertyName("ApiKey")]
+    public string ApiKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets the version of the api on the sl server plugin.
+    /// </summary>
+    [JsonPropertyName("ApiVersion")]
+    public string ApiVersion { get; set; }
+
+    /// <summary>
+    /// Gets or sets the version of the plugin on the sl server plugin.
+    /// </summary>
+    [JsonPropertyName("PluginVersion")]
+    public string PluginVersion { get; set; }
+
 #pragma warning restore SA1401
 
 }
@@ -147,8 +174,6 @@ public class NetDataPacket
 
 // ReSharper disable once UnusedType.Global
 internal partial class PacketSerializerContext
-    
-    
     : JsonSerializerContext
 {
 }

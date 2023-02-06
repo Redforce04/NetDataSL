@@ -10,6 +10,8 @@
 //    Created Date:     01/27/2023 9:47 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL;
 
 using System.Text;
@@ -29,7 +31,7 @@ public class Log
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
-    private const bool DebugModeEnabled = false;
+    private const bool DebugModeEnabled = true;
     private string _logPath = string.Empty;
     private List<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;
@@ -66,6 +68,8 @@ public class Log
             Singleton._stdOut.Flush();
             Thread.Sleep(50);
         }
+
+        SentrySdk.CaptureMessage(log);
 #pragma warning restore CS0162
 
         Singleton._logMessages.Add(log);
@@ -83,6 +87,8 @@ public class Log
         }
 
         string log = $"[{DateTime.Now:G}] [Error] {x}    ";
+
+        SentrySdk.CaptureMessage(log);
 
         // Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
         // Singleton!._stdErr.Flush();
@@ -108,6 +114,8 @@ public class Log
     /// </param>
     public void AddLogMessage(string message)
     {
+        SentrySdk.CaptureMessage(message);
+
         this._logMessages.Add(message);
         if (DebugModeEnabled)
         {
@@ -137,6 +145,8 @@ public class Log
         }
         catch (Exception e)
         {
+            SentrySdk.CaptureException(e);
+
             Log.Error($"Could not write to logfile. Error: \n{e}");
         }
 

@@ -10,6 +10,8 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL.Networking;
 
 using System.Diagnostics;
@@ -30,6 +32,27 @@ using NetDataSL.StructsAndClasses;
 /// </summary>
 public class NetworkHandler
 {
+    /// <summary>
+    /// The amount of time a request is checked for rate-limit samples.
+    /// </summary>
+    internal const int RateLimitSampleTime = 5;
+
+    /// <summary>
+    /// The amount of requests to get rate-limited.
+    /// </summary>
+    internal const float RateLimitSampleAmount = 10;
+
+    /// <summary>
+    /// The max invalid api key requests before a sender gets blacklisted.
+    /// </summary>
+    internal const float MaxInvalidApiKeyRequests = 10;
+
+    /// <summary>
+    /// The timeout duration for a sender blacklist.
+    /// Currently 15 minutes.
+    /// </summary>
+    internal const int TimeoutDuration = 900;
+
     private static NetworkHandler? _singleton;
 
     // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
@@ -39,7 +62,6 @@ public class NetworkHandler
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
     /// </summary>
     /// <param name="host">The host to bind to.</param>
-    [RequiresUnreferencedCode("Calls NetDataSL.Networking.NetworkHandler.InitSocket()")]
     internal NetworkHandler(string host = "")
     {
         if (_singleton != null)
@@ -50,7 +72,9 @@ public class NetworkHandler
         Log.Debug($"Starting App");
 
         _singleton = this;
+#pragma warning disable IL2026
         ParameterizedThreadStart start = _ => { this.InitSocket(host == string.Empty ? "http://localhost:11011" : host); };
+#pragma warning restore IL2026
         _gRpcThread = new Thread(start);
         _gRpcThread.Start();
         _gRpcThread.IsBackground = false;
@@ -77,6 +101,13 @@ public class NetworkHandler
     [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
     private async Task ProcessPostRequest(HttpContext httpContext)
     {
+        var sender = Sender.Get(httpContext.Request.Host.Host, httpContext.Request.Host.Port);
+        if (sender.IsBlacklisted())
+        {
+            await this.SendResult(httpContext, StatusCodes.Status429TooManyRequests, "too many requests", sender);
+            return;
+        }
+
         try
         {
             // Flush the stream and make the stream reader.
@@ -89,31 +120,79 @@ public class NetworkHandler
 
             // Get the packet.
             Debug.Assert(PacketSerializerContext.Default.NetDataPacket != null, "PacketSerializerContext.Default.NetDataPacket != null");
-            NetDataPacket? packet = System.Text.Json.JsonSerializer.Deserialize<NetDataPacket>(body, PacketSerializerContext.Default.NetDataPacket);
+            NetDataPacket? packet = System.Text.Json.JsonSerializer.Deserialize(body, PacketSerializerContext.Default.NetDataPacket);
+            if (packet is null)
+            {
+                await this.SendResult(httpContext, StatusCodes.Status400BadRequest, "no packet received", sender);
+                sender.ProcessRequest(true);
+                return;
+            }
 
-            // JsonSerializer.Deserialize<WeatherForecast>(jsonString, SourceGenerationContext.Default.WeatherForecast);
+            if (!this.ApiKeyIsValid(packet.Port, packet.ApiKey))
+            {
+                await this.SendResult(httpContext, StatusCodes.Status401Unauthorized, "invalid api key", sender);
+                sender.ProcessRequest(true);
+                return;
+            }
 
-            // NetDataPacket packet = JsonConvert.DeserializeObject<NetDataPacket>(body);
-            Log.Debug($"Packet Received.");
+            sender.ProcessRequest(false);
 
-            // Return the status.
-            var data = new Dictionary<string, object>();
-            data.Add("status", 200);
-            data.Add("message", "packet receieved");
-            await Results.Json(data).ExecuteAsync(httpContext);
+            Plugin.Singleton!.ProcessPacket(packet);
+            await this.SendResult(httpContext, StatusCodes.Status200OK, "packet receieved", sender);
         }
         catch (Exception e)
         {
-            // If an error occurs.
-            Log.Debug($"Invalid Packet Received.");
+            SentrySdk.CaptureException(e);
 
+            // If an error occurs.
+            Log.Debug($"Invalid Packet Received from: {httpContext.Request.Host}.");
             Log.Debug(e.ToString());
 
-            // Return the status.
-            var data = new Dictionary<string, object>();
-            data.Add("status", 400);
-            data.Add("message", "bad packet");
-            await Results.Json(data).ExecuteAsync(httpContext);
+            await this.SendResult(httpContext, StatusCodes.Status400BadRequest, "bad packet receieved", sender);
         }
+    }
+
+    private bool ApiKeyIsValid(int port, string key)
+    {
+        Plugin.Singleton!.Servers.TryGetValue(port, out ServerConfig? confg);
+        if (confg == null)
+        {
+            return false;
+        }
+
+        if (confg.Key != key)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task SendResult(HttpContext httpContext, int response, string message, Sender sender)
+    {
+        if (response != 200)
+        {
+            switch (response)
+            {
+                case 400:
+                    await Results.BadRequest(message).ExecuteAsync(httpContext);
+                    Log.Debug($"Bad request from sender {sender}");
+                    return;
+                case 401:
+                    await Results.Unauthorized().ExecuteAsync(httpContext);
+                    Log.Debug($"Unauthorized request from sender {sender}");
+                    return;
+                default:
+                    await Results.Problem(message, null, response).ExecuteAsync(httpContext);
+                    Log.Debug($"Invalid request (status {response}, message: {message}), from sender {sender}");
+                    return;
+            }
+        }
+
+        // Return the status.
+        var data = new Dictionary<string, object>();
+        data.Add("status", response);
+        data.Add("message", message);
+        await Results.Json(data).ExecuteAsync(httpContext);
     }
 }

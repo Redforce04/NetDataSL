@@ -13,6 +13,7 @@
 namespace NetDataSL
 {
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using Sentry;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace NetDataSL
         /// The hash of the git commit when this plugin was built. Used for API reference, update tracking, and error tracking.
         /// </summary>
 #pragma warning disable SA1401
-        public static string GitCommitHash = string.Empty;
+        public static string GitCommitHash = AssemblyInfo.CommitHash;
 #pragma warning restore SA1401
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace NetDataSL
         /// </summary>
         // ReSharper disable once NotAccessedField.Global
 #pragma warning disable SA1401
-        public static string VersionIdentifier = string.Empty;
+        public static string VersionIdentifier = AssemblyInfo.CommitBranch;
 #pragma warning restore SA1401
 
         /// <summary>
@@ -45,26 +46,44 @@ namespace NetDataSL
 
             var refreshTime = 5f;
             string host = string.Empty;
-
+            string configFilePath = string.Empty;
             if (args.Length > 0)
             {
+                List<string> properArguments = new List<string>();
+                string combinedargs = string.Empty;
+                foreach (string arg in args)
+                {
+                    combinedargs += $"{arg} ";
+                }
+
+                Regex regex = new Regex("(\"[^\"]+\"|[^\\s\"]+)");
+                var result = regex.Matches(combinedargs);
+                foreach (string x in result)
+                {
+                    properArguments.Add(x.Replace("\"", string.Empty));
+                }
+
                 try
                 {
-                    for (int i = 0; i < args.Length; i++)
+                    for (int i = 0; i < properArguments.Count; i++)
                     {
-                        if (i == 0)
+                        switch (i)
                         {
-                            float.TryParse(args[0], out refreshTime);
-                        }
-                        else
-                        {
-                            host += args[i] + " ";
+                            // Argument 1 - Refresh rate.
+                            case 0:
+                                float.TryParse(properArguments[0], out refreshTime);
+                                break;
+
+                            // Argument 2 - config file.
+                            case 1:
+                                configFilePath = properArguments[1];
+                                break;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Could not parse startup args. Args: {args[0]} Exception: \n{e}");
+                    Log.Error($"Could not parse startup args. Args: Exception: \n{e}");
                 }
             }
 
@@ -88,7 +107,17 @@ namespace NetDataSL
                    }))
             {
                 // App code goes here. Dispose the SDK before exiting to flush events.
-                var unused = new Plugin(refreshTime, host);
+                if (configFilePath != string.Empty)
+                {
+                    var unused = new Config(configFilePath);
+                }
+                else
+                {
+                    Console.Error.Write($"No Config Detected.");
+                    return;
+                }
+
+                var unused2 = new Plugin(refreshTime, host);
             }
         }
 

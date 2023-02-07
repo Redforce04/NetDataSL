@@ -71,7 +71,7 @@ public class NetworkHandler
 
         _singleton = this;
 #pragma warning disable IL2026
-        ParameterizedThreadStart start = _ => { this.InitSocket(host == string.Empty ? "http://localhost:11011" : host); };
+        ParameterizedThreadStart start = _ => { this.InitSocket(host == string.Empty ? "127.0.0.1:11011" : host); };
 #pragma warning restore IL2026
         _gRpcThread = new Thread(start);
         _gRpcThread.Start();
@@ -81,9 +81,9 @@ public class NetworkHandler
 
     [RequiresUnreferencedCode(
         "Calls Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGet(String, Delegate)")]
-    private void InitSocket(string host = "http://localhost:11011")
+    private void InitSocket(string host = "127.0.0.1:11011")
     {
-        Log.Debug($"Creating Builder with host {host}");
+        Log.Debug($"Creating Builder with host http://{host}");
         var builder = WebApplication.CreateBuilder();
 
         builder.Logging.ClearProviders();
@@ -92,7 +92,7 @@ public class NetworkHandler
 
         // ReSharper disable once ArrangeThisQualifier
         app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
-        app.Run(host);
+        app.Run("https://" + host);
     }
 
     [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]

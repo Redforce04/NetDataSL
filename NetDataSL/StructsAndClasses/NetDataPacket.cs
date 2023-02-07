@@ -27,9 +27,11 @@ public class NetDataPacket
 #pragma warning disable SA1201, SA1313, SA1114, CS8618
     [JsonConstructor]
     public NetDataPacket()
-#pragma warning restore CS8618, CS8618
     {
     }
+#pragma warning restore CS8618, CS8618
+
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetDataPacket"/> class.
@@ -79,7 +81,6 @@ public class NetDataPacket
         this.ApiVersion = ApiVersion;
         this.PluginVersion = PluginVersion;
     }
-#pragma warning restore SA1201, SA1313, SA1114
 
     /// <summary>
     /// Gets or sets the port of the sending server.
@@ -164,7 +165,7 @@ public class NetDataPacket
     [JsonPropertyName("PluginVersion")]
     public string PluginVersion { get; set; }
 
-#pragma warning restore SA1401
+#pragma warning restore SA1201, SA1313, SA1114, SA1401
 
 }
 

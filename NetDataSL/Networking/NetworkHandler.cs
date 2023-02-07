@@ -18,7 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 // using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 // ReSharper disable twice RedundantNameQualifier
@@ -86,7 +85,6 @@ public class NetworkHandler
     {
         Log.Debug($"Creating Builder with host {host}");
         var builder = WebApplication.CreateBuilder();
-        builder.Services.AddGrpc();
 
         builder.Logging.ClearProviders();
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());

@@ -10,6 +10,8 @@
 //    Created Date:     01/25/2023 12:20 PM
 // -----------------------------------------
 
+using Sentry.Protocol;
+
 namespace NetDataSL
 {
     using System.Reflection;
@@ -114,6 +116,7 @@ namespace NetDataSL
                 else
                 {
                     Console.Error.Write($"No Config Detected.");
+                    Environment.Exit(128);
                     return;
                 }
 

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release Windows")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Redforce04")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2a3a7dd-dirty")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("NetDataSL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NetDataSL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -28,23 +28,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
-        <PackageReference Include="Grpc.AspNetCore.Server" Version="2.51.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.52.0-pre1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
         <PackageReference Include="Sentry.AspNetCore" Version="3.27.1" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Version.txt" />
-        <None Remove="VersionIdentifier.txt" />
+        <PackageReference Include="System.Text.Json" Version="7.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,15 +45,4 @@
         <Link>.gitlab-ci.yml</Link>
       </Content>
     </ItemGroup>
-    
-    <Target Name="SetSourceRevisionId" BeforeTargets="InitializeSourceControlInformation">
-        <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False">
-            <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
-        </Exec>
-    </Target>
-    <Target Name="SetSourceBranchName" BeforeTargets="InitializeSourceControlInformation">
-        <Exec Command="git branch --show-current" ConsoleToMSBuild="True" IgnoreExitCode="False">
-            <Output PropertyName="SourceBranchName" TaskParameter="ConsoleOutput" />
-        </Exec>
-    </Target>
 </Project>

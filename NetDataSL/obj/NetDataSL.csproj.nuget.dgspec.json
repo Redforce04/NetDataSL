@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {}
+    "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {
+    "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+        "projectUniqueName": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
         "projectName": "NetDataSL",
-        "projectPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
-        "packagesPath": "C:\\Users\\AJ Blessing\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
+        "projectPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+        "packagesPath": "C:\\Users\\redfo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\AJ Blessing\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\redfo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,23 +40,9 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "Grpc.AspNetCore": {
-              "target": "Package",
-              "version": "[2.51.0, )"
-            },
-            "Grpc.AspNetCore.Server": {
-              "target": "Package",
-              "version": "[2.51.0, )"
-            },
-            "Grpc.Tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.52.0-pre1, )"
-            },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.2, )"
+              "version": "[9.0.1, )"
             },
             "Sentry.AspNetCore": {
               "target": "Package",
@@ -67,6 +53,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[1.2.0-beta.435, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[7.0.1, )"
             }
           },
           "imports": [

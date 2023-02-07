@@ -60,18 +60,22 @@ public class Log
     {
         string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
-        if (DebugModeEnabled)
+        if (DebugModeEnabled && Singleton is not null)
         {
             // ReSharper disable once HeuristicUnreachableCode
             Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
             Singleton._stdOut.Flush();
             Thread.Sleep(50);
+            Singleton._logMessages.Add(log);
+        }
+        else
+        {
+            Console.Write(log);
         }
 
         SentrySdk.CaptureMessage(log);
 #pragma warning restore CS0162
 
-        Singleton._logMessages.Add(log);
     }
 
     /// <summary>

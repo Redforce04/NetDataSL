@@ -44,42 +44,16 @@ namespace NetDataSL
             Thread.Sleep(1000);
 
             var refreshTime = 5f;
-            string host = string.Empty;
             string configFilePath = string.Empty;
             if (args.Length > 0)
             {
-                List<string> properArguments = new List<string>();
-                string combinedargs = string.Empty;
-                foreach (string arg in args)
-                {
-                    combinedargs += $"{arg} ";
-                }
-
-                Regex regex = new Regex("(\"[^\"]+\"|[^\\s\"]+)");
-                var result = regex.Matches(combinedargs);
-                foreach (string x in result)
-                {
-                    properArguments.Add(x.Replace("\"", string.Empty));
-                }
+                ProcessArguments(args, out List<string> properArguments);
 
                 try
                 {
                     for (int i = 0; i < properArguments.Count; i++)
                     {
-                        Log.Debug($"Parsing argument {i} \'{properArguments[i]}\'.");
-
-                        switch (i)
-                        {
-                            // Argument 1 - Refresh rate.
-                            case 0:
-                                float.TryParse(properArguments[0], out refreshTime);
-                                break;
-
-                            // Argument 2 - config file.
-                            case 1:
-                                configFilePath = properArguments[i];
-                                break;
-                        }
+                        InterpretArgument(properArguments[i], i, out refreshTime, out configFilePath);
                     }
                 }
                 catch (Exception e)
@@ -124,7 +98,43 @@ namespace NetDataSL
                 // ReSharper disable once RedundantNameQualifier
                 Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
                 Log.Debug($"Plugin time.");
-                var unused2 = new Plugin(refreshTime, host);
+                var unused2 = new Plugin(refreshTime, Config.Singleton!.ServerAddress);
+            }
+        }
+
+        private static void ProcessArguments(string[] args, out List<string> properArguments)
+        {
+            properArguments = new List<string>();
+            string combinedargs = string.Empty;
+            foreach (string arg in args)
+            {
+                combinedargs += $"{arg} ";
+            }
+
+            Regex regex = new Regex("(\"[^\"]+\"|[^\\s\"]+)");
+            var result = regex.Matches(combinedargs);
+            foreach (string x in result)
+            {
+                properArguments.Add(x.Replace("\"", string.Empty));
+            }
+        }
+
+        private static void InterpretArgument(string arg, int i, out float refreshTime, out string configFilePath)
+        {
+            Log.Debug($"Parsing argument {i} \'{arg}\'.");
+            refreshTime = 5f;
+            configFilePath = string.Empty;
+            switch (i)
+            {
+                // Argument 1 - Refresh rate.
+                case 0:
+                    float.TryParse(arg, out refreshTime);
+                    break;
+
+                // Argument 2 - config file.
+                case 1:
+                    configFilePath = arg;
+                    break;
             }
         }
     }

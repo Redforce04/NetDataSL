@@ -89,7 +89,6 @@ namespace NetDataSL
                 }
             }
 
-            GetVersionInstances();
             using (SentrySdk.Init(o =>
                    {
                        o.Dsn = "https://841ce728bc284365be420b1fce6e133e@sentry.peanutworshipers.net/2";
@@ -122,29 +121,6 @@ namespace NetDataSL
 
                 Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
                 var unused2 = new Plugin(refreshTime, host);
-            }
-        }
-
-        private static void GetVersionInstances()
-        {
-            try
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                using (Stream stream = assembly.GetManifestResourceStream("PWProfiler.version.txt")!)
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    GitCommitHash = reader.ReadToEnd();
-                }
-
-                using (Stream stream = assembly.GetManifestResourceStream("PWProfiler.versionIdentifier.txt")!)
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    VersionIdentifier = reader.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.ToString());
             }
         }
     }

@@ -76,7 +76,7 @@ public class Config
         {
             StreamWriter writer = new StreamWriter(stream);
             this.LogPath = this.DirectoryPath + "ScpslPlugin.log";
-            this.ServerAddress = "localhost:11011";
+            this.ServerAddress = "127.0.0.1:11011";
             this.ServerInstances = new List<ServerConfig>()
             {
                 new ServerConfig(7777, "Server 1", "[insert server 1 key here]"),
@@ -92,17 +92,16 @@ public class Config
         else
         {
             StreamReader reader = new StreamReader(stream);
+            string json = reader.ReadToEnd();
             reader.Close();
             stream.Close();
-            string json = reader.ReadToEnd();
             Config? config = JsonSerializer.Deserialize(json, ConfigSerializerContext.Default.Config);
             if (config == null)
             {
                 Log.Error($"Config not valid. Unable to load config.");
-                stream.Close();
-                reader.Close();
+                Environment.Exit(128);
                 this.LogPath = string.Empty;
-                this.ServerAddress = "localhost:11011";
+                this.ServerAddress = "127.0.0.1:11011";
                 this.ServerInstances = new List<ServerConfig>();
                 return;
             }

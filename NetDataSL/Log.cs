@@ -60,20 +60,24 @@ public class Log
     {
         string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
-        if (DebugModeEnabled && Singleton is not null)
+        if (DebugModeEnabled)
         {
-            // ReSharper disable once HeuristicUnreachableCode
-            Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
-            Singleton._stdOut.Flush();
-            Thread.Sleep(50);
-            Singleton._logMessages.Add(log);
-        }
-        else
-        {
-            Console.Write(log);
+            if (Singleton is not null)
+            {
+                // ReSharper disable once HeuristicUnreachableCode
+                Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                Singleton._stdOut.Flush();
+                Thread.Sleep(50);
+                Singleton._logMessages.Add(log);
+            }
+            else
+            {
+                Console.Write(log);
+            }
+
+            SentrySdk.CaptureMessage(log);
         }
 
-        SentrySdk.CaptureMessage(log);
 #pragma warning restore CS0162
 
     }
@@ -117,8 +121,6 @@ public class Log
     /// </param>
     public void AddLogMessage(string message)
     {
-        SentrySdk.CaptureMessage(message);
-
         this._logMessages.Add(message);
         if (DebugModeEnabled)
         {

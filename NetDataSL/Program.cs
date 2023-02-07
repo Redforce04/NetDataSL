@@ -21,21 +21,6 @@ namespace NetDataSL
     internal class Program
     {
         /// <summary>
-        /// The hash of the git commit when this plugin was built. Used for API reference, update tracking, and error tracking.
-        /// </summary>
-#pragma warning disable SA1401
-        public static string GitCommitHash = AssemblyInfo.CommitHash;
-#pragma warning restore SA1401
-
-        /// <summary>
-        /// The version identifier. This is the branch that this build was made with.
-        /// </summary>
-        // ReSharper disable once NotAccessedField.Global
-#pragma warning disable SA1401
-        public static string VersionIdentifier = AssemblyInfo.CommitBranch;
-#pragma warning restore SA1401
-
-        /// <summary>
         /// The main startup method.
         /// </summary>
         /// <param name="args">The arguments. Should be one float for the refresh rate.</param>
@@ -68,7 +53,7 @@ namespace NetDataSL
 
                        // When configuring for the first time, to see what the SDK is doing:
                        o.Debug = false;
-                       o.Release = GitCommitHash;
+                       o.Release = AssemblyInfo.CommitHash;
 
                        o.AutoSessionTracking = true;
 
@@ -83,7 +68,6 @@ namespace NetDataSL
                 // App code goes here. Dispose the SDK before exiting to flush events.
                 if (configFilePath != string.Empty)
                 {
-                    Log.Debug($"creating config.");
                     var unused = new Config(configFilePath);
                 }
                 else
@@ -93,11 +77,8 @@ namespace NetDataSL
                     return;
                 }
 
-                Log.Debug($"Sentry message.");
-
                 // ReSharper disable once RedundantNameQualifier
                 Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
-                Log.Debug($"Plugin time.");
                 var unused2 = new Plugin(refreshTime, Config.Singleton!.ServerAddress);
             }
         }
@@ -121,7 +102,6 @@ namespace NetDataSL
 
         private static void InterpretArgument(string arg, int i, out float refreshTime, out string configFilePath)
         {
-            Log.Debug($"Parsing argument {i} \'{arg}\'.");
             refreshTime = 5f;
             configFilePath = string.Empty;
             switch (i)

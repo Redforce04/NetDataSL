@@ -87,7 +87,7 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
-  - 'envsubst < PWProfiler/AssemblyInfo.cs | sponge PWProfiler/AssemblyInfo.cs'
+  - 'envsubst < NetDataSL/AssemblyInfo.cs | sponge NetDataSL/AssemblyInfo.cs'
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY /p:Hash=${CI_COMMIT_SHORT_SHA} /p:Branch=${CI_COMMIT_BRANCH}'
 
 build:

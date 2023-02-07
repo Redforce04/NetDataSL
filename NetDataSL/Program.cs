@@ -120,6 +120,8 @@ namespace NetDataSL
                     return;
                 }
 
+                Sentry.SentrySdk.CaptureMessage(
+                    $"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
                 var unused2 = new Plugin(refreshTime, host);
             }
         }

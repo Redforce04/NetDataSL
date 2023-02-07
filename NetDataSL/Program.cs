@@ -10,11 +10,8 @@
 //    Created Date:     01/25/2023 12:20 PM
 // -----------------------------------------
 
-using Sentry.Protocol;
-
 namespace NetDataSL
 {
-    using System.Reflection;
     using System.Text.RegularExpressions;
     using Sentry;
 
@@ -69,6 +66,8 @@ namespace NetDataSL
                 {
                     for (int i = 0; i < properArguments.Count; i++)
                     {
+                        Log.Debug($"Parsing argument {i} \'{properArguments[i]}\'.");
+
                         switch (i)
                         {
                             // Argument 1 - Refresh rate.
@@ -78,7 +77,7 @@ namespace NetDataSL
 
                             // Argument 2 - config file.
                             case 1:
-                                configFilePath = properArguments[1];
+                                configFilePath = properArguments[i];
                                 break;
                         }
                     }
@@ -110,6 +109,7 @@ namespace NetDataSL
                 // App code goes here. Dispose the SDK before exiting to flush events.
                 if (configFilePath != string.Empty)
                 {
+                    Log.Debug($"creating config.");
                     var unused = new Config(configFilePath);
                 }
                 else
@@ -119,7 +119,11 @@ namespace NetDataSL
                     return;
                 }
 
+                Log.Debug($"Sentry message.");
+
+                // ReSharper disable once RedundantNameQualifier
                 Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
+                Log.Debug($"Plugin time.");
                 var unused2 = new Plugin(refreshTime, host);
             }
         }

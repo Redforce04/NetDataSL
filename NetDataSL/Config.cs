@@ -10,6 +10,8 @@
 //    Created Date:     02/05/2023 12:30 PM
 // -----------------------------------------
 
+using System.Text.Json.Serialization.Metadata;
+
 namespace NetDataSL;
 
 using System.Text.Json;

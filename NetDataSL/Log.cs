@@ -160,8 +160,8 @@ public class Log
 
     private void Init()
     {
-        string directory = "/var/log/";
-        this._logPath = directory + "ScpslPlugin.log";
+        this._logPath = Config.Singleton!.LogPath + "/NetDataSL.log";
+        string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
 
         this._logMessages = new List<string>();
         if (!Directory.Exists(directory))

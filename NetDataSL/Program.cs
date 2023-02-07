@@ -113,9 +113,9 @@ namespace NetDataSL
 
             Regex regex = new Regex("(\"[^\"]+\"|[^\\s\"]+)");
             var result = regex.Matches(combinedargs);
-            foreach (string x in result)
+            foreach (Match match in result)
             {
-                properArguments.Add(x.Replace("\"", string.Empty));
+                properArguments.Add(match.Value.Replace("\"", string.Empty));
             }
         }
 

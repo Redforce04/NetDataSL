@@ -10,6 +10,8 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
+using Microsoft.Extensions.Configuration;
+
 namespace NetDataSL.Networking;
 
 using System.Diagnostics;
@@ -85,14 +87,13 @@ public class NetworkHandler
     {
         Log.Debug($"Creating Builder with host http://{host}");
         var builder = WebApplication.CreateBuilder();
-
         builder.Logging.ClearProviders();
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         var app = builder.Build();
 
         // ReSharper disable once ArrangeThisQualifier
         app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
-        app.Run("https://" + host);
+        app.Run("http://" + host);
     }
 
     [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]

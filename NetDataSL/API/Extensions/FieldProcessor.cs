@@ -41,10 +41,9 @@ public static class Field
         {
             switch (field)
             {
-                case FieldType.Name or FieldType.Title:
+                case FieldType.Name or FieldType.Title or FieldType.Units:
                     return (string)value;
                 case FieldType.TypeId or FieldType.Type or FieldType.Id
-                    or FieldType.Units
                     or FieldType.Family or FieldType.Context or FieldType.Plugin
                     or FieldType.Module:
                     return ((string)value).Replace(" ", "_").ToLower();

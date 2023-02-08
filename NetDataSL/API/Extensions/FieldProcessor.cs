@@ -53,7 +53,7 @@ public static class Field
                     return ((int)value).ToString();
 
                 case FieldType.UpdateEvery:
-                    return ((float)value).ToString("0.00");
+                    return ((float)value).ToString("0");
 
                 case FieldType.ChartType:
                     return ((ChartType)value).ToString().ToLower();
@@ -85,7 +85,7 @@ public static class Field
                     return ((double)value).ToString("0.00000");
                 case FieldType.DimensionId:
                     return ((string)value)
-                        .Replace(".", string.Empty);
+                        .Replace(" ", "_");
                 case FieldType.CLabelName:
                     return ((string)value)
                         .Replace("+", "_")

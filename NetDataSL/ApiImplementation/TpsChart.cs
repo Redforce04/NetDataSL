@@ -75,7 +75,7 @@ class TpsChartDimensions : Dimension
     private string ServerName { get; }
     
     public override string Id => $"tps.{Server}";
-    public override string Name => $"\"{ServerName}\"";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;

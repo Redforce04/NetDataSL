@@ -144,6 +144,7 @@ public class Log
             using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(concatLog);
+            sw.Flush();
             sw.Close();
             fs.Close();
             File.WriteAllText(this._logPath, concatLog);

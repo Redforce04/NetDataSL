@@ -29,21 +29,21 @@ public class PlayersChart : Chart
             label.AssignChart(this);
     }
 
-    private const string ChartInfo = "players";
+    private const string ChartInfo = "Player";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"players";
 
     public override string Name => ChartInfo;
 
-    public override string Title => $"{ChartInfo}";
+    public override string Title => $"{ChartInfo} Count";
 
-    public override string Units => ChartInfo;
+    public override string Units => "players ingame";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"scpsl";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.player_count";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -72,8 +72,8 @@ class PlayersChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"players-{Server}";
-    public override string Name => $"\"{ServerName}\" Players";
+    public override string Id => $"players.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1;

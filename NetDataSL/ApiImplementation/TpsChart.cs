@@ -31,11 +31,11 @@ public class TpsChart : Chart
     }
 
 
-    private const string ChartInfo = "tps";
+    private const string ChartInfo = "Average Tps";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"tps";
 
     public override string Name => ChartInfo;
 
@@ -43,9 +43,9 @@ public class TpsChart : Chart
 
     public override string Units => "average ticks per second";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"scpsl";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.average_tps";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -74,8 +74,8 @@ class TpsChartDimensions : Dimension
     private int Server { get; }
     private string ServerName { get; }
     
-    public override string Id => $"tps-{Server}";
-    public override string Name => $"\"{ServerName}\" tps";
+    public override string Id => $"tps.{Server}";
+    public override string Name => $"\"{ServerName}\"";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;

@@ -30,22 +30,22 @@ public class CpuChart : Chart
     public override string Type => "scpsl";
 
     /// <inheritdoc/>
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"cpu";
 
     /// <inheritdoc/>
     public override string Name => ChartInfo;
 
     /// <inheritdoc/>
-    public override string Title => $"{ChartInfo}";
+    public override string Title => $"{ChartInfo} Usage";
 
     /// <inheritdoc/>
-    public override string Units => "percent cpu used";
+    public override string Units => "percent of cpu cores used";
 
     /// <inheritdoc/>
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"scpsl";
 
     /// <inheritdoc/>
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.cpu_usage";
 
     /// <inheritdoc/>
     public override ChartType ChartType => ChartType.Line;
@@ -105,10 +105,10 @@ internal class CpuChartDimensions : Dimension
     }
 
     /// <inheritdoc/>
-    public override string Id => $"cpu-{this.Server}";
+    public override string Id => $"cpu.{this.Server}";
 
     /// <inheritdoc/>
-    public override string Name => $"\"{this.ServerName}\" Cpu Usage";
+    public override string Name => $"{this.ServerName}";
 
     /// <inheritdoc/>
     public override Algorithm Algorithm => Algorithm.Absolute;

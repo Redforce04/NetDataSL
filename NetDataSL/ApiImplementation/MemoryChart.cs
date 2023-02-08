@@ -30,21 +30,21 @@ public class MemoryChart : Chart
     }
 
 
-    private const string ChartInfo = "memory";
+    private const string ChartInfo = "Memory";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"memory";
 
     public override string Name => ChartInfo;
 
     public override string Title => $"{ChartInfo}";
 
-    public override string Units => "Mb allocated";
+    public override string Units => "mb of memory allocated";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"scpsl";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.memory_usage";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -73,8 +73,8 @@ class MemoryChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"memory-{Server}";
-    public override string Name => $"\"{ServerName}\" Memory Usage";
+    public override string Id => $"memory.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;

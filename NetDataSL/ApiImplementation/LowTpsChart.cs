@@ -31,11 +31,11 @@ public class LowTpsChart : Chart
     }
 
 
-    private const string ChartInfo = "low_tps";
+    private const string ChartInfo = "Low Tps";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"low_tps";
 
     public override string Name => ChartInfo;
 
@@ -43,9 +43,9 @@ public class LowTpsChart : Chart
 
     public override string Units => "low tps warnings";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"scpsl";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.low_tps";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -73,8 +73,8 @@ class LowTpsChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"lowtps-{Server}";
-    public override string Name => $"\"{ServerName}\" Low Tps Warnings";
+    public override string Id => $"lowtps.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;

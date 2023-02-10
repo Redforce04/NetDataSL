@@ -68,7 +68,8 @@ public class Log
         {
             if (Singleton is not null)
             {
-                Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                //Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                Singleton._stdOut.Write(log + "\n");
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50);
                 Singleton._logMessages.Add(log);
@@ -91,14 +92,14 @@ public class Log
     /// <param name="x">The error message to log.</param>
     public static void Error(string x)
     {
+        string log = $"[{DateTime.Now:G}] [Error] {x}    ";
+        SentrySdk.CaptureMessage(log, SentryLevel.Error);
         if (Singleton is null)
         {
             var unused = new Log();
         }
 
-        string log = $"[{DateTime.Now:G}] [Error] {x}    ";
 
-        SentrySdk.CaptureMessage(log);
 
         // Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
         // Singleton!._stdErr.Flush();
@@ -112,7 +113,8 @@ public class Log
     /// <param name="x">The information to send to StdOut.</param>
     public static void Line(string x)
     {
-        Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+        // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+        Singleton!._stdOut.Write($"{x}\n");
         Singleton._stdOut.Flush();
         Thread.Sleep(50);
     }
@@ -138,12 +140,6 @@ public class Log
     /// </summary>
     internal void LogMessages()
     {
-        string concatLog = string.Empty;
-        foreach (string log in this._logMessages)
-        {
-            concatLog += log + Environment.NewLine;
-        }
-
         try
         {
             File.AppendAllLines(this._logPath, this._logMessages);
@@ -158,9 +154,8 @@ public class Log
         }
         catch (Exception e)
         {
-            SentrySdk.CaptureException(e);
-
             Log.Error($"Could not write to logfile. Error: \n{e}");
+            SentrySdk.CaptureException(e);
         }
 
         this._logMessages.Clear();
@@ -168,23 +163,41 @@ public class Log
 
     private void Init()
     {
-        this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
-        string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
 
-        this._logMessages = new ConcurrentBag<string>();
-        if (!Directory.Exists(directory))
+        try
         {
-            Directory.CreateDirectory(directory);
-        }
 
-        if (!File.Exists(this._logPath))
+            this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
+            string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
+
+            this._logMessages = new ConcurrentBag<string>();
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            try
+            {
+                if (!File.Exists(this._logPath))
+                {
+                    File.Create(this._logPath).Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error at Log.Init() => Creating logging file.");
+                SentrySdk.CaptureException(e);
+            }
+
+            this._stdOut = new StreamWriter(Console.OpenStandardOutput());
+            this._stdErr = new StreamWriter(Console.OpenStandardError());
+
+            // Log.Error($"Info: Log filepath: {_logPath}");
+        }
+        catch (Exception e)
         {
-            File.Create(this._logPath).Close();
+            Log.Error("Error at Log.Init()");
+            SentrySdk.CaptureException(e);
         }
-
-        this._stdOut = new StreamWriter(Console.OpenStandardOutput());
-        this._stdErr = new StreamWriter(Console.OpenStandardError());
-
-        // Log.Error($"Info: Log filepath: {_logPath}");
     }
 }

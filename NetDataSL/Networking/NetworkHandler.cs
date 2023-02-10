@@ -162,7 +162,7 @@ public class NetworkHandler
             }
             catch (Exception e)
             {
-                Log.Error($"Could not capture packet");
+                Log.Error($"Could not capture packet.");
                 SentrySdk.CaptureException(e);
             }
 
@@ -173,7 +173,7 @@ public class NetworkHandler
             SentrySdk.CaptureException(e);
 
             // If an error occurs.
-            Log.Debug($"Invalid Packet Received from: {httpContext.Request.Host}.");
+            Log.Error($"Invalid Packet Received from: {httpContext.Request.Host}.");
             Log.Debug(e.ToString());
 
             await this.SendResult(httpContext, StatusCodes.Status400BadRequest, "bad packet receieved", sender);

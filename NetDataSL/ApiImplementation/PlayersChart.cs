@@ -31,7 +31,7 @@ public class PlayersChart : Chart
 
     private const string ChartInfo = "Player";
 
-    public override string Type => "ScpSL";
+    public override string Type => "scpsl";
 
     public override string Id => $"players";
 

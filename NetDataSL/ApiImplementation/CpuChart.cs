@@ -27,7 +27,7 @@ public class CpuChart : Chart
     private const string ChartInfo = "Cpu";
 
     /// <inheritdoc/>
-    public override string Type => "ScpSL";
+    public override string Type => "scpsl";
 
     /// <inheritdoc/>
     public override string Id => $"cpu";

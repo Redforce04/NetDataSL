@@ -38,7 +38,7 @@ public class Plugin
     /// <summary>
     /// The name of the netdata plugin.
     /// </summary>
-    internal static readonly string PluginName = "scpsl.plugin";
+    internal static readonly string PluginName = "ScpSL.plugin";
     private readonly float _serverRefreshTime = -1f;
     private float _refreshTime = 5f;
 #pragma warning restore SA1401

@@ -9,13 +9,43 @@
         <StripSymbols>true</StripSymbols>
         <Configurations>Debug;Release;Release Windows</Configurations>
         <Platforms>AnyCPU</Platforms>
+        <Title>NetDataSL</Title>
+        <Authors>Redforce04#4091</Authors>
+        <Copyright>Redforce04</Copyright>
+        <Company>Redforce04#4091</Company>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <NoWarn>1701;1702;IL2121;SA1309;IL2121;SA1638;SA1636;IL2121</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <NoWarn>1701;1702;IL2121;SA1309;IL2121;SA1638;IL2121;SA1636</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release Windows' ">
+      <NoWarn>1701;1702;IL2121;SA1309;IL2121;SA1638;IL2121;SA1636</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+        <PackageReference Include="Sentry.AspNet" Version="3.28.1" />
+        <PackageReference Include="Sentry.AspNetCore" Version="3.27.1" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.gitignore">
+        <Link>.gitignore</Link>
+      </Content>
+      <Content Include="..\.gitlab-ci.yml">
+        <Link>.gitlab-ci.yml</Link>
+      </Content>
     </ItemGroup>
 </Project>

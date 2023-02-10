@@ -1,17 +1,22 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         TpsChart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 10:31 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Members;
-
+#pragma warning disable
 namespace NetDataSL.ApiImplementation;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Members;
+#pragma warning disable
 public class TpsChart : Chart
 {
     internal TpsChart(List<Dimension> dimensions)
@@ -26,11 +31,11 @@ public class TpsChart : Chart
     }
 
 
-    private const string ChartInfo = "tps";
+    private const string ChartInfo = "Average Tps";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"tps";
 
     public override string Name => ChartInfo;
 
@@ -38,9 +43,9 @@ public class TpsChart : Chart
 
     public override string Units => "average ticks per second";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"Average Tps";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.average_tps";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -56,7 +61,7 @@ public class TpsChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "tps";
+    public override string Module => "Tps";
 }
 class TpsChartDimensions : Dimension
 {    
@@ -69,11 +74,12 @@ class TpsChartDimensions : Dimension
     private int Server { get; }
     private string ServerName { get; }
     
-    public override string Id => $"tps-{Server}";
-    public override string Name => $"\"{ServerName}\" tps";
+    public override string Id => $"tps.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

@@ -1,18 +1,21 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         MemoryChart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 10:43 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Members;
-
-
 namespace NetDataSL.ApiImplementation;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Members;
+#pragma warning disable
 public class MemoryChart : Chart
 {
     internal MemoryChart(List<Dimension> dimensions)
@@ -27,21 +30,21 @@ public class MemoryChart : Chart
     }
 
 
-    private const string ChartInfo = "memory";
+    private const string ChartInfo = "Memory";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"memory";
 
     public override string Name => ChartInfo;
 
     public override string Title => $"{ChartInfo}";
 
-    public override string Units => "Mb allocated";
+    public override string Units => "mb of memory allocated";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"Memory Usage";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.memory_usage";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -57,7 +60,7 @@ public class MemoryChart : Chart
 
     public override bool Hidden => false;
 
-    public override string Module => "memory";
+    public override string Module => "Memory";
 }
 
 class MemoryChartDimensions : Dimension
@@ -70,11 +73,12 @@ class MemoryChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"memory-{Server}";
-    public override string Name => $"\"{ServerName}\" Memory Usage";
+    public override string Id => $"memory.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1000;
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

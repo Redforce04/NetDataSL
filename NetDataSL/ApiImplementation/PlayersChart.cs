@@ -1,17 +1,21 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         PlayersChart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 9:57 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Members;
-
 namespace NetDataSL.ApiImplementation;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Members;
+#pragma warning disable
 public class PlayersChart : Chart
 {
     internal PlayersChart(List<Dimension> dimensions)
@@ -25,21 +29,21 @@ public class PlayersChart : Chart
             label.AssignChart(this);
     }
 
-    private const string ChartInfo = "players";
+    private const string ChartInfo = "Player";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"players";
 
     public override string Name => ChartInfo;
 
-    public override string Title => $"{ChartInfo}";
+    public override string Title => $"{ChartInfo} Count";
 
-    public override string Units => ChartInfo;
+    public override string Units => "players ingame";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"Players";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.player_count";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -55,7 +59,7 @@ public class PlayersChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "players";
+    public override string Module => "Players";
 
 }
 class PlayersChartDimensions : Dimension
@@ -68,11 +72,12 @@ class PlayersChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"players-{Server}";
-    public override string Name => $"\"{ServerName}\" Players";
+    public override string Id => $"players.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
     public override int Divisor => 1;
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

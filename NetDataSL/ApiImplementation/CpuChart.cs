@@ -1,81 +1,131 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         CpuChart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 10:43 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Members;
-
-
 namespace NetDataSL.ApiImplementation;
 
+using NetDataSL.API.Enums;
+
+// ReSharper disable once RedundantNameQualifier
+using NetDataSL.API.Members;
+
+/// <inheritdoc />
 public class CpuChart : Chart
 {
-    
     // string type, string id, string title, string name = "",
-    // string module = "stats", string units = "percentage", string family = "", 
-    // string context = "", ChartType chartType = ChartType.Line, int priority = 1000, 
+    // string module = "stats", string units = "percentage", string family = "";
+    // string context = "", ChartType chartType = ChartType.Line, int priority = 1000;
     // float updateEvery = 5f, ChartOptions options = ChartOptions.None
-    
-    internal CpuChart(List<Dimension> dimensions)
-    {
-        Dimensions = dimensions;
-        foreach(Dimension dimension in Dimensions)
-            dimension.AssignChart(this);
-        foreach(Variable variable in Variables)
-            variable.AssignChart(this);
-        foreach (CLabel label in CLabels)
-            label.AssignChart(this);
-    }
-    
-
-
     private const string ChartInfo = "Cpu";
 
+    /// <inheritdoc/>
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    /// <inheritdoc/>
+    public override string Id => $"cpu";
 
+    /// <inheritdoc/>
     public override string Name => ChartInfo;
 
-    public override string Title => $"{ChartInfo}";
+    /// <inheritdoc/>
+    public override string Title => $"{ChartInfo} Usage";
 
-    public override string Units => "percent cpu used";
+    /// <inheritdoc/>
+    public override string Units => "percent of cpu cores used";
 
-    public override string Family => $"{ChartInfo}";
+    /// <inheritdoc/>
+    public override string Family => $"Cpu Usage";
 
-    public override string Context => ChartInfo;
+    /// <inheritdoc/>
+    public override string Context => "scpsl.cpu_usage";
 
+    /// <inheritdoc/>
     public override ChartType ChartType => ChartType.Line;
 
+    /// <inheritdoc/>
     public override int Priority => 1000;
 
+    /// <inheritdoc/>
     public override float UpdateEvery => 5f;
 
+    /// <inheritdoc/>
     public override ChartOptions Options => ChartOptions.None;
 
-    public override string Module => "cpu";
+    /// <inheritdoc/>
+    public override string Module => "Cpu";
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CpuChart"/> class.
+    /// </summary>
+    /// <param name="dimensions">The dimensions for this chart.</param>
+#pragma warning disable SA1201
+    internal CpuChart(List<Dimension> dimensions)
+#pragma warning restore SA1201
+    {
+        this.Dimensions = dimensions;
+        foreach (Dimension dimension in this.Dimensions)
+        {
+            dimension.AssignChart(this);
+        }
+
+        foreach (Variable variable in this.Variables)
+        {
+            variable.AssignChart(this);
+        }
+
+        foreach (CLabel label in this.CLabels)
+        {
+            label.AssignChart(this);
+        }
+    }
 }
 
-class CpuChartDimensions : Dimension
+/// <inheritdoc />
+#pragma warning disable SA1402
+internal class CpuChartDimensions : Dimension
+#pragma warning restore SA1402
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CpuChartDimensions"/> class.
+    /// </summary>
+    /// <param name="server">The server port.</param>
+    /// <param name="serverName">The server name.</param>
     public CpuChartDimensions(int server, string serverName)
     {
         this.Server = server;
         this.ServerName = serverName;
     }
 
-    private int Server { get; }
-    private string ServerName { get; }
-    public override string Id => $"cpu-{Server}";
-    public override string Name => $"\"{ServerName}\" Cpu Usage";
+    /// <inheritdoc/>
+    public override string Id => $"cpu.{this.Server}";
+
+    /// <inheritdoc/>
+    public override string Name => $"{this.ServerName}";
+
+    /// <inheritdoc/>
     public override Algorithm Algorithm => Algorithm.Absolute;
+
+    /// <inheritdoc/>
     public override int Multiplier => 1;
+
+    /// <inheritdoc/>
     public override int Divisor => 1000;
+
+    /// <inheritdoc/>
     public override bool Obsolete => false;
+
+    /// <inheritdoc/>
     public override bool Hidden => false;
+
+    private int Server { get; }
+
+    private string ServerName { get; }
 }

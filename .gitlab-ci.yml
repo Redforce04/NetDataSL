@@ -51,7 +51,7 @@ variables:
 # and then unpacked to the paths as specified below.
 cache:
   # Per-stage and per-branch caching.
-  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  key: "$CI_COMMIT_REF_SLUG"
   paths:
     # Specify three paths that should be cached:
     #
@@ -87,7 +87,8 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
-  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  - 'envsubst < NetDataSL/AssemblyInfo.cs | sponge NetDataSL/AssemblyInfo.cs'
+  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY /p:Hash=${CI_COMMIT_SHORT_SHA} /p:Branch=${CI_COMMIT_BRANCH}'
 
 build:
   stage: build

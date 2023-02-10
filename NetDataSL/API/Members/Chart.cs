@@ -1,16 +1,23 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         Chart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 9:21 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
+#pragma warning disable
 
 namespace NetDataSL.API.Members;
+
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
+using Sentry;
 
 /// <summary>
 /// Creates or updates a chart.
@@ -79,32 +86,26 @@ public class Chart
         try
         {
 
-            var content = $"CHART {Process(TypeId, FieldType.TypeId)} " +
-                          $"{Process(Name, FieldType.Name)} " +
-                          $"{Process(Title, FieldType.Title)} " +
-                          $"{Process(Units, FieldType.Units)} " +
-                          $"{Process(Family, FieldType.Family)} [" +
-                          $"{Process(Context, FieldType.Context)} [" +
-                          $"{Process(ChartType, FieldType.ChartType)} [" +
-                          $"{Process(Priority, FieldType.Priority)} [" +
-                          $"{Process(UpdateEvery, FieldType.UpdateEvery)} [" +
+            var content = $"CHART '{Process(TypeId, FieldType.TypeId)}' " +
+                          $"'{Process(Name, FieldType.Name)}' " +
+                          $"'{Process(Title, FieldType.Title)}' " +
+                          $"'{Process(Units, FieldType.Units)}' " +
+                          $"'{Process(Family, FieldType.Family)}' " +
+                          $"'{Process(Context, FieldType.Context)}' " +
+                          $"'{Process(ChartType, FieldType.ChartType)}' " +
+                          $"'{Process(Priority, FieldType.Priority)}' " +
+                          $"'{Process(UpdateEvery, FieldType.UpdateEvery)}' '" +
                           Process(Obsolete, FieldType.Obsolete) +
                           Process(Obsolete, FieldType.Detail) +
                           Process(Obsolete, FieldType.StoreFirst) +
                           Process(Obsolete, FieldType.Hidden) +
-                          $" [" +
-                          $"{Process(_plugin, FieldType.Plugin)} [" +
-                          $"{Process(Module, FieldType.Module)}]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]";
-            Log.Line(content.Replace("[","").Replace("]",""));
+                          $"' '{Process(_plugin, FieldType.Plugin)}' " +
+                          $"'{Process(Module, FieldType.Module)}'";
+                          Log.Line(content);
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the chart because a value was empty. The chart will not be sent.");
             return;
         }
@@ -330,10 +331,9 @@ public class Chart
     /// ebpf.plugin,
     /// go.d
     /// </example>
-    private readonly string _plugin = Plugin.Singleton != null ? Plugin.Singleton.PluginName : "plugin";
+    private readonly string _plugin = Plugin.Singleton != null ? Plugin.PluginName : "plugin";
 
     /// <summary>
-    /// 
     /// </summary>
     /// <example>
     /// /proc/meminfo,
@@ -382,3 +382,4 @@ public class Chart
         return Charts.FirstOrDefault(x => x.Type == type && x.Id == id);
     }
 }
+#pragma warning restore

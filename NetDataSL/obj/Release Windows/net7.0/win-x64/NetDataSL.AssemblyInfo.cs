@@ -10,8 +10,9 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("NetDataSL")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Redforce04#4091")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release Windows")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("Redforce04")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("NetDataSL")]

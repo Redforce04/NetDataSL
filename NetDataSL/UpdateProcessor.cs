@@ -62,6 +62,7 @@ public class UpdateProcessor
             if (x.Value.Count != 0)
             {
                 ChartIntegration.Singleton!.UpdateChartData(x.Key, x.Value);
+                x.Value.Clear();
             }
         }
     }

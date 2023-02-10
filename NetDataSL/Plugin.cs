@@ -94,7 +94,6 @@ public class Plugin
 
     private void GetServers(out List<KeyValuePair<int, string>> servers)
     {
-        Thread.Sleep(7500);
         servers = new List<KeyValuePair<int, string>>();
 
         foreach (ServerConfig conf in Config.Singleton!.ServerInstances)

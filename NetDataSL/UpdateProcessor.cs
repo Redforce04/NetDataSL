@@ -72,6 +72,7 @@ public class UpdateProcessor
     /// <param name="packet">the packet to update.</param>
     internal void ProcessUpdate(NetDataPacket packet)
     {
+        Log.Debug($"Processing Update");
         this.AddUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true);
         this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true);
         this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true);

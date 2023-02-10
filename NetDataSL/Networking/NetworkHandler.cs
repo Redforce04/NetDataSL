@@ -163,6 +163,7 @@ public class NetworkHandler
             }
             catch (Exception e)
             {
+                Log.Error($"Could not capture packet");
                 SentrySdk.CaptureException(e);
             }
 

@@ -78,10 +78,11 @@ public class ChartIntegration
         Chart? chart = this.GetChartByChartType(implementationType);
         if (chart is null)
         {
+            Log.Error($"Chart is null when getting dimension. {implementationType} {server}");
             return null;
         }
 
-        string dimensionId = $"{implementationType.ToString().ToLower()}-{server}";
+        string dimensionId = $"{implementationType.ToString().ToLower().Replace(" ", "_")}.{server}";
         return chart.Dimensions.FirstOrDefault(x => x.Id == dimensionId);
     }
 

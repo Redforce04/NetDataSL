@@ -60,7 +60,7 @@ public class MemoryChart : Chart
 
     public override bool Hidden => false;
 
-    public override string Module => "memory";
+    public override string Module => "Memory";
 }
 
 class MemoryChartDimensions : Dimension

@@ -60,7 +60,7 @@ public class LowTpsChart : Chart
     public override bool StoreFirst => false;
 
     public override bool Hidden => false;
-    public override string Module => "lowtps";
+    public override string Module => "LowTps";
 
 }
 class LowTpsChartDimensions : Dimension
@@ -77,7 +77,7 @@ class LowTpsChartDimensions : Dimension
     public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
-    public override int Divisor => 1000;
+    public override int Divisor => 1;
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }

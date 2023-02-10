@@ -61,7 +61,7 @@ public class TpsChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "tps";
+    public override string Module => "Tps";
 }
 class TpsChartDimensions : Dimension
 {    

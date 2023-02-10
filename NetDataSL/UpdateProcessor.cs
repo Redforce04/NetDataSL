@@ -77,8 +77,8 @@ public class UpdateProcessor
         this.AddUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true);
         this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true);
         this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true);
-        this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players);
-        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.AverageTps);
+        this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players, false);
+        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.LowTpsWarnCount, false);
     }
 
     private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false)

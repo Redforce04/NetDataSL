@@ -60,7 +60,7 @@ public class CpuChart : Chart
     public override ChartOptions Options => ChartOptions.None;
 
     /// <inheritdoc/>
-    public override string Module => "cpu";
+    public override string Module => "Cpu";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CpuChart"/> class.

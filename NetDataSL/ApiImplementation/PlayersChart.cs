@@ -59,7 +59,7 @@ public class PlayersChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "players";
+    public override string Module => "Players";
 
 }
 class PlayersChartDimensions : Dimension

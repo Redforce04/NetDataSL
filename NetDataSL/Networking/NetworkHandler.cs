@@ -104,7 +104,6 @@ public class NetworkHandler
         var builder = WebApplication.CreateBuilder();
         builder.Logging.ClearProviders();
         this.app = builder.Build();
-        this.app.UseSentryTracing();
 
         // ReSharper disable once ArrangeThisQualifier
         this.app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));

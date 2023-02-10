@@ -51,7 +51,7 @@ variables:
 # and then unpacked to the paths as specified below.
 cache:
   # Per-stage and per-branch caching.
-  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  key: "$CI_COMMIT_REF_SLUG"
   paths:
     # Specify three paths that should be cached:
     #

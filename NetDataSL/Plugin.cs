@@ -146,6 +146,12 @@ public class Plugin
         }
 
         Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
+        if (NetworkHandler.Singleton is not null)
+        {
+            NetworkHandler.Singleton.Stop();
+        }
+
+        Environment.Exit(0);
     }
 
     private float UsableRefresh()

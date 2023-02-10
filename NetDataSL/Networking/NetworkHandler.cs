@@ -53,10 +53,19 @@ public class NetworkHandler
     /// </summary>
     internal const int TimeoutDuration = 900;
 
-    private static NetworkHandler? _singleton;
+    /// <summary>
+    /// The single instance of the NetworkHandler.
+    /// </summary>
+#pragma warning disable SA1401
+    internal static NetworkHandler? Singleton;
+#pragma warning restore SA1401
 
     // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-    private static Thread _gRpcThread = null!;
+    // ReSharper disable once InconsistentNaming
+    private static Thread gRpcThread = null!;
+
+    // ReSharper disable once InconsistentNaming
+    private WebApplication app;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
@@ -64,21 +73,29 @@ public class NetworkHandler
     /// <param name="host">The host to bind to.</param>
     internal NetworkHandler(string host = "")
     {
-        if (_singleton != null)
+        if (Singleton != null)
         {
             return;
         }
 
         Log.Debug($"Starting App");
 
-        _singleton = this;
+        Singleton = this;
 #pragma warning disable IL2026
         ParameterizedThreadStart start = _ => { this.InitSocket(host == string.Empty ? "127.0.0.1:11011" : host); };
 #pragma warning restore IL2026
-        _gRpcThread = new Thread(start);
-        _gRpcThread.Start();
-        _gRpcThread.IsBackground = false;
+        gRpcThread = new Thread(start);
+        gRpcThread.Start();
+        gRpcThread.IsBackground = false;
         Log.Debug($"Running App");
+    }
+
+    /// <summary>
+    /// Stops the web application.
+    /// </summary>
+    internal void Stop()
+    {
+        this.app.StopAsync();
     }
 
     [RequiresUnreferencedCode(
@@ -89,11 +106,11 @@ public class NetworkHandler
         var builder = WebApplication.CreateBuilder();
         builder.Logging.ClearProviders();
         builder.Logging.AddProvider(new NoStdOutLoggerProvider());
-        var app = builder.Build();
+        this.app = builder.Build();
 
         // ReSharper disable once ArrangeThisQualifier
-        app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
-        app.Run("http://" + host);
+        this.app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));
+        this.app.Run("http://" + host);
     }
 
     [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]

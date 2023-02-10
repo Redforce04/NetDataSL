@@ -30,7 +30,7 @@ public class Log
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
-    private const bool DebugModeEnabled = false;
+    private const bool DebugModeEnabled = true;
     private string _logPath = string.Empty;
     private List<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;

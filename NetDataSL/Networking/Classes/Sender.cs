@@ -97,6 +97,7 @@ public class Sender
     /// <returns>True if the sender is blacklisted. False if the sender can send messages.</returns>
     internal bool IsBlacklisted()
     {
+        return false;
         if (this.IsBlackListed == false)
         {
             return false;
@@ -117,6 +118,7 @@ public class Sender
     /// <param name="apiKeyIsValid">Is the api key valid.</param>
     internal void ProcessRequest(bool apiKeyIsValid)
     {
+        return;
         foreach (var request in this.Requests)
         {
             if (request.Key.TotalSeconds <

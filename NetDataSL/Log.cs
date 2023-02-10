@@ -65,7 +65,7 @@ public class Log
             if (Singleton is not null)
             {
                 // ReSharper disable once HeuristicUnreachableCode
-                Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50);
                 Singleton._logMessages.Add(log);

@@ -10,8 +10,6 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
-using Microsoft.Extensions.Configuration;
-
 namespace NetDataSL.Networking;
 
 using System.Diagnostics;
@@ -65,7 +63,7 @@ public class NetworkHandler
     private static Thread gRpcThread = null!;
 
     // ReSharper disable once InconsistentNaming
-    private WebApplication app;
+    private WebApplication app = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
@@ -152,7 +150,22 @@ public class NetworkHandler
 
             sender.ProcessRequest(false);
 
-            Plugin.Singleton!.ProcessPacket(packet);
+            try
+            {
+                if (packet.Epoch + Plugin.Singleton!.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                {
+                    Log.Debug($"Packet from port {packet.Port} is an old packet (older than {Plugin.Singleton.UsableRefresh()} seconds). This packet will not be processed.");
+                    return;
+                }
+
+                Plugin.Singleton.UpdateRefreshTime(packet.RefreshSpeed);
+                UpdateProcessor.Singleton!.ProcessUpdate(packet);
+            }
+            catch (Exception e)
+            {
+                SentrySdk.CaptureException(e);
+            }
+
             await this.SendResult(httpContext, StatusCodes.Status200OK, "packet receieved", sender);
         }
         catch (Exception e)

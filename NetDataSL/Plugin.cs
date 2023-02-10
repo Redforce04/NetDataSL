@@ -17,7 +17,6 @@ using System.Collections.Concurrent;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking;
 using NetDataSL.StructsAndClasses;
-using Sentry;
 
 /// <summary>
 /// The main plugin. Does all of the processing and is instantiated via <see cref="Program"/>.
@@ -41,7 +40,6 @@ public class Plugin
     /// </summary>
     internal static readonly string PluginName = "scpsl.plugin";
     private readonly float _serverRefreshTime = -1f;
-    private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
     private float _refreshTime = 5f;
 #pragma warning restore SA1401
 
@@ -66,25 +64,24 @@ public class Plugin
     }
 
     /// <summary>
-    /// Sends a NetData update for a packet.
+    /// Gets the actual refresh time.
     /// </summary>
-    /// <param name="packet">The packet to update.</param>
-    internal void ProcessPacket(NetDataPacket packet)
+    /// <returns>The actual refresh time.</returns>
+    internal float UsableRefresh()
     {
-        try
-        {
-            if (packet.Epoch + this.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-            {
-                Log.Debug($"Packet from port {packet.Port} is an old packet (older than {this.UsableRefresh()} seconds). This packet will not be processed.");
-                return;
-            }
+        return this._serverRefreshTime > this._refreshTime ? this._serverRefreshTime : this._refreshTime;
+    }
 
-            this.UpdateRefreshTime(packet.RefreshSpeed);
-            this.ProcessStats(packet);
-        }
-        catch (Exception e)
+    /// <summary>
+    /// Sets the refresh time.
+    /// </summary>
+    /// <param name="updateTime">The new refresh time.</param>
+    internal void UpdateRefreshTime(float updateTime)
+    {
+        if (Math.Abs(updateTime - this._refreshTime) > .1f)
         {
-            SentrySdk.CaptureException(e);
+            Log.Debug($"Updated Refresh Speed.");
+            this._refreshTime = updateTime;
         }
     }
 
@@ -110,16 +107,7 @@ public class Plugin
     private void Init()
     {
         Log.Debug($"Starting Net-data Integration");
-        this.CreateDirectories();
         this.StartMainRunningLoop();
-    }
-
-    private void CreateDirectories()
-    {
-        if (!Directory.Exists(this._tempDirectory))
-        {
-            Directory.CreateDirectory(this._tempDirectory);
-        }
     }
 
     private void StartMainRunningLoop()
@@ -152,25 +140,5 @@ public class Plugin
         }
 
         Environment.Exit(0);
-    }
-
-    private float UsableRefresh()
-    {
-        return this._serverRefreshTime > this._refreshTime ? this._serverRefreshTime : this._refreshTime;
-    }
-
-    private void UpdateRefreshTime(float updateTime)
-    {
-        if (Math.Abs(updateTime - this._refreshTime) > .1f)
-        {
-            Log.Debug($"Updated Refresh Speed.");
-            this._refreshTime = updateTime;
-        }
-    }
-
-    private void ProcessStats(NetDataPacket packet)
-    {
-        Log.Debug($"Received Stats Data");
-        UpdateProcessor.Singleton!.ProcessUpdate(packet);
     }
 }

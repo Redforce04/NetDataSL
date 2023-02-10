@@ -12,6 +12,8 @@
 
 namespace NetDataSL;
 
+using System.Collections.Concurrent;
+
 // ReSharper disable three RedundantNameQualifier
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
@@ -29,7 +31,7 @@ public class UpdateProcessor
 #pragma warning disable SA1401
     internal static UpdateProcessor? Singleton;
 #pragma warning restore SA1401
-    private readonly Dictionary<ChartImplementationType, List<DataSet>> _dataSets = null!;
+    private readonly ConcurrentDictionary<ChartImplementationType, ConcurrentBag<DataSet>> _dataSets = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateProcessor"/> class.
@@ -42,14 +44,12 @@ public class UpdateProcessor
         }
 
         Singleton = this;
-        this._dataSets = new Dictionary<ChartImplementationType, List<DataSet>>()
-        {
-            { ChartImplementationType.Cpu, new List<DataSet>() },
-            { ChartImplementationType.Memory, new List<DataSet>() },
-            { ChartImplementationType.Tps, new List<DataSet>() },
-            { ChartImplementationType.LowTps, new List<DataSet>() },
-            { ChartImplementationType.Players, new List<DataSet>() },
-        };
+        this._dataSets = new ConcurrentDictionary<ChartImplementationType, ConcurrentBag<DataSet>>();
+        this._dataSets.GetOrAdd(ChartImplementationType.Cpu, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Memory, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Tps, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.LowTps, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentBag<DataSet>());
     }
 
     /// <summary>

@@ -12,6 +12,8 @@
 
 namespace NetDataSL;
 
+using System.Collections.Concurrent;
+
 // ReSharper disable three RedundantNameQualifier
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
@@ -88,7 +90,7 @@ public class ChartIntegration
     /// </summary>
     /// <param name="implementationType">The type of chart to update.</param>
     /// <param name="dataSets">A list of all data to update.</param>
-    public void UpdateChartData(ChartImplementationType implementationType, List<DataSet> dataSets)
+    public void UpdateChartData(ChartImplementationType implementationType, ConcurrentBag<DataSet> dataSets)
     {
         Chart? chart = this.GetChartByChartType(implementationType);
         if (chart == null)
@@ -97,7 +99,8 @@ public class ChartIntegration
             return;
         }
 
-        var unused = new Data(chart, dataSets);
+        Log.Debug($"Sending Data for chart {chart} ({dataSets.Count})");
+        var unused = new Data(chart, dataSets.ToList());
     }
 
     private void Init()

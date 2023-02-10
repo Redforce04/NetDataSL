@@ -33,7 +33,7 @@ public class TpsChart : Chart
 
     private const string ChartInfo = "Average Tps";
 
-    public override string Type => "scpsl";
+    public override string Type => "ScpSL";
 
     public override string Id => $"tps";
 
@@ -43,7 +43,7 @@ public class TpsChart : Chart
 
     public override string Units => "average ticks per second";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Average Tps";
 
     public override string Context => "scpsl.average_tps";
 

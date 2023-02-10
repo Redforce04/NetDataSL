@@ -31,7 +31,7 @@ public class PlayersChart : Chart
 
     private const string ChartInfo = "Player";
 
-    public override string Type => "scpsl";
+    public override string Type => "ScpSL";
 
     public override string Id => $"players";
 
@@ -41,7 +41,7 @@ public class PlayersChart : Chart
 
     public override string Units => "players ingame";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Players";
 
     public override string Context => "scpsl.player_count";
 

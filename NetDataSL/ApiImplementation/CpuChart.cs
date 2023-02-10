@@ -27,7 +27,7 @@ public class CpuChart : Chart
     private const string ChartInfo = "Cpu";
 
     /// <inheritdoc/>
-    public override string Type => "scpsl";
+    public override string Type => "ScpSL";
 
     /// <inheritdoc/>
     public override string Id => $"cpu";
@@ -42,7 +42,7 @@ public class CpuChart : Chart
     public override string Units => "percent of cpu cores used";
 
     /// <inheritdoc/>
-    public override string Family => $"scpsl";
+    public override string Family => $"Cpu Usage";
 
     /// <inheritdoc/>
     public override string Context => "scpsl.cpu_usage";

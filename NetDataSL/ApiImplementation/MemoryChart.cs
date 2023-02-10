@@ -32,7 +32,7 @@ public class MemoryChart : Chart
 
     private const string ChartInfo = "Memory";
 
-    public override string Type => "scpsl";
+    public override string Type => "ScpSL";
 
     public override string Id => $"memory";
 
@@ -42,7 +42,7 @@ public class MemoryChart : Chart
 
     public override string Units => "mb of memory allocated";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Memory";
 
     public override string Context => "scpsl.memory_usage";
 

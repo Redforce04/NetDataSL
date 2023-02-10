@@ -33,7 +33,7 @@ public class LowTpsChart : Chart
 
     private const string ChartInfo = "Low Tps";
 
-    public override string Type => "scpsl";
+    public override string Type => "ScpSL";
 
     public override string Id => $"low_tps";
 
@@ -43,7 +43,7 @@ public class LowTpsChart : Chart
 
     public override string Units => "low tps warnings";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Low Tps Warnings";
 
     public override string Context => "scpsl.low_tps";
 

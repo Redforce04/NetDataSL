@@ -14,7 +14,6 @@ namespace NetDataSL
 {
     using System.Text.RegularExpressions;
     using Sentry;
-    using Sentry.AspNet;
 
     /// <summary>
     /// The main program. Where everything is started.
@@ -57,7 +56,6 @@ namespace NetDataSL
                        o.Release = AssemblyInfo.CommitHash;
                        o.Environment = AssemblyInfo.CommitBranch;
                        o.AutoSessionTracking = true;
-                       o.AddAspNet();
 
                        // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
                        // We recommend adjusting this value in production.

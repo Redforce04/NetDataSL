@@ -59,7 +59,6 @@ public class Config
         this.ConfigPath = path;
         this.DirectoryPath = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
         Singleton = this;
-
         if (!Directory.Exists(this.DirectoryPath))
         {
             Directory.CreateDirectory(this.DirectoryPath);

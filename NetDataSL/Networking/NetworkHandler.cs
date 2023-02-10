@@ -103,8 +103,8 @@ public class NetworkHandler
         Log.Debug($"Creating Builder with host http://{host}");
         var builder = WebApplication.CreateBuilder();
         builder.Logging.ClearProviders();
-        builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         this.app = builder.Build();
+        this.app.UseSentryTracing();
 
         // ReSharper disable once ArrangeThisQualifier
         this.app.MapPost("/packet", async (httpContext) => await this.ProcessPostRequest(httpContext));

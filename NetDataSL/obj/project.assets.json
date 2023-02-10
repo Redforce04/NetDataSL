@@ -305,7 +305,7 @@
           }
         }
       },
-      "Sentry/3.27.1": {
+      "Sentry/3.28.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/Sentry.dll": {
@@ -319,6 +319,23 @@
         },
         "build": {
           "buildTransitive/Sentry.targets": {}
+        }
+      },
+      "Sentry.AspNet/3.28.1": {
+        "type": "package",
+        "dependencies": {
+          "Sentry": "3.28.1",
+          "Sentry.DiagnosticSource": "3.28.1"
+        },
+        "compile": {
+          "lib/net461/Sentry.AspNet.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net461/Sentry.AspNet.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Sentry.AspNetCore/3.27.1": {
@@ -339,6 +356,23 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Sentry.DiagnosticSource/3.28.1": {
+        "type": "package",
+        "dependencies": {
+          "Sentry": "3.28.1",
+          "System.Diagnostics.DiagnosticSource": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Sentry.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Sentry.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
+        }
       },
       "Sentry.Extensions.Logging/3.27.1": {
         "type": "package",
@@ -1455,7 +1489,7 @@
           "runtimes/win/lib/netstandard1.5/System.Runtime.Extensions.dll": {}
         }
       },
-      "Sentry/3.27.1": {
+      "Sentry/3.28.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/Sentry.dll": {
@@ -1469,6 +1503,23 @@
         },
         "build": {
           "buildTransitive/Sentry.targets": {}
+        }
+      },
+      "Sentry.AspNet/3.28.1": {
+        "type": "package",
+        "dependencies": {
+          "Sentry": "3.28.1",
+          "Sentry.DiagnosticSource": "3.28.1"
+        },
+        "compile": {
+          "lib/net461/Sentry.AspNet.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net461/Sentry.AspNet.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Sentry.AspNetCore/3.27.1": {
@@ -1489,6 +1540,23 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Sentry.DiagnosticSource/3.28.1": {
+        "type": "package",
+        "dependencies": {
+          "Sentry": "3.28.1",
+          "System.Diagnostics.DiagnosticSource": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Sentry.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Sentry.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
+        }
       },
       "Sentry.Extensions.Logging/3.27.1": {
         "type": "package",
@@ -2993,10 +3061,10 @@
         "runtimes/win/lib/netstandard1.5/System.Runtime.Extensions.dll"
       ]
     },
-    "Sentry/3.27.1": {
-      "sha512": "fSJJ0ZaWl9DSOHH3lEnIWT/7rgUxEvgX1dgqdjYI6h2pf8bgfH9pBCIG/UlPARRPgfZ/h9RW2NEjIcj7+xhGuA==",
+    "Sentry/3.28.1": {
+      "sha512": "6yt9g9VZnc7OSItlD1C4Ar80Rqwv38OmVINr1S3hVZquo2D86A2ezgcHEqmTUkYJ3DVU+zvZQTTQw4NV/sojSA==",
       "type": "package",
-      "path": "sentry/3.27.1",
+      "path": "sentry/3.28.1",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -3023,7 +3091,7 @@
         "lib/netstandard2.1/Sentry.dll",
         "lib/netstandard2.1/Sentry.xml",
         "sentry-nuget.png",
-        "sentry.3.27.1.nupkg.sha512",
+        "sentry.3.28.1.nupkg.sha512",
         "sentry.nuspec",
         "tools/sentry-cli-Darwin-arm64",
         "tools/sentry-cli-Darwin-x86_64",
@@ -3032,6 +3100,21 @@
         "tools/sentry-cli-Linux-x86_64",
         "tools/sentry-cli-Windows-i686.exe",
         "tools/sentry-cli-Windows-x86_64.exe"
+      ]
+    },
+    "Sentry.AspNet/3.28.1": {
+      "sha512": "gLMe/LvVO8xmiuW9kWF3uOh0UvYceS0NVluMgoDMO1JFhtfaB6PT0aCpjJXRxDL6nbKgvwKei8WQ6nGJRPwh4A==",
+      "type": "package",
+      "path": "sentry.aspnet/3.28.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net461/Sentry.AspNet.dll",
+        "lib/net461/Sentry.AspNet.xml",
+        "sentry-nuget.png",
+        "sentry.aspnet.3.28.1.nupkg.sha512",
+        "sentry.aspnet.nuspec"
       ]
     },
     "Sentry.AspNetCore/3.27.1": {
@@ -3053,6 +3136,25 @@
         "sentry-nuget.png",
         "sentry.aspnetcore.3.27.1.nupkg.sha512",
         "sentry.aspnetcore.nuspec"
+      ]
+    },
+    "Sentry.DiagnosticSource/3.28.1": {
+      "sha512": "C7nXqqp7dsXnSTJXdFqCZvv7CzwegmnZqK00OZPpPFNBu/+OSc9Hx0DY6bjljVopwOwWqboo0U5wmtroN69how==",
+      "type": "package",
+      "path": "sentry.diagnosticsource/3.28.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net461/Sentry.DiagnosticSource.dll",
+        "lib/net461/Sentry.DiagnosticSource.xml",
+        "lib/netstandard2.0/Sentry.DiagnosticSource.dll",
+        "lib/netstandard2.0/Sentry.DiagnosticSource.xml",
+        "lib/netstandard2.1/Sentry.DiagnosticSource.dll",
+        "lib/netstandard2.1/Sentry.DiagnosticSource.xml",
+        "sentry-nuget.png",
+        "sentry.diagnosticsource.3.28.1.nupkg.sha512",
+        "sentry.diagnosticsource.nuspec"
       ]
     },
     "Sentry.Extensions.Logging/3.27.1": {
@@ -5324,25 +5426,26 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Newtonsoft.Json >= 9.0.1",
+      "Sentry.AspNet >= 3.28.1",
       "Sentry.AspNetCore >= 3.27.1",
       "StyleCop.Analyzers >= 1.2.0-beta.435",
       "System.Text.Json >= 7.0.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\redfo\\.nuget\\packages\\": {}
+    "C:\\Users\\AJ Blessing\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+      "projectUniqueName": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
       "projectName": "NetDataSL",
-      "projectPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
-      "packagesPath": "C:\\Users\\redfo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
+      "projectPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+      "packagesPath": "C:\\Users\\AJ Blessing\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\redfo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\AJ Blessing\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5371,6 +5474,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[9.0.1, )"
+          },
+          "Sentry.AspNet": {
+            "target": "Package",
+            "version": "[3.28.1, )"
           },
           "Sentry.AspNetCore": {
             "target": "Package",
@@ -5429,5 +5536,17 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Sentry.AspNet 3.28.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Sentry.AspNet",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

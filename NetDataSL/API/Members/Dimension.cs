@@ -1,17 +1,23 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         Dimension.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/28/2023 12:54 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
-
 namespace NetDataSL.API.Members;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
+using Sentry;
+
+#pragma warning disable
 public class Dimension
 {
     public Dimension(string id, string name = "", Algorithm algorithm = Algorithm.Absolute, int multiplier = 1, int divisor = 1, bool obsolete = false, bool hidden = false)
@@ -59,25 +65,22 @@ public class Dimension
 
             // Needs to send the chart first
             // DIMENSION id [name [algorithm [multiplier [divisor [options]]]]]
-            var content = $"DIMENSION {Field.Process(Id, FieldType.DimensionId)} [" +
-                          $"{Process(Name, FieldType.Name)} [" +
-                          $"{Process(Algorithm, FieldType.Algorithm)} [" +
-                          $"{Process(Multiplier, FieldType.Multiplier)} [" +
-                          $"{Process(Divisor, FieldType.Divisor)} [" +
+            var content = $"DIMENSION '{Field.Process(Id, FieldType.DimensionId)}' " +
+                          $"'{Process(Name, FieldType.Name)}' " +
+                          $"'{Process(Algorithm, FieldType.Algorithm)}' " +
+                          $"'{Process(Multiplier, FieldType.Multiplier)}' " +
+                          $"'{Process(Divisor, FieldType.Divisor)}' '" +
                           Process(Obsolete, FieldType.Obsolete) +
                           Process(Hidden, FieldType.Hidden) +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]" +
-                          $"]";
-            Log.Line(content.Replace("[","").Replace("]",""));
+                          $"'";
+            Log.Line(content);
             if (localSend)
                 Chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the dimension because a value was empty. The dimension will not be sent.");
         }
     }
@@ -156,5 +159,4 @@ public class Dimension
     
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
-
-
+#pragma warning restore

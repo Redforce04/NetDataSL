@@ -1,17 +1,23 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         Variable.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 2:55 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/28/2023 2:55 PM
 // -----------------------------------------
 
-using NetDataSL.API.Enums;
-using NetDataSL.API.Extensions;
-
 namespace NetDataSL.API.Members;
 
+// ReSharper disable twice RedundantNameQualifier
+using NetDataSL.API.Enums;
+using NetDataSL.API.Extensions;
+using Sentry;
+
+#pragma warning disable
 public class Variable
 {
     private void Send(bool localSend = true)
@@ -25,17 +31,18 @@ public class Variable
         try
         {
             // VARIABLE [SCOPE] name = value
-            var content = $"VARIABLE [{Process(Scope, FieldType.Scope)}] " +
-                          $"{Process(Name, FieldType.VariableName)} = " +
-                          $"{Process(Value, FieldType.Value)}";
-            Log.Line(content.Replace("[","").Replace("]",""));
+            var content = $"VARIABLE '{Process(Scope, FieldType.Scope)}' " +
+                          $"'{Process(Name, FieldType.VariableName)}' = " +
+                          $"'{Process(Value, FieldType.Value)}'";
+            Log.Line(content);
 
             if (localSend && (int)this.Scope == 0 && _chart != null)
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
             Log.Error("Cannot create the variable because a value was empty. The variable will not be sent.");
         }
     }
@@ -94,3 +101,4 @@ public class Variable
     private double _value;
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
+#pragma warning restore

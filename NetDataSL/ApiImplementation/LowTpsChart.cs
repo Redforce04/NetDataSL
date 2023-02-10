@@ -1,17 +1,21 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
-//    FileName:         LowFpsChart.cs
+//    FileName:         LowTpsChart.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 1:34 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/27/2023 10:43 PM
 // -----------------------------------------
 
+#pragma warning disable
+namespace NetDataSL.ApiImplementation;
+
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Members;
-
-
-namespace NetDataSL.ApiImplementation;
 
 public class LowTpsChart : Chart
 {
@@ -27,11 +31,11 @@ public class LowTpsChart : Chart
     }
 
 
-    private const string ChartInfo = "low_tps";
+    private const string ChartInfo = "Low Tps";
 
     public override string Type => "scpsl";
 
-    public override string Id => $"{ChartInfo}";
+    public override string Id => $"low_tps";
 
     public override string Name => ChartInfo;
 
@@ -39,9 +43,9 @@ public class LowTpsChart : Chart
 
     public override string Units => "low tps warnings";
 
-    public override string Family => $"{ChartInfo}";
+    public override string Family => $"Low Tps Warnings";
 
-    public override string Context => ChartInfo;
+    public override string Context => "scpsl.low_tps";
 
     public override ChartType ChartType => ChartType.Line;
 
@@ -56,7 +60,7 @@ public class LowTpsChart : Chart
     public override bool StoreFirst => false;
 
     public override bool Hidden => false;
-    public override string Module => "lowtps";
+    public override string Module => "LowTps";
 
 }
 class LowTpsChartDimensions : Dimension
@@ -69,11 +73,12 @@ class LowTpsChartDimensions : Dimension
 
     private int Server { get; }
     private string ServerName { get; }
-    public override string Id => $"lowtps-{Server}";
-    public override string Name => $"\"{ServerName}\" Low Tps Warnings";
+    public override string Id => $"lowtps.{Server}";
+    public override string Name => $"{ServerName}";
     public override Algorithm Algorithm => Algorithm.Absolute;
     public override int Multiplier => 1;
-    public override int Divisor => 1000;
+    public override int Divisor => 1;
     public override bool Obsolete => false;
     public override bool Hidden => false;
 }
+#pragma warning restore

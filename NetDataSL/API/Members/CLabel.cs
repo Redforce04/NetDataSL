@@ -1,16 +1,22 @@
-﻿// -----------------------------------------
+﻿// <copyright file="Log.cs" company="Redforce04#4091">
+// Copyright (c) Redforce04. All rights reserved.
+// </copyright>
+// -----------------------------------------
 //    Solution:         NetDataSL
 //    Project:          NetDataSL
 //    FileName:         CLabel.cs
 //    Author:           Redforce04#4091
-//    Revision Date:    01/28/2023 5:22 PM
+//    Revision Date:    02/03/2023 1:18 PM
 //    Created Date:     01/28/2023 5:22 PM
 // -----------------------------------------
 
+namespace NetDataSL.API.Members;
+
+#pragma warning disable
+// ReSharper disable twice RedundantNameQualifier
 using NetDataSL.API.Enums;
 using NetDataSL.API.Extensions;
-
-namespace NetDataSL.API.Members;
+using Sentry;
 
 public class CLabel
 {
@@ -40,17 +46,19 @@ public class CLabel
         try
         {
 
-            var content = $"CLABEL {Process(Name, FieldType.CLabelName)} " +
-                          $"{Process(Value, FieldType.CLabelValue)} " +
-                          $"{Process(Source, FieldType.CLabelSource)}";
+            var content = $"CLABEL '{Process(Name, FieldType.CLabelName)}' " +
+                          $"'{Process(Value, FieldType.CLabelValue)}' " +
+                          $"'{Process(Source, FieldType.CLabelSource)}'";
             Log.Line(content.Replace("[","").Replace("]",""));
             Commit();
             if (localSend)
                 _chart.ReloadOtherTriggerSend();
 
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException err)
         {
+            SentrySdk.CaptureException(err);
+
             Log.Error("Cannot create the clabel because a value was empty. The clabel will not be sent.");
         }
 
@@ -82,3 +90,4 @@ public class CLabel
     
     private string Process(object value, FieldType field) => Field.Process(value, field);
 }
+#pragma warning restore

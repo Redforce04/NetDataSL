@@ -12,6 +12,7 @@
 
 namespace NetDataSL;
 
+using System.Collections.Concurrent;
 using System.Text;
 using Sentry;
 
@@ -27,12 +28,14 @@ public class Log
     public static Log? Singleton;
 #pragma warning restore SA1401, CA2211
 
+    // ReSharper disable HeuristicUnreachableCode
+
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
     private const bool DebugModeEnabled = false;
     private string _logPath = string.Empty;
-    private List<string> _logMessages = null!;
+    private ConcurrentBag<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;
 
     // ReSharper disable once NotAccessedField.Local
@@ -58,13 +61,13 @@ public class Log
     /// <param name="x">The debug message to log.</param>
     public static void Debug(string x)
     {
+        // ReSharper disable once RedundantAssignment
         string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
         if (DebugModeEnabled)
         {
             if (Singleton is not null)
             {
-                // ReSharper disable once HeuristicUnreachableCode
                 Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50);
@@ -123,9 +126,11 @@ public class Log
     {
         this._logMessages.Add(message);
         if (DebugModeEnabled)
+#pragma warning disable CS0162
         {
             Line(message);
         }
+#pragma warning restore CS0162
     }
 
     /// <summary>
@@ -141,13 +146,15 @@ public class Log
 
         try
         {
-            using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
+            File.AppendAllLines(this._logPath, this._logMessages);
+
+            /*using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(concatLog);
             sw.Flush();
             sw.Close();
             fs.Close();
-            File.WriteAllText(this._logPath, concatLog);
+            File.WriteAllText(this._logPath, concatLog);*/
         }
         catch (Exception e)
         {
@@ -161,10 +168,10 @@ public class Log
 
     private void Init()
     {
-        this._logPath = Config.Singleton!.LogPath + "/NetDataSL.log";
+        this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
         string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
 
-        this._logMessages = new List<string>();
+        this._logMessages = new ConcurrentBag<string>();
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);

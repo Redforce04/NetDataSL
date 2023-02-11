@@ -102,9 +102,12 @@ Potential paths include:
 Add this to the config:
 ```
 [plugin:scpsl]
+         # How often the server should send updates.
          update every = 5
+         # The path to the netdata integration config. If it has a space in it, put it in `'` quotes.
          command options = /your/path/to/the/NetDataSL/config.json
 ```
+
 Netdata should automatically detect and load the plugin within a minute or two. 
 
 The plugin will create the config for you when it is loaded. *Note: If the plugin does not have a config, it will fail to load.*
@@ -147,31 +150,37 @@ If there are any errors related to `PD[scpsl]` contact **Redforce04#4091** for s
 ```yml
 # Make sure to enable the integration
 net_data_integration_enabled: true
-# The address and port that the NetData integration is hosted on. Ie: localhost:11011
+# The address and port that the NetData integration is hosted on. Ie: 127.0.0.1:11011
 # *Note:* if your server is hosted through docker / pterodactyl, you may have to use the machine's LAN ip instead of the loopback adapter. (192.168.1.2) 
 net_data_integration_address: 127.0.0.1:11011
-# The name of the server in the panel.
+# The name of the server.
 server_name: Test Net
 # Used to communicate with the NetData integration and verify that this is a registered server with permission to update stats. 
-# You will generate this in the next step.
 api_key: '[api key]'
 ```
 
 ### Netdata Config
 ```
 [plugin:scpsl]
+         # How often the server should send updates.
          update every = 5
+         # The path to the netdata integration config. If it has a space in it, put it in `'` quotes.
          command options = /your/path/to/the/NetDataSL/config.json
 ```
 
 ### Netdata Integration Config
 ```json
 {
+  # Log path - the path to where the integration is logged.
   "LogPath": "/your/path/to/the/NetDataSL/log.log",
+  # Server instances - a list of all the servers that netdata will show.
   "ServerInstances": [
     {
+      # Port - The port of the server.
       "Port": 7777,
+      # ServerName - The Name of the server to show up in NetDatal.
       "ServerName": "Server 1",
+      # Key - The Api Key of the server to communicate with the plugin.
       "Key": "[Server 1 Api Key]"
     },
     {
@@ -180,14 +189,13 @@ api_key: '[api key]'
       "Key": "[Server 2 Api Key]"
     }
   ],
+  # Server Address - The ip address and port that the server will listen to.
   "ServerAddress": "127.0.0.1:11011"
 }
 
-# Log path - the path to where the integration is logged.
-# Server instances - a list of all the servers that netdata will configure
-#   Port - The port of the server.
-#   ServerName - The Name of the server to show up in NetDatal.
-#   Key - The Api Key of the server to communicate with the plugin.
+
+
+
 ```
 ## Other Information
 

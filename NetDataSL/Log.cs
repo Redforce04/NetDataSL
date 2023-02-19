@@ -121,7 +121,7 @@ public class Log
         Singleton._stdOut.Flush();
         if (_debugModeEnabled)
         {
-            Singleton.AddLogMessage($"{x}\n", true);
+            Singleton.AddLogMessage($"{x}", true);
         }
 
         // Thread.Sleep(50);
@@ -134,8 +134,11 @@ public class Log
     /// <param name="lineOut">If the message is sent from the line() method.</param>
     public void AddLogMessage(string message, bool lineOut = false)
     {
-        this._logMessages.Add(message);
-        if (_debugModeEnabled && lineOut)
+        if (!lineOut)
+        {
+            this._logMessages.Add(message);
+        }
+        else if (_debugModeEnabled && lineOut)
 #pragma warning disable CS0162
         {
             this._debugLineOutMessages.Add(message);
@@ -171,6 +174,7 @@ public class Log
         }
 
         this._logMessages.Clear();
+        this._debugLineOutMessages.Clear();
     }
 
     private void Init()
@@ -181,7 +185,11 @@ public class Log
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
             this._debugLineOutPath = directory + "/debug-output.log";
             this._debugLineOutMessages = new ConcurrentBag<string>();
-            this._logMessages = new ConcurrentBag<string>();
+            this._logMessages = new ConcurrentBag<string>()
+            {
+                "\n",
+                $"Loading NetDataSL Integration on commit {AssemblyInfo.CommitHash}, and branch {AssemblyInfo.CommitBranch}.",
+            };
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);

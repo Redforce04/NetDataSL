@@ -44,7 +44,7 @@ public class Plugin
     /// How often the server should send updates.
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
-    internal readonly float ServerRefreshTime = 5f;
+    internal float ServerRefreshTime = 5f;
 
 #pragma warning restore SA1401
 

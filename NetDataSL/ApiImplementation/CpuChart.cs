@@ -42,7 +42,7 @@ public class CpuChart : Chart
     public override string Units => "percent of cpu cores used";
 
     /// <inheritdoc/>
-    public override string Family => $"scpsl";
+    public override string Family => $"Cpu Usage";
 
     /// <inheritdoc/>
     public override string Context => "scpsl.cpu_usage";
@@ -60,7 +60,7 @@ public class CpuChart : Chart
     public override ChartOptions Options => ChartOptions.None;
 
     /// <inheritdoc/>
-    public override string Module => "cpu";
+    public override string Module => "Cpu";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CpuChart"/> class.

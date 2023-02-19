@@ -103,7 +103,6 @@ public class NetworkHandler
         Log.Debug($"Creating Builder with host http://{host}");
         var builder = WebApplication.CreateBuilder();
         builder.Logging.ClearProviders();
-        builder.Logging.AddProvider(new NoStdOutLoggerProvider());
         this.app = builder.Build();
 
         // ReSharper disable once ArrangeThisQualifier
@@ -150,11 +149,28 @@ public class NetworkHandler
 
             sender.ProcessRequest(false);
 
-            Plugin.Singleton!.ProcessPacket(packet);
-            if (packet.RefreshSpeed > Plugin.Singleton.ServerRefreshTime)
+            try
             {
-                await this.SendResult(httpContext, StatusCodes.Status200OK, "slow refresh time", sender, new Dictionary<string, object> { { "server refresh", Plugin.Singleton.ServerRefreshTime } });
-                return;
+                if (packet.Epoch + Plugin.Singleton!.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                {
+                    Log.Debug($"Packet from port {packet.Port} is an old packet (older than {Plugin.Singleton.ServerRefreshTime} seconds). This packet will still be processed.");
+
+                    // return;
+                }
+
+                UpdateProcessor.Singleton!.ProcessUpdate(packet);
+                if (packet.RefreshSpeed > Plugin.Singleton.ServerRefreshTime)
+                {
+                    await this.SendResult(httpContext, StatusCodes.Status200OK, "slow refresh time", sender, new Dictionary<string, object> { { "server refresh", Plugin.Singleton.ServerRefreshTime } });
+                    return;
+                }
+
+                UpdateProcessor.Singleton!.ProcessUpdate(packet);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Could not capture packet.");
+                SentrySdk.CaptureException(e);
             }
 
             await this.SendResult(httpContext, StatusCodes.Status200OK, "packet receieved", sender);
@@ -164,7 +180,7 @@ public class NetworkHandler
             SentrySdk.CaptureException(e);
 
             // If an error occurs.
-            Log.Debug($"Invalid Packet Received from: {httpContext.Request.Host}.");
+            Log.Error($"Invalid Packet Received from: {httpContext.Request.Host}.");
             Log.Debug(e.ToString());
 
             await this.SendResult(httpContext, StatusCodes.Status400BadRequest, "bad packet receieved", sender);

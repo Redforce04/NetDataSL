@@ -70,6 +70,7 @@ public class Sender
     /// <returns>An instance of the sender.</returns>
     public static Sender Get(string ip, int? port)
     {
+        Log.Debug($"Getting ip {ip}, port {port}");
         if (_senders.Any(x => x.Ip == ip || (port != null && x.Port == port)))
         {
             var sender = _senders.FirstOrDefault(x => x.Ip == ip || (port != null && x.Port == port));
@@ -96,6 +97,7 @@ public class Sender
     /// <returns>True if the sender is blacklisted. False if the sender can send messages.</returns>
     internal bool IsBlacklisted()
     {
+        return false;
         if (this.IsBlackListed == false)
         {
             return false;
@@ -116,6 +118,7 @@ public class Sender
     /// <param name="apiKeyIsValid">Is the api key valid.</param>
     internal void ProcessRequest(bool apiKeyIsValid)
     {
+        return;
         foreach (var request in this.Requests)
         {
             if (request.Key.TotalSeconds <

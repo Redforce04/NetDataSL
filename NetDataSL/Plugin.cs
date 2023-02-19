@@ -17,7 +17,6 @@ using System.Collections.Concurrent;
 // ReSharper disable twice RedundantNameQualifier
 using NetDataSL.Networking;
 using NetDataSL.StructsAndClasses;
-using Sentry;
 
 /// <summary>
 /// The main plugin. Does all of the processing and is instantiated via <see cref="Program"/>.
@@ -39,7 +38,7 @@ public class Plugin
     /// <summary>
     /// The name of the netdata plugin.
     /// </summary>
-    internal static readonly string PluginName = "scpsl.plugin";
+    internal static readonly string PluginName = "ScpSL.plugin";
 
     /// <summary>
     /// How often the server should send updates.
@@ -70,29 +69,6 @@ public class Plugin
         this.Init();
     }
 
-    /// <summary>
-    /// Sends a NetData update for a packet.
-    /// </summary>
-    /// <param name="packet">The packet to update.</param>
-    internal void ProcessPacket(NetDataPacket packet)
-    {
-        try
-        {
-            if (packet.Epoch + this.ServerRefreshTime < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-            {
-                Log.Debug($"Packet from port {packet.Port} is an old packet (older than {this.ServerRefreshTime} seconds). This packet will still be processed.");
-
-                // return;
-            }
-
-            this.ProcessStats(packet);
-        }
-        catch (Exception e)
-        {
-            SentrySdk.CaptureException(e);
-        }
-    }
-
     private void InitNetDataIntegration()
     {
         this.GetServers(out var servers);
@@ -102,7 +78,6 @@ public class Plugin
 
     private void GetServers(out List<KeyValuePair<int, string>> servers)
     {
-        Thread.Sleep(7500);
         servers = new List<KeyValuePair<int, string>>();
 
         foreach (ServerConfig conf in Config.Singleton!.ServerInstances)
@@ -115,16 +90,7 @@ public class Plugin
     private void Init()
     {
         Log.Debug($"Starting Net-data Integration");
-        this.CreateDirectories();
         this.StartMainRunningLoop();
-    }
-
-    private void CreateDirectories()
-    {
-        if (!Directory.Exists(this._tempDirectory))
-        {
-            Directory.CreateDirectory(this._tempDirectory);
-        }
     }
 
     private void StartMainRunningLoop()

@@ -43,7 +43,7 @@ public class TpsChart : Chart
 
     public override string Units => "average ticks per second";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Average Tps";
 
     public override string Context => "scpsl.average_tps";
 
@@ -61,7 +61,7 @@ public class TpsChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "tps";
+    public override string Module => "Tps";
 }
 class TpsChartDimensions : Dimension
 {    

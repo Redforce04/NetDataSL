@@ -41,11 +41,11 @@ public static class Field
         {
             switch (field)
             {
-                case FieldType.Name or FieldType.Title or FieldType.Units:
+                case FieldType.Name or FieldType.Title or FieldType.Units
+                    or FieldType.Family or FieldType.Plugin or FieldType.Module:
                     return (string)value;
                 case FieldType.TypeId or FieldType.Type or FieldType.Id
-                    or FieldType.Family or FieldType.Context or FieldType.Plugin
-                    or FieldType.Module:
+                    or FieldType.Context:
                     return ((string)value).Replace(" ", "_").ToLower();
 
                 case FieldType.Priority or FieldType.Multiplier

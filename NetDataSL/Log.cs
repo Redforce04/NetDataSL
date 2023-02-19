@@ -12,6 +12,7 @@
 
 namespace NetDataSL;
 
+using System.Collections.Concurrent;
 using System.Text;
 using Sentry;
 
@@ -27,12 +28,14 @@ public class Log
     public static Log? Singleton;
 #pragma warning restore SA1401, CA2211
 
+    // ReSharper disable HeuristicUnreachableCode
+
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
     private const bool DebugModeEnabled = true;
     private string _logPath = string.Empty;
-    private List<string> _logMessages = null!;
+    private ConcurrentBag<string> _logMessages = null!;
     private StreamWriter _stdOut = null!;
 
     // ReSharper disable once NotAccessedField.Local
@@ -58,14 +61,15 @@ public class Log
     /// <param name="x">The debug message to log.</param>
     public static void Debug(string x)
     {
+        // ReSharper disable once RedundantAssignment
         string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
         if (DebugModeEnabled)
         {
             if (Singleton is not null)
             {
-                // ReSharper disable once HeuristicUnreachableCode
-                Singleton!._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                //Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                Singleton._stdOut.Write(log + "\n");
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50);
                 Singleton._logMessages.Add(log);
@@ -88,12 +92,13 @@ public class Log
     /// <param name="x">The error message to log.</param>
     public static void Error(string x)
     {
+        string log = $"[{DateTime.Now:G}] [Error] {x}    ";
+        SentrySdk.CaptureMessage(log, SentryLevel.Error);
         if (Singleton is null)
         {
             var unused = new Log();
         }
 
-        string log = $"[{DateTime.Now:G}] [Error] {x}    ";
 
         SentrySdk.CaptureMessage(log);
 
@@ -109,7 +114,8 @@ public class Log
     /// <param name="x">The information to send to StdOut.</param>
     public static void Line(string x)
     {
-        Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+        // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+        Singleton!._stdOut.Write($"{x}\n");
         Singleton._stdOut.Flush();
         Thread.Sleep(50);
     }
@@ -123,9 +129,11 @@ public class Log
     {
         this._logMessages.Add(message);
         if (DebugModeEnabled)
+#pragma warning disable CS0162
         {
             Line(message);
         }
+#pragma warning restore CS0162
     }
 
     /// <summary>
@@ -133,31 +141,22 @@ public class Log
     /// </summary>
     internal void LogMessages()
     {
-        string concatLog = string.Empty;
-        foreach (string log in this._logMessages)
-        {
-            concatLog += log + Environment.NewLine;
-        }
-
         try
         {
-            using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
+            File.AppendAllLines(this._logPath, this._logMessages);
+
+            /*using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(concatLog);
             sw.Flush();
             sw.Close();
             fs.Close();
-            File.WriteAllText(this._logPath, concatLog);
-            if (DebugModeEnabled)
-            {
-                Console.WriteLine($"[Debug] Logging Message {concatLog} to {this._logPath}");
-            }
+            File.WriteAllText(this._logPath, concatLog);*/
         }
         catch (Exception e)
         {
-            SentrySdk.CaptureException(e);
-
             Log.Error($"Could not write to logfile. Error: \n{e}");
+            SentrySdk.CaptureException(e);
         }
 
         this._logMessages.Clear();
@@ -165,23 +164,41 @@ public class Log
 
     private void Init()
     {
-        this._logPath = Config.Singleton!.LogPath + "/NetDataSL.log";
-        string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
 
-        this._logMessages = new List<string>();
-        if (!Directory.Exists(directory))
+        try
         {
-            Directory.CreateDirectory(directory);
-        }
 
-        if (!File.Exists(this._logPath))
+            this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
+            string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
+
+            this._logMessages = new ConcurrentBag<string>();
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            try
+            {
+                if (!File.Exists(this._logPath))
+                {
+                    File.Create(this._logPath).Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error at Log.Init() => Creating logging file.");
+                SentrySdk.CaptureException(e);
+            }
+
+            this._stdOut = new StreamWriter(Console.OpenStandardOutput());
+            this._stdErr = new StreamWriter(Console.OpenStandardError());
+
+            // Log.Error($"Info: Log filepath: {_logPath}");
+        }
+        catch (Exception e)
         {
-            File.Create(this._logPath).Close();
+            Log.Error("Error at Log.Init()");
+            SentrySdk.CaptureException(e);
         }
-
-        this._stdOut = new StreamWriter(Console.OpenStandardOutput());
-        this._stdErr = new StreamWriter(Console.OpenStandardError());
-
-        // Log.Error($"Info: Log filepath: {_logPath}");
     }
 }

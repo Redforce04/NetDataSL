@@ -42,7 +42,7 @@ public class MemoryChart : Chart
 
     public override string Units => "mb of memory allocated";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Memory Usage";
 
     public override string Context => "scpsl.memory_usage";
 
@@ -60,7 +60,7 @@ public class MemoryChart : Chart
 
     public override bool Hidden => false;
 
-    public override string Module => "memory";
+    public override string Module => "Memory";
 }
 
 class MemoryChartDimensions : Dimension

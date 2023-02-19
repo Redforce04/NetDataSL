@@ -41,7 +41,7 @@ public class PlayersChart : Chart
 
     public override string Units => "players ingame";
 
-    public override string Family => $"scpsl";
+    public override string Family => $"Players";
 
     public override string Context => "scpsl.player_count";
 
@@ -59,7 +59,7 @@ public class PlayersChart : Chart
 
     public override bool Hidden => false;
     
-    public override string Module => "players";
+    public override string Module => "Players";
 
 }
 class PlayersChartDimensions : Dimension

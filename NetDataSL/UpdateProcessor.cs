@@ -12,6 +12,8 @@
 
 namespace NetDataSL;
 
+using System.Collections.Concurrent;
+
 // ReSharper disable three RedundantNameQualifier
 using NetDataSL.API.Members;
 using NetDataSL.API.Structs;
@@ -29,8 +31,7 @@ public class UpdateProcessor
 #pragma warning disable SA1401
     internal static UpdateProcessor? Singleton;
 #pragma warning restore SA1401
-    private readonly Dictionary<ChartImplementationType, Dictionary<int, Data>> _dataSets = null!;
-    private DateTimeOffset _lastUpdate;
+    private readonly ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>> _dataSets = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateProcessor"/> class.
@@ -43,16 +44,13 @@ public class UpdateProcessor
         }
 
         Singleton = this;
-        this._dataSets = new Dictionary<ChartImplementationType, Dictionary<int, Data>>()
-        {
-            { ChartImplementationType.Cpu, new Dictionary<int, Data>() },
-            { ChartImplementationType.Memory, new Dictionary<int, Data>() },
-            { ChartImplementationType.Tps, new Dictionary<int, Data>() },
-            { ChartImplementationType.LowTps, new Dictionary<int, Data>() },
-            { ChartImplementationType.Players, new Dictionary<int, Data>() },
-        };
+        this._dataSets = new ConcurrentDictionary<ChartImplementationType, ConcurrentBag<DataSet>>();
+        this._dataSets.GetOrAdd(ChartImplementationType.Cpu, new ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Memory, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Tps, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.LowTps, new ConcurrentBag<DataSet>());
+        this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentBag<DataSet>());
     }
-
 
     /// <summary>
     /// Sends an update.
@@ -97,18 +95,9 @@ public class UpdateProcessor
                 {
                     Log.Error($"Chart is null when sending empty updates for servers.");
                 }
-            }
-
-            if (chartDataSet.Value.Count != 0)
-            {
-                foreach (var dataSet in data)
-                {
-                    dataSet.Call();
-                }
+                
             }
         }
-
-        this._lastUpdate = DateTimeOffset.UtcNow;
     }
 
     /// <summary>
@@ -121,12 +110,11 @@ public class UpdateProcessor
         this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true, (uint)packet.Epoch);
         this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true, (uint)packet.Epoch);
         this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players, false, (uint)packet.Epoch);
-        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.AverageTps, false, (uint)packet.Epoch);
+        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.LowTpsWarnCount, false, (uint)packet.Epoch);
     }
 
-    private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false, uint timeSinceLastUpdate = 5000)
+    private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false)
     {
-        Chart? chart = ChartIntegration.Singleton!.GetChartByChartType(type);
         Dimension? dimension =
             ChartIntegration.Singleton!.GetDimensionByChartTypeAndServer(type, server);
         if (dimension is null)

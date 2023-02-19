@@ -10,6 +10,9 @@
 //    Created Date:     01/29/2023 3:09 PM
 // -----------------------------------------
 
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -31,7 +34,8 @@ public class UpdateProcessor
 #pragma warning disable SA1401
     internal static UpdateProcessor? Singleton;
 #pragma warning restore SA1401
-    private readonly ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>> _dataSets = null!;
+    private ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>> _dataSets = null!;
+    private ConcurrentDictionary<int, ConcurrentBag<Data>> _serverStats = null!;
     private DateTimeOffset _lastUpdate;
 
     /// <summary>
@@ -46,12 +50,18 @@ public class UpdateProcessor
 
         Singleton = this;
 
-        // this._dataSets.GetOrAdd(ChartImplementationType., new ConcurrentDictionary<int, Data>());
+        this._dataSets = new ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>>();
         this._dataSets.GetOrAdd(ChartImplementationType.Cpu, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.Memory, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.Tps, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.LowTps, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentDictionary<int, Data>());
+
+        this._serverStats = new ConcurrentDictionary<int, ConcurrentBag<Data>>();
+        foreach (var server in Config.Singleton!.ServerInstances)
+        {
+            this._serverStats.GetOrAdd(server.Port, new ConcurrentBag<Data>());
+        }
     }
 
     /// <summary>
@@ -102,6 +112,37 @@ public class UpdateProcessor
             chartDataSet.Value.Clear();
         }
 
+        foreach (ServerConfig server in Config.Singleton.ServerInstances)
+        {
+            if (!this._serverStats.ContainsKey(server.Port) || this._serverStats[server.Port].Count == 0)
+            {
+                Chart? chart = ChartIntegration.Singleton!.GetChartByChartType(ChartImplementationType.Server, server.Port);
+                if (chart is null)
+                {
+                    Log.Error($"Could not send blank server stat update because the chart was null. Port: {server.Port}");
+                    return;
+                }
+
+                List<DataSet> datasets = new List<DataSet>();
+                datasets.Add(new DataSet($"stats.{server.Port}.cpu", (float)0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.memory", (float)0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.players", (int)0));
+                datasets.Add(new DataSet($"stats.{server.Port}.tps", (float)0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.lowtps", (int)0));
+                var timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)UpdateProcessor.Singleton!._lastUpdate.ToUnixTimeMilliseconds();
+                var data = new Data(chart, datasets, timeSinceLastUpdate);
+            }
+            else
+            {
+                foreach (var data in this._serverStats[server.Port])
+                {
+                    data.Call();
+                }
+
+                this._serverStats[server.Port].Clear();
+            }
+        }
+
         this._lastUpdate = DateTimeOffset.UtcNow;
     }
 
@@ -116,6 +157,32 @@ public class UpdateProcessor
         this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true, (uint)packet.Epoch);
         this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players, false, (uint)packet.Epoch);
         this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.LowTpsWarnCount, false, (uint)packet.Epoch);
+        this.AddServerStatUpdate(packet);
+    }
+
+    private void AddServerStatUpdate(NetDataPacket packet)
+    {
+        Chart? chart = ChartIntegration.Singleton!.GetChartByChartType(ChartImplementationType.Server, packet.Port);
+        if (chart is null)
+        {
+            Log.Error($"Could not process server stat update because the chart was null. Port: {packet.Port}");
+            return;
+        }
+
+        if (!this._serverStats.ContainsKey(packet.Port))
+        {
+            Log.Error($"Server stats does not contain an instance of this server. Port: {packet.Port}");
+        }
+
+        List<DataSet> datasets = new List<DataSet>();
+        datasets.Add(new DataSet($"stats.{packet.Port}.cpu", (float)packet.CpuUsage));
+        datasets.Add(new DataSet($"stats.{packet.Port}.memory", (float)packet.MemoryUsage));
+        datasets.Add(new DataSet($"stats.{packet.Port}.players", (int)packet.Players));
+        datasets.Add(new DataSet($"stats.{packet.Port}.tps", (float)packet.AverageTps));
+        datasets.Add(new DataSet($"stats.{packet.Port}.lowtps", (int)packet.LowTpsWarnCount));
+        var timeSinceLastUpdate = (uint)packet.Epoch - (uint)UpdateProcessor.Singleton!._lastUpdate.ToUnixTimeMilliseconds();
+        var data = new Data(chart, datasets, timeSinceLastUpdate, false);
+        this._serverStats[packet.Port].Add(data);
     }
 
     private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false, uint timeSinceLastUpdate = 5000)

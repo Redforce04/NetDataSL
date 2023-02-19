@@ -119,10 +119,11 @@ public class Log
     {
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
-        Singleton._stdOut.Flush();
+
+        // Singleton._stdOut.Flush();
         if (_debugModeEnabled)
         {
-            Singleton.AddLogMessage($"{x}", true);
+            Singleton.AddLogMessage($"[{DateTime.Now:G}] {x}", true);
         }
 
         // Thread.Sleep(50);

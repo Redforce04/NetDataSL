@@ -126,11 +126,6 @@ public class Config
             this.ServerInstances = config.ServerInstances;
             this.SendRate = config.SendRate;
         }
-
-        if (Plugin.Singleton!.ServerRefreshTime > this.SendRate)
-        {
-            Plugin.Singleton.ServerRefreshTime = this.SendRate;
-        }
     }
 
     /// <summary>

@@ -61,6 +61,10 @@ public class Plugin
         }
 
         Singleton = this;
+        if (this.ServerRefreshTime > Config.Singleton!.SendRate)
+        {
+            this.ServerRefreshTime = Config.Singleton.SendRate;
+        }
         var unused = new Log();
         var unused2 = new NetworkHandler(host);
         this.ServerRefreshTime = refreshRate;

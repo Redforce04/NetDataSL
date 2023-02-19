@@ -10,6 +10,8 @@
 //    Created Date:     02/05/2023 12:30 PM
 // -----------------------------------------
 
+using System.Runtime.CompilerServices;
+
 namespace NetDataSL;
 
 using System.Text.Json;
@@ -104,6 +106,21 @@ public class Config
                 this.ServerAddress = "127.0.0.1:11011";
                 this.ServerInstances = new List<ServerConfig>();
                 return;
+            }
+
+            try
+            {
+                var fileStream = File.Open(this.LogPath!, FileMode.OpenOrCreate);
+                var writer = new StreamWriter(fileStream);
+                writer.WriteLine("\n\n");
+                writer.Flush();
+                writer.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Could not write to log path. Exception {e}");
+                Environment.Exit(128);
             }
 
             this.LogPath = config.LogPath;

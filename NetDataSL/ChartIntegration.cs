@@ -107,6 +107,7 @@ public class ChartIntegration
         this.BuildMemoryCharts();
         this.BuildCpuCharts();
         this.BuildLowTpsCharts();
+        this.BuildIndividualServerCharts();
         Chart.RegisterAllCharts();
     }
 
@@ -163,5 +164,18 @@ public class ChartIntegration
         }
 
         this._charts.Add(ChartImplementationType.LowTps, new LowTpsChart(dimensions));
+    }
+
+    private void BuildIndividualServerCharts()
+    {
+        foreach (var server in Config.Singleton!.ServerInstances)
+        {
+            List<Dimension> dimensions = new List<Dimension>();
+
+            foreach (string chartType in Enum.GetNames(typeof(ChartImplementationType)))
+            {
+                
+            }
+        }
     }
 }

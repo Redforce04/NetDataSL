@@ -40,7 +40,7 @@ public struct Data
     /// <param name="microseconds">The milliseconds since the last update.</param>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
 #pragma warning disable SA1201
-    public Data(Chart chart, List<DataSet> dataSet, uint microseconds = 5000)
+    public Data(Chart chart, List<DataSet> dataSet, uint microseconds = 5000, bool sendOnCreation = true)
 #pragma warning restore SA1201
     {
         if (dataSet.Count == 0)
@@ -58,7 +58,10 @@ public struct Data
         this.DataSet = dataSet;
         this._cancel = false;
         this._sent = false;
-        this.Call();
+        if (sendOnCreation)
+        {
+            this.Call();
+        }
     }
 
     /// <summary>
@@ -75,7 +78,7 @@ public struct Data
         }
     }
 
-    private void Call()
+    public void Call()
     {
         this.Begin();
         this.Set();

@@ -10,8 +10,6 @@
 //    Created Date:     02/01/2023 10:26 AM
 // -----------------------------------------
 
-using Microsoft.Extensions.Configuration;
-
 namespace NetDataSL.Networking;
 
 using System.Diagnostics;
@@ -65,7 +63,7 @@ public class NetworkHandler
     private static Thread gRpcThread = null!;
 
     // ReSharper disable once InconsistentNaming
-    private WebApplication app;
+    private WebApplication app = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetworkHandler"/> class.
@@ -153,6 +151,12 @@ public class NetworkHandler
             sender.ProcessRequest(false);
 
             Plugin.Singleton!.ProcessPacket(packet);
+            if (packet.RefreshSpeed > Plugin.Singleton.ServerRefreshTime)
+            {
+                await this.SendResult(httpContext, StatusCodes.Status200OK, "slow refresh time", sender, new Dictionary<string, object> { { "server refresh", Plugin.Singleton.ServerRefreshTime } });
+                return;
+            }
+
             await this.SendResult(httpContext, StatusCodes.Status200OK, "packet receieved", sender);
         }
         catch (Exception e)
@@ -183,7 +187,7 @@ public class NetworkHandler
         return true;
     }
 
-    private async Task SendResult(HttpContext httpContext, int response, string message, Sender sender)
+    private async Task SendResult(HttpContext httpContext, int response, string message, Sender sender, Dictionary<string, object>? optionalValues = null)
     {
         if (response != 200)
         {
@@ -205,7 +209,7 @@ public class NetworkHandler
         }
 
         // Return the status.
-        var data = new Dictionary<string, object>();
+        var data = optionalValues == null ? new Dictionary<string, object>() : optionalValues;
         data.Add("status", response);
         data.Add("message", message);
         await Results.Json(data).ExecuteAsync(httpContext);

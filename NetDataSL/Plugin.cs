@@ -40,9 +40,14 @@ public class Plugin
     /// The name of the netdata plugin.
     /// </summary>
     internal static readonly string PluginName = "scpsl.plugin";
-    private readonly float _serverRefreshTime = -1f;
+
+    /// <summary>
+    /// How often the server should send updates.
+    /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
+    internal readonly float ServerRefreshTime = 5f;
+
     private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
-    private float _refreshTime = 5f;
 #pragma warning restore SA1401
 
     /// <summary>
@@ -60,7 +65,7 @@ public class Plugin
         Singleton = this;
         var unused = new Log();
         var unused2 = new NetworkHandler(host);
-        this._refreshTime = refreshRate;
+        this.ServerRefreshTime = refreshRate;
         this.InitNetDataIntegration();
         this.Init();
     }
@@ -73,13 +78,13 @@ public class Plugin
     {
         try
         {
-            if (packet.Epoch + this.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+            if (packet.Epoch + this.ServerRefreshTime < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
             {
-                Log.Debug($"Packet from port {packet.Port} is an old packet (older than {this.UsableRefresh()} seconds). This packet will not be processed.");
-                return;
+                Log.Debug($"Packet from port {packet.Port} is an old packet (older than {this.ServerRefreshTime} seconds). This packet will still be processed.");
+
+                // return;
             }
 
-            this.UpdateRefreshTime(packet.RefreshSpeed);
             this.ProcessStats(packet);
         }
         catch (Exception e)
@@ -128,7 +133,7 @@ public class Plugin
         while (DateTime.UtcNow < restartEveryHour)
         {
             var now = DateTime.UtcNow.TimeOfDay;
-            now = now.Add(new TimeSpan(0, 0, (int)this.UsableRefresh()));
+            now = now.Add(new TimeSpan(0, 0, (int)this.ServerRefreshTime));
 
             // Get the delay necessary.
             // foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);
@@ -152,20 +157,6 @@ public class Plugin
         }
 
         Environment.Exit(0);
-    }
-
-    private float UsableRefresh()
-    {
-        return this._serverRefreshTime > this._refreshTime ? this._serverRefreshTime : this._refreshTime;
-    }
-
-    private void UpdateRefreshTime(float updateTime)
-    {
-        if (Math.Abs(updateTime - this._refreshTime) > .1f)
-        {
-            Log.Debug($"Updated Refresh Speed.");
-            this._refreshTime = updateTime;
-        }
     }
 
     private void ProcessStats(NetDataPacket packet)

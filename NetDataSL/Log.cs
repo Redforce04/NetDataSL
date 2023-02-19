@@ -124,7 +124,7 @@ public class Log
             Singleton.AddLogMessage($"[{DateTime.Now:G}] {x}", true);
         }
 
-        Thread.Sleep(25);
+        // Thread.Sleep(25);
         Singleton._stdOut.Flush();
         Thread.Sleep(25);
 

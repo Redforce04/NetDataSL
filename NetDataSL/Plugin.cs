@@ -65,7 +65,9 @@ public class Plugin
         var unused2 = new NetworkHandler(host);
         this.ServerRefreshTime = refreshRate;
         this.InitNetDataIntegration();
-        this.Init();
+        Thread.Sleep(1000);
+        Log.Debug($"Starting Net-data Integration");
+        this.StartMainRunningLoop();
     }
 
     private void InitNetDataIntegration()
@@ -84,12 +86,6 @@ public class Plugin
             this.Servers.TryAdd(conf.Port, conf);
             servers.Add(new KeyValuePair<int, string>(conf.Port, conf.ServerName));
         }
-    }
-
-    private void Init()
-    {
-        Log.Debug($"Starting Net-data Integration");
-        this.StartMainRunningLoop();
     }
 
     private void StartMainRunningLoop()

@@ -12,7 +12,6 @@
 
 namespace NetDataSL
 {
-    using System.Text.RegularExpressions;
     using Sentry;
 
     /// <summary>
@@ -32,8 +31,6 @@ namespace NetDataSL
             string configFilePath = string.Empty;
             if (args.Length > 0)
             {
-                //ProcessArguments(args, out List<string> properArguments);
-
                 try
                 {
                     for (int i = 0; i < args.Length; i++)
@@ -80,23 +77,6 @@ namespace NetDataSL
                 // ReSharper disable once RedundantNameQualifier
                 Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
                 var unused2 = new Plugin(refreshTime, Config.Singleton!.ServerAddress);
-            }
-        }
-
-        private static void ProcessArguments(string[] args, out List<string> properArguments)
-        {
-            properArguments = new List<string>();
-            string combinedargs = string.Empty;
-            foreach (string arg in args)
-            {
-                combinedargs += $"{arg} ";
-            }
-
-            Regex regex = new Regex("(\"[^\"]+\"|[^\\s\"]+)");
-            var result = regex.Matches(combinedargs);
-            foreach (Match match in result)
-            {
-                properArguments.Add(match.Value.Replace("\"", string.Empty));
             }
         }
 

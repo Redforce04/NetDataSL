@@ -77,6 +77,7 @@ public class Config
             StreamWriter writer = new StreamWriter(stream);
             this.LogPath = this.DirectoryPath + "/scpsl.log";
             this.ServerAddress = "127.0.0.1:11011";
+            this.DebugMode = false;
             this.ServerInstances = new List<ServerConfig>()
             {
                 new ServerConfig(7777, "Server 1", "[insert server 1 key here]"),
@@ -103,6 +104,7 @@ public class Config
                 this.LogPath = string.Empty;
                 this.ServerAddress = "127.0.0.1:11011";
                 this.ServerInstances = new List<ServerConfig>();
+                this.DebugMode = false;
                 return;
             }
 
@@ -133,17 +135,25 @@ public class Config
     /// <param name="LogPath">The log path for this plugin.</param>
     /// <param name="ServerInstances">The server instances for this plugin.</param>
     /// <param name="ServerAddress">The address for the webapi.</param>
+    /// <param name="DebugMode">The setting for enabling or disabling Debug Mode.</param>
     [JsonConstructor]
 #pragma warning disable CS8618,SA1313
 
     // ReSharper disable InconsistentNaming
-    public Config(string LogPath, List<ServerConfig> ServerInstances, string ServerAddress)
+    public Config(string LogPath, List<ServerConfig> ServerInstances, string ServerAddress, bool DebugMode)
 #pragma warning restore CS8618,SA1313
     {
         this.LogPath = LogPath;
         this.ServerInstances = ServerInstances;
         this.ServerAddress = ServerAddress;
+        this.DebugMode = DebugMode;
     }
+
+    /// <summary>
+    /// Gets a value indicating whether gets or sets the debug mode for output tracing.
+    /// </summary>
+    [JsonPropertyName("DebugMode")]
+    public bool DebugMode { get; private set; }
 
     /// <summary>
     /// Gets the path for file logging.

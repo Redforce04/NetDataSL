@@ -32,9 +32,11 @@ public class Log
     /// <summary>
     /// Should Logs output directly into stdout - note that this may mess with the plugin so try to avoid it.
     /// </summary>
-    private const bool DebugModeEnabled = true;
+    private static bool _debugModeEnabled = true;
     private string _logPath = string.Empty;
+    private string _debugLineOutPath = string.Empty;
     private ConcurrentBag<string> _logMessages = null!;
+    private ConcurrentBag<string> _debugLineOutMessages = null!;
     private StreamWriter _stdOut = null!;
 
     // ReSharper disable once NotAccessedField.Local
@@ -50,6 +52,7 @@ public class Log
             return;
         }
 
+        _debugModeEnabled = Config.Singleton!.DebugMode;
         Singleton = this;
         this.Init();
     }
@@ -63,19 +66,19 @@ public class Log
         // ReSharper disable once RedundantAssignment
         string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
 #pragma warning disable CS0162
-        if (DebugModeEnabled)
+        if (_debugModeEnabled)
         {
             if (Singleton is not null)
             {
                 // Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
-                Singleton._stdOut.Write(log + "\n");
+                /*Singleton._stdOut.Write(log + "\n");
                 Singleton._stdOut.Flush();
-                Thread.Sleep(50);
+                Thread.Sleep(50); */
                 Singleton._logMessages.Add(log);
             }
             else
             {
-                Console.Write(log);
+                // Console.Write(log);
             }
 
             SentrySdk.CaptureMessage(log);
@@ -115,21 +118,33 @@ public class Log
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
         Singleton._stdOut.Flush();
-        Thread.Sleep(50);
+        if (_debugModeEnabled)
+        {
+            Singleton.AddLogMessage($"{x}\n", true);
+        }
+
+        // Thread.Sleep(50);
     }
 
     /// <summary>
     /// Adds a log message to the file log.
     /// </summary>
-    /// <param name="message">The message to add to the file log.
-    /// </param>
-    public void AddLogMessage(string message)
+    /// <param name="message">The message to add to the file log.</param>
+    /// <param name="lineOut">If the message is sent from the line() method.</param>
+    public void AddLogMessage(string message, bool lineOut = false)
     {
         this._logMessages.Add(message);
-        if (DebugModeEnabled)
+        if (_debugModeEnabled)
 #pragma warning disable CS0162
         {
-            Line(message);
+            if (!lineOut)
+            {
+                Line(message);
+            }
+            else
+            {
+                this._debugLineOutMessages.Add(message);
+            }
         }
 #pragma warning restore CS0162
     }
@@ -142,6 +157,10 @@ public class Log
         try
         {
             File.AppendAllLines(this._logPath, this._logMessages);
+            if (_debugModeEnabled)
+            {
+                File.AppendAllLines(this._debugLineOutPath, this._debugLineOutMessages);
+            }
 
             /*using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
@@ -166,7 +185,8 @@ public class Log
         {
             this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
-
+            this._debugLineOutPath = directory += "/debug-output.log";
+            this._debugLineOutMessages = new ConcurrentBag<string>();
             this._logMessages = new ConcurrentBag<string>();
             if (!Directory.Exists(directory))
             {

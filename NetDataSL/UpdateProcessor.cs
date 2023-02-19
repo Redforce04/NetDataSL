@@ -160,11 +160,11 @@ public class UpdateProcessor
     /// <param name="packet">the packet to update.</param>
     internal void ProcessUpdate(NetDataPacket packet)
     {
-        this.AddUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true, (uint)packet.Epoch);
-        this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true, (uint)packet.Epoch);
-        this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true, (uint)packet.Epoch);
-        this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players, false, (uint)packet.Epoch);
-        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.LowTpsWarnCount, false, (uint)packet.Epoch);
+        this.AddUpdate(ChartImplementationType.Cpu, packet.Port, packet.CpuUsage, true, (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch);
+        this.AddUpdate(ChartImplementationType.Memory, packet.Port, (float)packet.MemoryUsage, true, (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch);
+        this.AddUpdate(ChartImplementationType.Tps, packet.Port, packet.AverageTps, true, (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch);
+        this.AddUpdate(ChartImplementationType.Players, packet.Port, packet.Players, false, (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch);
+        this.AddUpdate(ChartImplementationType.LowTps, packet.Port, packet.LowTpsWarnCount, false, (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch);
         this.AddServerStatUpdate(packet);
     }
 
@@ -188,7 +188,7 @@ public class UpdateProcessor
         datasets.Add(new DataSet($"stats.{packet.Port}.players", packet.Players));
         datasets.Add(new DataSet($"stats.{packet.Port}.tps", packet.AverageTps));
         datasets.Add(new DataSet($"stats.{packet.Port}.lowtps", packet.LowTpsWarnCount));
-        var timeSinceLastUpdate = (uint)packet.Epoch - (uint)UpdateProcessor.Singleton!._lastUpdate.ToUnixTimeMilliseconds();
+        var timeSinceLastUpdate = (uint)packet.Epoch - (uint)packet.PreviousPacketEpoch;
         var data = new Data(chart, datasets, timeSinceLastUpdate, false);
         this._serverStats[packet.Port].Enqueue(data);
     }

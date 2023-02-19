@@ -208,6 +208,7 @@ public class Log
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
             this._debugLineOutPath = directory + "/debug-output.log";
             this._debugLineOutMessages = new ConcurrentQueue<string>();
+            this._debugLineOutMessages.Enqueue("\n");
             this._logMessages = new ConcurrentQueue<string>();
             this._logMessages.Enqueue("\n");
             this._logMessages.Enqueue($"Loading NetDataSL Integration on commit {AssemblyInfo.CommitHash}, and branch {AssemblyInfo.CommitBranch}.");

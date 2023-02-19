@@ -40,6 +40,7 @@ public class NetDataPacket
     /// <param name="ServerName">server name.</param>
     /// <param name="RefreshSpeed">refresh speed.</param>
     /// <param name="Epoch">epoch.</param>
+    /// <param name="PreviousPacketEpoch">epoch of the previous sent packet.</param>
     /// <param name="AverageTps">average tps.</param>
     /// <param name="AverageDeltaTime">average delta time.</param>
     /// <param name="MemoryUsage">memory usage.</param>
@@ -55,7 +56,8 @@ public class NetDataPacket
         int Port,
         string ServerName,
         double RefreshSpeed,
-        int Epoch,
+        long Epoch,
+        long PreviousPacketEpoch,
         double AverageTps,
         double AverageDeltaTime,
         int MemoryUsage,
@@ -70,6 +72,7 @@ public class NetDataPacket
         this.ServerName = ServerName;
         this.RefreshSpeed = (float)RefreshSpeed;
         this.Epoch = Epoch;
+        this.PreviousPacketEpoch = PreviousPacketEpoch;
         this.DateTime = DateTimeOffset.FromUnixTimeSeconds(Epoch).DateTime;
         this.AverageTps = (float)AverageTps;
         this.AverageDeltaTime = (float)AverageDeltaTime;
@@ -105,6 +108,12 @@ public class NetDataPacket
     /// </summary>
     [JsonPropertyName("Epoch")]
     public long Epoch { get; set; }
+
+    /// <summary>
+    /// Gets or sets the epoch of the packet sent previous to this.
+    /// </summary>
+    [JsonPropertyName("PreviousPacketEpoch")]
+    public long PreviousPacketEpoch { get; set; }
 
     /// <summary>
     /// Gets or sets the datetime of when this packet was made.

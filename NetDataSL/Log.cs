@@ -10,11 +10,10 @@
 //    Created Date:     01/27/2023 9:47 PM
 // -----------------------------------------
 
-using System.Text;
-
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
+using System.Text;
 using Sentry;
 
 /// <summary>
@@ -37,8 +36,8 @@ public class Log
     private static bool _debugModeEnabled = true;
     private string _logPath = string.Empty;
     private string _debugLineOutPath = string.Empty;
-    private ConcurrentBag<string> _logMessages = null!;
-    private ConcurrentBag<string> _debugLineOutMessages = null!;
+    private ConcurrentQueue<string> _logMessages = null!;
+    private ConcurrentQueue<string> _debugLineOutMessages = null!;
     private StreamWriter _stdOut = null!;
 
     // ReSharper disable once NotAccessedField.Local
@@ -76,7 +75,7 @@ public class Log
                 /*Singleton._stdOut.Write(log + "\n");
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50); */
-                Singleton._logMessages.Add(log);
+                Singleton._logMessages.Enqueue(log);
             }
             else
             {
@@ -107,7 +106,7 @@ public class Log
 
         // Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
         // Singleton!._stdErr.Flush();
-        Singleton!._logMessages.Add(log);
+        Singleton!._logMessages.Enqueue(log);
 
         // Thread.Sleep(50);
     }
@@ -138,12 +137,12 @@ public class Log
     {
         if (!lineOut)
         {
-            this._logMessages.Add(message);
+            this._logMessages.Enqueue(message);
         }
         else if (_debugModeEnabled && lineOut)
 #pragma warning disable CS0162
         {
-            this._debugLineOutMessages.Add(message);
+            this._debugLineOutMessages.Enqueue(message);
         }
 #pragma warning restore CS0162
     }
@@ -208,12 +207,11 @@ public class Log
             this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
             this._debugLineOutPath = directory + "/debug-output.log";
-            this._debugLineOutMessages = new ConcurrentBag<string>();
-            this._logMessages = new ConcurrentBag<string>()
-            {
-                "\n",
-                $"Loading NetDataSL Integration on commit {AssemblyInfo.CommitHash}, and branch {AssemblyInfo.CommitBranch}.",
-            };
+            this._debugLineOutMessages = new ConcurrentQueue<string>();
+            this._logMessages = new ConcurrentQueue<string>();
+            this._logMessages.Enqueue("\n");
+            this._logMessages.Enqueue($"Loading NetDataSL Integration on commit {AssemblyInfo.CommitHash}, and branch {AssemblyInfo.CommitBranch}.");
+
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);

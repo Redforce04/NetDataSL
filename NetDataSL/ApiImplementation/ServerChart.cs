@@ -102,6 +102,7 @@ public class ServerChart : Chart
 }
 
 #pragma warning disable SA1402
+
 /// <summary>
 /// A dimension for individual server charts measuring the cpu usage.
 /// </summary>

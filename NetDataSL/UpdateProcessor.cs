@@ -32,7 +32,7 @@ public class UpdateProcessor
     internal static UpdateProcessor? Singleton;
 #pragma warning restore SA1401
     private ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>> _dataSets = null!;
-    private ConcurrentDictionary<int, ConcurrentBag<Data>> _serverStats = null!;
+    private ConcurrentDictionary<int, ConcurrentQueue<Data>> _serverStats = null!;
     private DateTimeOffset _lastUpdate;
 
     /// <summary>
@@ -54,10 +54,10 @@ public class UpdateProcessor
         this._dataSets.GetOrAdd(ChartImplementationType.LowTps, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentDictionary<int, Data>());
 
-        this._serverStats = new ConcurrentDictionary<int, ConcurrentBag<Data>>();
+        this._serverStats = new ConcurrentDictionary<int, ConcurrentQueue<Data>>();
         foreach (var server in Config.Singleton!.ServerInstances)
         {
-            this._serverStats.GetOrAdd(server.Port, new ConcurrentBag<Data>());
+            this._serverStats.GetOrAdd(server.Port, new ConcurrentQueue<Data>());
         }
     }
 
@@ -190,7 +190,7 @@ public class UpdateProcessor
         datasets.Add(new DataSet($"stats.{packet.Port}.lowtps", packet.LowTpsWarnCount));
         var timeSinceLastUpdate = (uint)packet.Epoch - (uint)UpdateProcessor.Singleton!._lastUpdate.ToUnixTimeMilliseconds();
         var data = new Data(chart, datasets, timeSinceLastUpdate, false);
-        this._serverStats[packet.Port].Add(data);
+        this._serverStats[packet.Port].Enqueue(data);
     }
 
     private void AddUpdate(ChartImplementationType type, int server, object value, bool isFloat = false, uint timeSinceLastUpdate = 5000)

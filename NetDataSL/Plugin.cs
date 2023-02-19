@@ -10,6 +10,8 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
+using Sentry;
+
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -66,11 +68,19 @@ public class Plugin
             this.ServerRefreshTime = Config.Singleton.SendRate;
         }
 
+        SentrySdk.AddBreadcrumb("Loading Plugin", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        SentrySdk.AddBreadcrumb("Loading Log", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         var unused = new Log();
+        SentrySdk.AddBreadcrumb("Logging System Loaded", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        SentrySdk.AddBreadcrumb("Loading Network Handler", "Plugin", "default", new Dictionary<string, string>() { { "host", $"{host}" } }, BreadcrumbLevel.Debug);
         var unused2 = new NetworkHandler(host);
+        SentrySdk.AddBreadcrumb("Network Handler Loaded", "Plugin", "default", new Dictionary<string, string>() { { "host", $"{host}" } }, BreadcrumbLevel.Debug);
         this.ServerRefreshTime = refreshRate;
+        SentrySdk.AddBreadcrumb("Init Integration", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         this.InitNetDataIntegration();
+        SentrySdk.AddBreadcrumb("Integration Initialized", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         Log.Debug($"Starting Net-data Integration");
+        SentrySdk.AddBreadcrumb("Start Main Loop", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         this.StartMainRunningLoop();
     }
 

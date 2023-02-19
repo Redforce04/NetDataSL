@@ -17,6 +17,7 @@ using System.Text.Json.Serialization;
 
 // ReSharper disable once RedundantNameQualifier
 using NetDataSL.StructsAndClasses;
+using Sentry;
 
 /// <summary>
 /// The main config for the plugin.
@@ -60,11 +61,14 @@ public class Config
         string indexKey = path.Contains('/') ? "/" : "\\";
         this.DirectoryPath = path.Substring(0, path.LastIndexOf(indexKey, StringComparison.Ordinal));
         Singleton = this;
+        SentrySdk.AddBreadcrumb("Creating Directory", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+
         if (!Directory.Exists(this.DirectoryPath))
         {
             Directory.CreateDirectory(this.DirectoryPath);
         }
 
+        SentrySdk.AddBreadcrumb("Creating File Stream", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         bool createFile = !File.Exists(this.ConfigPath);
         FileStream stream = new FileStream(
             this.ConfigPath,
@@ -74,6 +78,7 @@ public class Config
 
         if (createFile)
         {
+            SentrySdk.AddBreadcrumb("Creating Config File", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
             StreamWriter writer = new StreamWriter(stream);
             this.LogPath = this.DirectoryPath + "/scpsl.log";
             this.ServerAddress = "127.0.0.1:11011";
@@ -90,22 +95,37 @@ public class Config
             writer.Flush();
             writer.Close();
             stream.Close();
+            SentrySdk.AddBreadcrumb("Config File Created", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         }
         else
         {
+            SentrySdk.AddBreadcrumb("Reading Config File", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
             StreamReader reader = new StreamReader(stream);
             string json = reader.ReadToEnd();
             reader.Close();
             stream.Close();
-            Config? config = JsonSerializer.Deserialize(json, ConfigSerializerContext.Default.Config);
+
+            Config? config = null;
+            try
+            {
+                 config = JsonSerializer.Deserialize(json, ConfigSerializerContext.Default.Config);
+            }
+            catch (Exception e)
+            {
+                SentrySdk.AddBreadcrumb("Json Error", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+                SentrySdk.CaptureException(e);
+            }
+
             if (config == null)
             {
+                SentrySdk.AddBreadcrumb("Config File Null", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
                 Log.Error($"Config not valid. Unable to load config.");
                 Environment.Exit(128);
                 return;
             }
 
             this.LogPath = config.LogPath;
+            SentrySdk.AddBreadcrumb("Opening Log Path", "Config", "default", new Dictionary<string, string>() { { "log path", this.LogPath } }, BreadcrumbLevel.Debug);
             try
             {
                 var fileStream = File.Open(this.LogPath, FileMode.OpenOrCreate);
@@ -117,7 +137,9 @@ public class Config
             }
             catch (Exception e)
             {
+                SentrySdk.AddBreadcrumb("Could not open log path", "Config", "default", new Dictionary<string, string>() { { "log path", this.LogPath } }, BreadcrumbLevel.Debug);
                 Console.WriteLine($"Could not write to log path. Exception {e}");
+                SentrySdk.CaptureException(e);
                 Environment.Exit(128);
             }
 
@@ -125,6 +147,7 @@ public class Config
             this.ServerAddress = config.ServerAddress;
             this.ServerInstances = config.ServerInstances;
             this.SendRate = config.SendRate;
+            SentrySdk.AddBreadcrumb("Variables set", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         }
     }
 

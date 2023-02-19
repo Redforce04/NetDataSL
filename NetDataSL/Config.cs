@@ -76,7 +76,7 @@ public class Config
         if (createFile)
         {
             StreamWriter writer = new StreamWriter(stream);
-            this.LogPath = this.DirectoryPath + "ScpslPlugin.log";
+            this.LogPath = this.DirectoryPath + "/scpsl.log";
             this.ServerAddress = "127.0.0.1:11011";
             this.ServerInstances = new List<ServerConfig>()
             {
@@ -107,11 +107,12 @@ public class Config
                 return;
             }
 
+            this.LogPath = config.LogPath;
             try
             {
                 var fileStream = File.Open(this.LogPath!, FileMode.OpenOrCreate);
                 var writer = new StreamWriter(fileStream);
-                writer.WriteLine("\n\n");
+                writer.WriteLine("\n");
                 writer.Flush();
                 writer.Close();
                 fileStream.Close();
@@ -122,7 +123,6 @@ public class Config
                 Environment.Exit(128);
             }
 
-            this.LogPath = config.LogPath;
             this.ServerAddress = config.ServerAddress;
             this.ServerInstances = config.ServerInstances;
         }

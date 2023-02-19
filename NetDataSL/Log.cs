@@ -81,7 +81,7 @@ public class Log
                 // Console.Write(log);
             }
 
-            SentrySdk.CaptureMessage(log);
+            SentrySdk.CaptureMessage(log, SentryLevel.Debug);
         }
 
 #pragma warning restore CS0162
@@ -106,7 +106,8 @@ public class Log
         // Singleton!._stdErr.Write(log.Replace("\n", "").Replace(Environment.NewLine, ""));
         // Singleton!._stdErr.Flush();
         Singleton!._logMessages.Add(log);
-        Thread.Sleep(50);
+
+        // Thread.Sleep(50);
     }
 
     /// <summary>
@@ -201,6 +202,7 @@ public class Log
 
             this._stdOut = new StreamWriter(Console.OpenStandardOutput());
             this._stdErr = new StreamWriter(Console.OpenStandardError());
+            Sentry.SentrySdk.CaptureMessage($"(Commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}) Debug mode: {_debugModeEnabled}, debug output: {this._debugLineOutPath}, log output: {this._logPath}, directory({directory})");
 
             // Log.Error($"Info: Log filepath: {_logPath}");
         }

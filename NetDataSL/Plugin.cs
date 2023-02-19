@@ -65,11 +65,11 @@ public class Plugin
         {
             this.ServerRefreshTime = Config.Singleton.SendRate;
         }
+
         var unused = new Log();
         var unused2 = new NetworkHandler(host);
         this.ServerRefreshTime = refreshRate;
         this.InitNetDataIntegration();
-        Thread.Sleep(1000);
         Log.Debug($"Starting Net-data Integration");
         this.StartMainRunningLoop();
     }

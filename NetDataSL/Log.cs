@@ -119,14 +119,14 @@ public class Log
     {
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
+        Thread.Sleep(25);
+        Singleton._stdOut.Flush();
         if (_debugModeEnabled)
         {
             Singleton.AddLogMessage($"[{DateTime.Now:G}] {x}", true);
         }
 
-        // Thread.Sleep(25);
-        Singleton._stdOut.Flush();
-        Thread.Sleep(25);
+        Thread.Sleep(50);
 
         // Thread.Sleep(50);
     }
@@ -157,45 +157,16 @@ public class Log
     {
         try
         {
-            var logStream = File.Open(this._logPath, FileMode.Append);
-            var logWriter = new StreamWriter(logStream, Encoding.UTF8);
-            foreach (string line in this._logMessages)
-            {
-                logWriter.WriteLine(line);
-            }
-
-            logWriter.Flush();
-            logWriter.Close();
-            logStream.Close();
-
-            // File.AppendAllLines(this._logPath, this._logMessages);
+            File.AppendAllLines(this._logPath, this._logMessages);
             if (_debugModeEnabled)
             {
-                var debugOutputStream = File.Open(this._debugLineOutPath, FileMode.Append);
-                var debugOutputWriter = new StreamWriter(debugOutputStream, Encoding.UTF8);
-                foreach (string line in this._debugLineOutMessages)
-                {
-                    debugOutputWriter.WriteLine(line);
-                }
-
-                debugOutputWriter.Flush();
-                debugOutputWriter.Close();
-                debugOutputStream.Close();
-
-                // File.AppendAllLines(this._debugLineOutPath, this._debugLineOutMessages);
+                File.AppendAllLines(this._debugLineOutPath, this._debugLineOutMessages);
             }
-
-            /*using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);
-            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-            sw.Write(concatLog);
-            sw.Flush();
-            sw.Close();
-            fs.Close();
-            File.WriteAllText(this._logPath, concatLog);*/
         }
         catch (Exception e)
         {
             Log.Error($"Could not write to logfile. Error: \n{e}");
+            Environment.Exit(128);
             SentrySdk.CaptureException(e);
         }
 

@@ -193,6 +193,11 @@ public class Log
                 {
                     File.Create(this._logPath).Close();
                 }
+
+                if (_debugModeEnabled && !File.Exists(this._debugLineOutPath))
+                {
+                    File.Create(this._debugLineOutPath).Close();
+                }
             }
             catch (Exception e)
             {
@@ -202,8 +207,8 @@ public class Log
 
             this._stdOut = new StreamWriter(Console.OpenStandardOutput());
             this._stdErr = new StreamWriter(Console.OpenStandardError());
-            Sentry.SentrySdk.CaptureMessage($"(Commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}) Debug mode: {_debugModeEnabled}, debug output: {this._debugLineOutPath}, log output: {this._logPath}, directory({directory})");
 
+            // Sentry.SentrySdk.CaptureMessage($"(Commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}) Debug mode: {_debugModeEnabled}, debug output: {this._debugLineOutPath}, log output: {this._logPath}, directory({directory})");
             // Log.Error($"Info: Log filepath: {_logPath}");
         }
         catch (Exception e)

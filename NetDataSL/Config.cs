@@ -124,6 +124,7 @@ public class Config
                 Environment.Exit(128);
             }
 
+            this.DebugMode = config.DebugMode;
             this.ServerAddress = config.ServerAddress;
             this.ServerInstances = config.ServerInstances;
         }

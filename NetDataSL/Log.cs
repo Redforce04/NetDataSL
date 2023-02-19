@@ -134,17 +134,10 @@ public class Log
     public void AddLogMessage(string message, bool lineOut = false)
     {
         this._logMessages.Add(message);
-        if (_debugModeEnabled)
+        if (_debugModeEnabled && lineOut)
 #pragma warning disable CS0162
         {
-            if (!lineOut)
-            {
-                Line(message);
-            }
-            else
-            {
-                this._debugLineOutMessages.Add(message);
-            }
+            this._debugLineOutMessages.Add(message);
         }
 #pragma warning restore CS0162
     }
@@ -185,7 +178,7 @@ public class Log
         {
             this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
-            this._debugLineOutPath = directory += "/debug-output.log";
+            this._debugLineOutPath = directory + "/debug-output.log";
             this._debugLineOutMessages = new ConcurrentBag<string>();
             this._logMessages = new ConcurrentBag<string>();
             if (!Directory.Exists(directory))

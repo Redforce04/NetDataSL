@@ -55,23 +55,24 @@ public class ChartIntegration
     /// Gets a chart via the type of chart it is.
     /// </summary>
     /// <param name="implementationType">The type of chart.</param>
+    /// <param name="serverPort">The port of the server if searching for a server stat chart.</param>
     /// <returns>The instance of the chart.</returns>
-    public Chart? GetChartByChartType(ChartImplementationType implementationType, int ServerPort = 0)
+    public Chart? GetChartByChartType(ChartImplementationType implementationType, int serverPort = 0)
     {
         if (implementationType == ChartImplementationType.Server)
         {
-            if (ServerPort == 0)
+            if (serverPort == 0)
             {
                 Log.Error($"You must specify a valid server port for the server.");
                 return null;
             }
 
-            if (!this._serverCharts.ContainsKey(ServerPort))
+            if (!this._serverCharts.ContainsKey(serverPort))
             {
                 return null;
             }
 
-            return this._serverCharts[ServerPort];
+            return this._serverCharts[serverPort];
         }
 
         if (this._charts.ContainsKey(implementationType))

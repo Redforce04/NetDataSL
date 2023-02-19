@@ -10,8 +10,6 @@
 //    Created Date:     02/05/2023 12:30 PM
 // -----------------------------------------
 
-using System.Runtime.CompilerServices;
-
 namespace NetDataSL;
 
 using System.Text.Json;
@@ -110,7 +108,7 @@ public class Config
             this.LogPath = config.LogPath;
             try
             {
-                var fileStream = File.Open(this.LogPath!, FileMode.OpenOrCreate);
+                var fileStream = File.Open(this.LogPath, FileMode.OpenOrCreate);
                 var writer = new StreamWriter(fileStream);
                 writer.WriteLine("\n");
                 writer.Flush();

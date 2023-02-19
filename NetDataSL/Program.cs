@@ -14,7 +14,6 @@ namespace NetDataSL
 {
     using System.Text.RegularExpressions;
     using Sentry;
-    using Sentry.AspNet;
 
     /// <summary>
     /// The main program. Where everything is started.

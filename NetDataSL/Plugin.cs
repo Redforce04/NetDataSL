@@ -46,7 +46,6 @@ public class Plugin
     // ReSharper disable once MemberCanBePrivate.Global
     internal readonly float ServerRefreshTime = 5f;
 
-    private readonly string _tempDirectory = Path.GetTempPath() + "PwProfiler/";
 #pragma warning restore SA1401
 
     /// <summary>
@@ -123,11 +122,5 @@ public class Plugin
         }
 
         Environment.Exit(0);
-    }
-
-    private void ProcessStats(NetDataPacket packet)
-    {
-        Log.Debug($"Received Stats Data");
-        UpdateProcessor.Singleton!.ProcessUpdate(packet);
     }
 }

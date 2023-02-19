@@ -13,7 +13,6 @@
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
-using System.Text;
 using Sentry;
 
 /// <summary>
@@ -68,7 +67,7 @@ public class Log
         {
             if (Singleton is not null)
             {
-                //Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
+                // Singleton._stdOut.Write(log.Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
                 Singleton._stdOut.Write(log + "\n");
                 Singleton._stdOut.Flush();
                 Thread.Sleep(50);
@@ -98,7 +97,6 @@ public class Log
         {
             var unused = new Log();
         }
-
 
         SentrySdk.CaptureMessage(log);
 
@@ -164,10 +162,8 @@ public class Log
 
     private void Init()
     {
-
         try
         {
-
             this._logPath = Config.Singleton!.LogPath; // + "/NetDataSL.log";
             string directory = this._logPath.Substring(0, this._logPath.LastIndexOf("/", StringComparison.Ordinal));
 

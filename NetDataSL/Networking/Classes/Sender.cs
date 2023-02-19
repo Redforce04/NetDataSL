@@ -98,6 +98,9 @@ public class Sender
     internal bool IsBlacklisted()
     {
         return false;
+#pragma warning disable CS0162
+
+        // ReSharper disable once HeuristicUnreachableCode
         if (this.IsBlackListed == false)
         {
             return false;
@@ -110,6 +113,7 @@ public class Sender
         }
 
         return true;
+#pragma warning restore CS0162
     }
 
     /// <summary>
@@ -119,6 +123,9 @@ public class Sender
     internal void ProcessRequest(bool apiKeyIsValid)
     {
         return;
+#pragma warning disable CS0162
+
+        // ReSharper disable once HeuristicUnreachableCode
         foreach (var request in this.Requests)
         {
             if (request.Key.TotalSeconds <
@@ -135,5 +142,6 @@ public class Sender
                 this.BlacklistExpiration = DateTime.UtcNow.AddSeconds(NetworkHandler.TimeoutDuration);
             }
         }
+#pragma warning restore CS0162
     }
 }

@@ -38,6 +38,7 @@ public struct Data
     /// <param name="chart">The chart to update.</param>
     /// <param name="dataSet">The list of data sets to update.</param>
     /// <param name="microseconds">The milliseconds since the last update.</param>
+    /// <param name="sendOnCreation">Should the dataset output the data on creation.</param>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
 #pragma warning disable SA1201
     public Data(Chart chart, List<DataSet> dataSet, uint microseconds = 5000, bool sendOnCreation = true)
@@ -78,6 +79,9 @@ public struct Data
         }
     }
 
+    /// <summary>
+    /// Outputs data to console, thereby sending it to NetData.
+    /// </summary>
     public void Call()
     {
         this.Begin();

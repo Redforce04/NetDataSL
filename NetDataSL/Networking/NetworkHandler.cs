@@ -165,7 +165,7 @@ public class NetworkHandler
                     return;
                 }
 
-                UpdateProcessor.Singleton!.ProcessUpdate(packet);
+                UpdateProcessor.Singleton.ProcessUpdate(packet);
             }
             catch (Exception e)
             {

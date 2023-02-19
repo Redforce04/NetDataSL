@@ -28,33 +28,33 @@ public class ServerChart : Chart
     /// <summary>
     /// Gets or sets the name of the server this chart represents.
     /// </summary>
-    internal string ServerName;
+    private readonly string _serverName;
 
     /// <summary>
     /// Gets or sets the port of the server this chart represents.
     /// </summary>
-    internal int ServerPort;
+    private readonly int _serverPort;
 
     /// <inheritdoc/>
     public override string Type => "scpsl";
 
     /// <inheritdoc/>
-    public override string Id => $"server.{this.ServerPort}";
+    public override string Id => $"server.{this._serverPort}";
 
     /// <inheritdoc/>
-    public override string Name => $"{this.ServerName} Stats";
+    public override string Name => $"{this._serverName} Stats";
 
     /// <inheritdoc/>
-    public override string Title => $"{this.ServerName} Stats";
+    public override string Title => $"{this._serverName} Stats";
 
     /// <inheritdoc/>
     public override string Units => "Server Stats";
 
     /// <inheritdoc/>
-    public override string Family => $"{this.ServerName}";
+    public override string Family => $"{this._serverName}";
 
     /// <inheritdoc/>
-    public override string Context => $"scpsl.{this.ServerName}";
+    public override string Context => $"scpsl.{this._serverName}";
 
     /// <inheritdoc/>
     public override ChartType ChartType => ChartType.Line;
@@ -80,8 +80,8 @@ public class ServerChart : Chart
 #pragma warning disable SA1201
     internal ServerChart(List<Dimension> dimensions, int port, string serverName)
     {
-        this.ServerPort = port;
-        this.ServerName = serverName;
+        this._serverPort = port;
+        this._serverName = serverName;
         this.Dimensions = dimensions;
         foreach (Dimension dimension in this.Dimensions)
         {
@@ -141,6 +141,7 @@ internal class ServerCpuChartDimensions : Dimension
 
     private int Server { get; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private string ServerName { get; }
 }
 
@@ -183,6 +184,7 @@ internal class ServerTpsChartDimensions : Dimension
 
     private int Server { get; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private string ServerName { get; }
 }
 
@@ -225,6 +227,7 @@ internal class ServerMemoryChartDimensions : Dimension
 
     private int Server { get; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private string ServerName { get; }
 }
 
@@ -267,6 +270,7 @@ internal class ServerPlayersChartDimensions : Dimension
 
     private int Server { get; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private string ServerName { get; }
 }
 
@@ -309,6 +313,7 @@ internal class ServerLowTpsChartDimensions : Dimension
 
     private int Server { get; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private string ServerName { get; }
 }
 #pragma warning restore SA1402

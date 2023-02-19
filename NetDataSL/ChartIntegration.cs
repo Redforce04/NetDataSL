@@ -32,6 +32,7 @@ public class ChartIntegration
     internal static ChartIntegration? Singleton;
     private readonly List<KeyValuePair<int, string>> _servers = new();
     private readonly Dictionary<ChartImplementationType, Chart> _charts = new();
+    private readonly Dictionary<int, Chart> _serverCharts = new();
 #pragma warning restore SA1401
 
     /// <summary>
@@ -55,8 +56,24 @@ public class ChartIntegration
     /// </summary>
     /// <param name="implementationType">The type of chart.</param>
     /// <returns>The instance of the chart.</returns>
-    public Chart? GetChartByChartType(ChartImplementationType implementationType)
+    public Chart? GetChartByChartType(ChartImplementationType implementationType, int ServerPort = 0)
     {
+        if (implementationType == ChartImplementationType.Server)
+        {
+            if (ServerPort == 0)
+            {
+                Log.Error($"You must specify a valid server port for the server.");
+                return null;
+            }
+
+            if (!this._serverCharts.ContainsKey(ServerPort))
+            {
+                return null;
+            }
+
+            return this._serverCharts[ServerPort];
+        }
+
         if (this._charts.ContainsKey(implementationType))
         {
             return this._charts[implementationType];
@@ -72,17 +89,29 @@ public class ChartIntegration
     /// </summary>
     /// <param name="implementationType">The chart type.</param>
     /// <param name="server">The server port.</param>
+    /// <param name="isServerStatChart">Is the dimension from a server stat chart.</param>
     /// <returns>The dimension. Null if no dimension was found.</returns>
-    public Dimension? GetDimensionByChartTypeAndServer(ChartImplementationType implementationType, int server)
+    public Dimension? GetDimensionByChartTypeAndServer(ChartImplementationType implementationType, int server, bool isServerStatChart = false)
     {
-        Chart? chart = this.GetChartByChartType(implementationType);
+        Chart? chart;
+        string dimensionId;
+        if (isServerStatChart)
+        {
+            chart = this.GetChartByChartType(ChartImplementationType.Server, server);
+            dimensionId = $"stats.{server}.{implementationType.ToString().ToLower()}";
+        }
+        else
+        {
+            chart = this.GetChartByChartType(implementationType);
+            dimensionId = $"{implementationType.ToString().ToLower().Replace(" ", "_")}.{server}";
+        }
+
         if (chart is null)
         {
             Log.Error($"Chart is null when getting dimension. {implementationType} {server}");
             return null;
         }
 
-        string dimensionId = $"{implementationType.ToString().ToLower().Replace(" ", "_")}.{server}";
         return chart.Dimensions.FirstOrDefault(x => x.Id == dimensionId);
     }
 
@@ -178,8 +207,29 @@ public class ChartIntegration
 
             foreach (string chartType in Enum.GetNames(typeof(ChartImplementationType)))
             {
-                
+                switch (chartType)
+                {
+                    case "Cpu":
+                        dimensions.Add(new ServerCpuChartDimensions(server.Port, server.ServerName));
+                        break;
+                    case "Memory":
+                        dimensions.Add(new ServerMemoryChartDimensions(server.Port, server.ServerName));
+                        break;
+                    case "Tps":
+                        dimensions.Add(new ServerTpsChartDimensions(server.Port, server.ServerName));
+                        break;
+                    case "LowTps":
+                        dimensions.Add(new ServerLowTpsChartDimensions(server.Port, server.ServerName));
+                        break;
+                    case "Players":
+                        dimensions.Add(new ServerPlayersChartDimensions(server.Port, server.ServerName));
+                        break;
+                    case "Server":
+                        continue;
+                }
             }
+
+            this._serverCharts.Add(server.Port, new ServerChart(dimensions, server.Port, server.ServerName));
         }
     }
 }

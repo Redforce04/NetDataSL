@@ -41,4 +41,9 @@ public enum ChartImplementationType
     /// The chart is the players chart.
     /// </summary>
     Players = 4,
+
+    /// <summary>
+    /// An individual server and the associated stats.
+    /// </summary>
+    Server = 5,
 }

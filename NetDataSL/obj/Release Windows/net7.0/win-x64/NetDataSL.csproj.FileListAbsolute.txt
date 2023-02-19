@@ -346,3 +346,5 @@ C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.
 C:\Users\AJ Blessing\RiderProjects\NetDataSL\NetDataSL\obj\Release Windows\net7.0\win-x64\NetDataSL.pdb
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Sentry.AspNetCore.dll
 C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Sentry.Extensions.Logging.dll
+C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Sentry.AspNet.dll
+C:\Users\redfo\RiderProjects\NetDataSL\NetDataSL\bin\Release Windows\net7.0\win-x64\Sentry.DiagnosticSource.dll

@@ -5856,19 +5856,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\AJ Blessing\\.nuget\\packages\\": {}
+    "C:\\Users\\redfo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+      "projectUniqueName": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
       "projectName": "NetDataSL",
-      "projectPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
-      "packagesPath": "C:\\Users\\AJ Blessing\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\AJ Blessing\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
+      "projectPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\NetDataSL.csproj",
+      "packagesPath": "C:\\Users\\redfo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\redfo\\RiderProjects\\NetDataSL\\NetDataSL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\AJ Blessing\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\redfo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

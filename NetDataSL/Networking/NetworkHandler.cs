@@ -151,7 +151,7 @@ public class NetworkHandler
 
             try
             {
-                if (packet.Epoch + Plugin.Singleton!.UsableRefresh() < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                if (packet.Epoch + Plugin.Singleton!.ServerRefreshTime < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                 {
                     Log.Debug($"Packet from port {packet.Port} is an old packet (older than {Plugin.Singleton.ServerRefreshTime} seconds). This packet will still be processed.");
 

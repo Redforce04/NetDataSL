@@ -40,9 +40,21 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Http.Extensions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[9.0.1, )"
+            },
+            "Sentry.AspNet": {
+              "target": "Package",
+              "version": "[3.28.1, )"
             },
             "Sentry.AspNetCore": {
               "target": "Package",

@@ -10,6 +10,8 @@
 //    Created Date:     01/27/2023 9:47 PM
 // -----------------------------------------
 
+using System.Text;
+
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -153,10 +155,32 @@ public class Log
     {
         try
         {
-            File.AppendAllLines(this._logPath, this._logMessages);
+            var logStream = File.Open(this._logPath, FileMode.Append);
+            var logWriter = new StreamWriter(logStream, Encoding.UTF8);
+            foreach (string line in this._logMessages)
+            {
+                logWriter.WriteLine(line);
+            }
+
+            logWriter.Flush();
+            logWriter.Close();
+            logStream.Close();
+
+            // File.AppendAllLines(this._logPath, this._logMessages);
             if (_debugModeEnabled)
             {
-                File.AppendAllLines(this._debugLineOutPath, this._debugLineOutMessages);
+                var debugOutputStream = File.Open(this._debugLineOutPath, FileMode.Append);
+                var debugOutputWriter = new StreamWriter(debugOutputStream, Encoding.UTF8);
+                foreach (string line in this._debugLineOutMessages)
+                {
+                    debugOutputWriter.WriteLine(line);
+                }
+
+                debugOutputWriter.Flush();
+                debugOutputWriter.Close();
+                debugOutputStream.Close();
+
+                // File.AppendAllLines(this._debugLineOutPath, this._debugLineOutMessages);
             }
 
             /*using FileStream fs = new FileStream(this._logPath, FileMode.Append, FileAccess.Write, FileShare.Write);

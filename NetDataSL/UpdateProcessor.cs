@@ -66,6 +66,7 @@ public class UpdateProcessor
     /// </summary>
     internal void SendUpdate()
     {
+        uint timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)this._lastUpdate.ToUnixTimeMilliseconds();
         Dictionary<ChartImplementationType, List<int>> servers = new()
         {
             { ChartImplementationType.Cpu, new List<int>() },
@@ -74,13 +75,40 @@ public class UpdateProcessor
             { ChartImplementationType.Tps, new List<int>() },
             { ChartImplementationType.LowTps, new List<int>() },
         };
-        foreach (var x in Config.Singleton!.ServerInstances)
+        foreach (var server in Config.Singleton!.ServerInstances)
         {
-            servers[ChartImplementationType.Cpu].Add(x.Port);
-            servers[ChartImplementationType.Memory].Add(x.Port);
-            servers[ChartImplementationType.Players].Add(x.Port);
-            servers[ChartImplementationType.Tps].Add(x.Port);
-            servers[ChartImplementationType.LowTps].Add(x.Port);
+            servers[ChartImplementationType.Cpu].Add(server.Port);
+            servers[ChartImplementationType.Memory].Add(server.Port);
+            servers[ChartImplementationType.Players].Add(server.Port);
+            servers[ChartImplementationType.Tps].Add(server.Port);
+            servers[ChartImplementationType.LowTps].Add(server.Port);
+
+            if (!this._serverStats.ContainsKey(server.Port) || this._serverStats[server.Port].Count == 0)
+            {
+                Chart? chart = ChartIntegration.Singleton!.GetChartByChartType(ChartImplementationType.Server, server.Port);
+                if (chart is null)
+                {
+                    Log.Error($"Could not send blank server stat update because the chart was null. Port: {server.Port}");
+                    return;
+                }
+
+                List<DataSet> datasets = new List<DataSet>();
+                datasets.Add(new DataSet($"stats.{server.Port}.cpu", 0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.memory", 0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.players", 0));
+                datasets.Add(new DataSet($"stats.{server.Port}.tps", 0f));
+                datasets.Add(new DataSet($"stats.{server.Port}.lowtps", 0));
+                var unused2 = new Data(chart, datasets, timeSinceLastUpdate);
+            }
+            else
+            {
+                foreach (var data in this._serverStats[server.Port])
+                {
+                    data.Call();
+                }
+
+                this._serverStats[server.Port].Clear();
+            }
         }
 
         foreach (var chartDataSet in this._dataSets)
@@ -109,7 +137,7 @@ public class UpdateProcessor
                         ChartIntegration.Singleton.GetDimensionByChartTypeAndServer(chartType.Key, emptyServer);
                     if (dimension != null)
                     {
-                        var unused = new Data(chart, new List<DataSet>() { new DataSet(dimension, 0) }, (uint)(this._lastUpdate.ToUnixTimeMilliseconds() - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
+                        var unused = new Data(chart, new List<DataSet>() { new DataSet(dimension, 0) }, timeSinceLastUpdate);
                     }
                     else
                     {
@@ -120,37 +148,6 @@ public class UpdateProcessor
             else
             {
                 Log.Error($"Chart is null when sending empty updates for servers.");
-            }
-        }
-
-        foreach (ServerConfig server in Config.Singleton.ServerInstances)
-        {
-            if (!this._serverStats.ContainsKey(server.Port) || this._serverStats[server.Port].Count == 0)
-            {
-                Chart? chart = ChartIntegration.Singleton!.GetChartByChartType(ChartImplementationType.Server, server.Port);
-                if (chart is null)
-                {
-                    Log.Error($"Could not send blank server stat update because the chart was null. Port: {server.Port}");
-                    return;
-                }
-
-                List<DataSet> datasets = new List<DataSet>();
-                datasets.Add(new DataSet($"stats.{server.Port}.cpu", 0f));
-                datasets.Add(new DataSet($"stats.{server.Port}.memory", 0f));
-                datasets.Add(new DataSet($"stats.{server.Port}.players", 0));
-                datasets.Add(new DataSet($"stats.{server.Port}.tps", 0f));
-                datasets.Add(new DataSet($"stats.{server.Port}.lowtps", 0));
-                var timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)this._lastUpdate.ToUnixTimeMilliseconds();
-                var unused2 = new Data(chart, datasets, timeSinceLastUpdate);
-            }
-            else
-            {
-                foreach (var data in this._serverStats[server.Port])
-                {
-                    data.Call();
-                }
-
-                this._serverStats[server.Port].Clear();
             }
         }
 

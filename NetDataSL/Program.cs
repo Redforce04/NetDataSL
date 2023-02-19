@@ -32,13 +32,13 @@ namespace NetDataSL
             string configFilePath = string.Empty;
             if (args.Length > 0)
             {
-                ProcessArguments(args, out List<string> properArguments);
+                //ProcessArguments(args, out List<string> properArguments);
 
                 try
                 {
-                    for (int i = 0; i < properArguments.Count; i++)
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        InterpretArgument(properArguments[i], i, out refreshTime, out configFilePath);
+                        InterpretArgument(args[i], i, out refreshTime, out configFilePath);
                     }
                 }
                 catch (Exception e)

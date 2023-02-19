@@ -57,7 +57,8 @@ public class Config
         }
 
         this.ConfigPath = path;
-        this.DirectoryPath = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
+        string indexKey = path.Contains('/') ? "/" : "\\";
+        this.DirectoryPath = path.Substring(0, path.LastIndexOf(indexKey, StringComparison.Ordinal));
         Singleton = this;
         if (!Directory.Exists(this.DirectoryPath))
         {

@@ -45,7 +45,7 @@ namespace NetDataSL
                        o.IsGlobalModeEnabled = true;
                    }))
             {
-                Sentry.SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
+                SentrySdk.CaptureMessage($"Starting on commit {AssemblyInfo.CommitHash}, branch {AssemblyInfo.CommitBranch}");
                 var refreshTime = 5f;
                 string configFilePath = string.Empty;
                 SentrySdk.AddBreadcrumb("Parsing Args", "Startup", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
@@ -98,7 +98,7 @@ namespace NetDataSL
                                 "args",
                                 args.Aggregate((x, y) =>
                                 {
-                                    return x += $"\"{y}\", ";
+                                    return x + $"\"{y}\", ";
                                 })
                             },
                         },
@@ -111,7 +111,7 @@ namespace NetDataSL
 
                 // ReSharper disable once RedundantNameQualifier
                 SentrySdk.AddBreadcrumb("Loading Plugin", "Startup", "default", new Dictionary<string, string>() { { "server address", $"{Config.Singleton!.ServerAddress}" } }, BreadcrumbLevel.Debug);
-                var unused2 = new Plugin(refreshTime, Config.Singleton!.ServerAddress);
+                var unused2 = new Plugin(refreshTime, Config.Singleton.ServerAddress);
                 SentrySdk.AddBreadcrumb("Plugin Loaded", "Startup", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
             }
         }

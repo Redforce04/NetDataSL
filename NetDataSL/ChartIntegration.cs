@@ -48,7 +48,10 @@ public class ChartIntegration
 
         Singleton = this;
         this._servers = servers;
+
+        Log.AddBreadcrumb("Building Charts", "Chart Integration", new Dictionary<string, string>());
         this.Init();
+        Log.AddBreadcrumb("Charts Built", "Chart Integration",  new Dictionary<string, string>());
     }
 
     /// <summary>
@@ -142,6 +145,7 @@ public class ChartIntegration
         this.BuildCpuCharts();
         this.BuildLowTpsCharts();
         this.BuildIndividualServerCharts();
+        Log.AddBreadcrumb("Registering Charts", "Chart Integration",  new Dictionary<string, string>());
         Chart.RegisterAllCharts();
     }
 

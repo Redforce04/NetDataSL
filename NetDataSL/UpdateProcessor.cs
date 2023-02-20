@@ -45,6 +45,7 @@ public class UpdateProcessor
             return;
         }
 
+        Log.AddBreadcrumb("Loading Datasets", "Update Processor",  new Dictionary<string, string>());
         Singleton = this;
         this._lastUpdate = DateTimeOffset.UtcNow;
         this._dataSets = new ConcurrentDictionary<ChartImplementationType, ConcurrentDictionary<int, Data>>();
@@ -55,6 +56,7 @@ public class UpdateProcessor
         this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentDictionary<int, Data>());
 
         this._serverStats = new ConcurrentDictionary<int, ConcurrentQueue<Data>>();
+        Log.AddBreadcrumb("Loading Server DataSets", "Update Processor", new Dictionary<string, string>());
         foreach (var server in Config.Singleton!.ServerInstances)
         {
             this._serverStats.GetOrAdd(server.Port, new ConcurrentQueue<Data>());
@@ -66,6 +68,8 @@ public class UpdateProcessor
     /// </summary>
     internal void SendUpdate()
     {
+        Log.AddBreadcrumb("Sending Update", "Update Processor",  new Dictionary<string, string>());
+
         uint timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)this._lastUpdate.ToUnixTimeMilliseconds();
         Dictionary<ChartImplementationType, List<int>> servers = new()
         {

@@ -10,8 +10,6 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
-using Sentry;
-
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -68,27 +66,33 @@ public class Plugin
             this.ServerRefreshTime = Config.Singleton.SendRate;
         }
 
-        SentrySdk.AddBreadcrumb("Loading Plugin", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
-        SentrySdk.AddBreadcrumb("Loading Log", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Loading Plugin", "Plugin", new Dictionary<string, string>());
+        Log.AddBreadcrumb("Loading Log", "Plugin", new Dictionary<string, string>());
         var unused = new Log();
-        SentrySdk.AddBreadcrumb("Logging System Loaded", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
-        SentrySdk.AddBreadcrumb("Loading Network Handler", "Plugin", "default", new Dictionary<string, string>() { { "host", $"{host}" } }, BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Logging System Loaded", "Plugin", new Dictionary<string, string>());
+        Log.AddBreadcrumb("Loading Network Handler", "Plugin", new Dictionary<string, string>() { { "host", $"{host}" } });
         var unused2 = new NetworkHandler(host);
-        SentrySdk.AddBreadcrumb("Network Handler Loaded", "Plugin", "default", new Dictionary<string, string>() { { "host", $"{host}" } }, BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Network Handler Loaded", "Plugin", new Dictionary<string, string>() { { "host", $"{host}" } });
         this.ServerRefreshTime = refreshRate;
-        SentrySdk.AddBreadcrumb("Init Integration", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Init Integration", "Plugin", new Dictionary<string, string>());
         this.InitNetDataIntegration();
-        SentrySdk.AddBreadcrumb("Integration Initialized", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Integration Initialized", "Plugin", new Dictionary<string, string>());
         Log.Debug($"Starting Net-data Integration");
-        SentrySdk.AddBreadcrumb("Start Main Loop", "Plugin", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
+        Log.AddBreadcrumb("Start Main Loop", "Plugin", new Dictionary<string, string>());
         this.StartMainRunningLoop();
     }
 
     private void InitNetDataIntegration()
     {
+        Log.AddBreadcrumb("Getting Servers", "Plugin", new Dictionary<string, string>());
         this.GetServers(out var servers);
+        Log.AddBreadcrumb("Got Servers", "Plugin", new Dictionary<string, string>() { { "server count", servers.Count.ToString() } });
+        Log.AddBreadcrumb("Creating Chart Integration", "Plugin", new Dictionary<string, string>());
         var unused = new ChartIntegration(servers);
+        Log.AddBreadcrumb("Chart Integration Created", "Plugin", new Dictionary<string, string>());
+        Log.AddBreadcrumb("Creating Update Processor", "Plugin", new Dictionary<string, string>());
         var unused2 = new UpdateProcessor();
+        Log.AddBreadcrumb("Update Processor Created", "Plugin", new Dictionary<string, string>());
     }
 
     private void GetServers(out List<KeyValuePair<int, string>> servers)

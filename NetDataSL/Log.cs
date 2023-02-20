@@ -13,7 +13,6 @@
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
-using System.Text;
 using Sentry;
 
 /// <summary>
@@ -56,6 +55,26 @@ public class Log
         _debugModeEnabled = Config.Singleton!.DebugMode;
         Singleton = this;
         this.Init();
+    }
+
+    /// <summary>
+    /// Adds a breadcrumb if debugging is enabled or the level is info or higher.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    /// <param name="category">The category to log.</param>
+    /// <param name="dictionary">Any values to be included.</param>
+    /// <param name="level">The level of the debug. Debug is only logged if debug mode is enabled.</param>
+    /// <param name="type">Should be default.</param>
+    public static void AddBreadcrumb(string message, string category, Dictionary<string, string>? dictionary = null, BreadcrumbLevel level = BreadcrumbLevel.Debug, string type = "default")
+    {
+        if (_debugModeEnabled && level == BreadcrumbLevel.Debug)
+        {
+            SentrySdk.AddBreadcrumb(message, category, type, dictionary, level);
+        }
+        else if ((int)level >= 0)
+        {
+            SentrySdk.AddBreadcrumb(message, category, type, dictionary, level);
+        }
     }
 
     /// <summary>

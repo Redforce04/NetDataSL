@@ -138,14 +138,13 @@ public class Log
     {
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
-        Thread.Sleep(25);
         Singleton._stdOut.Flush();
+        Thread.Sleep(30);
+
         if (_debugModeEnabled)
         {
             Singleton.AddLogMessage($"[{DateTime.Now:G}] {x}", true);
         }
-
-        Thread.Sleep(50);
 
         // Thread.Sleep(50);
     }

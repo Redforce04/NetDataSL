@@ -25,8 +25,7 @@ namespace NetDataSL
         /// <param name="args">The arguments. Should be one float for the refresh rate.</param>
         public static void Main(string[] args)
         {
-            Thread.Sleep(1000);
-
+            // Thread.Sleep(1000);
             using (SentrySdk.Init(o =>
                    {
                        o.Dsn = "https://841ce728bc284365be420b1fce6e133e@sentry.peanutworshipers.net/2";

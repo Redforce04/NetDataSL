@@ -139,7 +139,7 @@ public class Log
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
         Singleton._stdOut.Flush();
-        Thread.Sleep(30);
+        Thread.Sleep(10);
 
         if (_debugModeEnabled)
         {

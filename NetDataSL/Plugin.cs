@@ -130,6 +130,7 @@ public class Plugin
         }
 
         Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
+        Log.AddBreadcrumb("Hourly Restart", "Plugin", new Dictionary<string, string>());
         if (NetworkHandler.Singleton is not null)
         {
             NetworkHandler.Singleton.Stop();

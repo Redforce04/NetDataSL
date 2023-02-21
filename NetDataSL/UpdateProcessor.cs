@@ -56,7 +56,6 @@ public class UpdateProcessor
         this._dataSets.GetOrAdd(ChartImplementationType.Tps, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.LowTps, new ConcurrentDictionary<int, Data>());
         this._dataSets.GetOrAdd(ChartImplementationType.Players, new ConcurrentDictionary<int, Data>());
-
         this._serverStats = new ConcurrentDictionary<int, ConcurrentQueue<Data>>();
         Log.AddBreadcrumb("Loading Server DataSets", "Update Processor", new Dictionary<string, string>());
         foreach (var server in Config.Singleton!.ServerInstances)
@@ -71,8 +70,6 @@ public class UpdateProcessor
     internal void SendUpdate()
     {
         Log.AddBreadcrumb("Sending Update", "Update Processor",  new Dictionary<string, string>());
-        Log.Line($"BEGIN 'Type.Id'");
-        Log.Line($"SET 'DimensionId' = 0");
         uint timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)this._lastUpdate.ToUnixTimeMilliseconds();
         Dictionary<ChartImplementationType, List<int>> servers = new()
         {

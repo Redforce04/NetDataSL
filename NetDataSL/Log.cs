@@ -137,10 +137,9 @@ public class Log
     public static void Line(string x)
     {
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
-        Singleton!._stdOut.Write($"{x}\n");
-        Singleton._stdOut.Flush();
-        Thread.Sleep(10);
-
+        // Singleton!._stdOut.Write($"{x}\n");
+        // Singleton._stdOut.Flush();
+        // Thread.Sleep(10);
         if (_debugModeEnabled)
         {
             Singleton.AddLogMessage($"[{DateTime.Now:G}] {x}", true);

@@ -31,7 +31,7 @@ public class PlayersChart : Chart
 
     private const string ChartInfo = "Player";
 
-    public override string Type => "scpsl";
+    public override string Type => "Scp Secret Laboratory";
 
     public override string Id => $"players";
 
@@ -43,7 +43,7 @@ public class PlayersChart : Chart
 
     public override string Family => $"Players";
 
-    public override string Context => "scpsl.player_count";
+    public override string Context => "scpsl.players";
 
     public override ChartType ChartType => ChartType.Line;
 

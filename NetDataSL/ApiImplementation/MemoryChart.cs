@@ -32,7 +32,7 @@ public class MemoryChart : Chart
 
     private const string ChartInfo = "Memory";
 
-    public override string Type => "scpsl";
+    public override string Type => "Scp Secret Laboratory";
 
     public override string Id => $"memory";
 
@@ -44,7 +44,7 @@ public class MemoryChart : Chart
 
     public override string Family => $"Memory Usage";
 
-    public override string Context => "scpsl.memory_usage";
+    public override string Context => "scpsl.memory";
 
     public override ChartType ChartType => ChartType.Line;
 

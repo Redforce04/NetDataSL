@@ -27,7 +27,7 @@ public class CpuChart : Chart
     private const string ChartInfo = "Cpu";
 
     /// <inheritdoc/>
-    public override string Type => "scpsl";
+    public override string Type => "Scp Secret Laboratory";
 
     /// <inheritdoc/>
     public override string Id => $"cpu";
@@ -45,7 +45,7 @@ public class CpuChart : Chart
     public override string Family => $"Cpu Usage";
 
     /// <inheritdoc/>
-    public override string Context => "scpsl.cpu_usage";
+    public override string Context => "scpsl.cpu";
 
     /// <inheritdoc/>
     public override ChartType ChartType => ChartType.Line;

@@ -33,7 +33,7 @@ public class TpsChart : Chart
 
     private const string ChartInfo = "Average Tps";
 
-    public override string Type => "scpsl";
+    public override string Type => "Scp Secret Laboratory";
 
     public override string Id => $"tps";
 
@@ -45,7 +45,7 @@ public class TpsChart : Chart
 
     public override string Family => $"Average Tps";
 
-    public override string Context => "scpsl.average_tps";
+    public override string Context => "scpsl.tps";
 
     public override ChartType ChartType => ChartType.Line;
 

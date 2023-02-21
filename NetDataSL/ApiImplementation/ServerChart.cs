@@ -36,7 +36,7 @@ public class ServerChart : Chart
     private readonly int _serverPort;
 
     /// <inheritdoc/>
-    public override string Type => "scpsl";
+    public override string Type => "Scp Secret Laboratory";
 
     /// <inheritdoc/>
     public override string Id => $"server.{this._serverPort}";

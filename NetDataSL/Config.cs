@@ -146,6 +146,12 @@ public class Config
             this.ServerAddress = config.ServerAddress;
             this.ServerInstances = config.ServerInstances;
             this.SendRate = config.SendRate;
+            SentrySdk.AddBreadcrumb("Processing Send Rate", "Config", "default", new Dictionary<string, string>() { { "Send Rate", config.SendRate.ToString("F") }, { "Previous Refresh Rate", Plugin.ServerRefreshTime.ToString("F") }, }, BreadcrumbLevel.Debug);
+            if (config.SendRate < Plugin.ServerRefreshTime)
+            {
+                SentrySdk.AddBreadcrumb("Changing Send Rate", "Config", "default", new Dictionary<string, string>() { { "Send Rate", config.SendRate.ToString("F") }, { "Previous Refresh Rate", Plugin.ServerRefreshTime.ToString("F") }, }, BreadcrumbLevel.Debug);
+                Plugin.ServerRefreshTime = config.SendRate;
+            }
             SentrySdk.AddBreadcrumb("Variables set", "Config", "default", new Dictionary<string, string>(), BreadcrumbLevel.Debug);
         }
     }

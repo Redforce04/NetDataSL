@@ -152,13 +152,13 @@ public class NetworkHandler
 
             try
             {
-                float late = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (packet.Epoch + Plugin.Singleton!.ServerRefreshTime);
+                float late = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (packet.Epoch + Plugin.ServerRefreshTime);
                 if (late > 1f)
                 {
                     Log.AddBreadcrumb("An old packet has been received. It will still be processed.", "Network Handler", new Dictionary<string, string>()
                     {
                         { "Port", packet.Port.ToString() },
-                        { "Server Refresh Speed", Plugin.Singleton.ServerRefreshTime.ToString("F") },
+                        { "Server Refresh Speed", Plugin.ServerRefreshTime.ToString("F") },
                         { "Late", late.ToString("F") },
                     });
 
@@ -166,9 +166,9 @@ public class NetworkHandler
                 }
 
                 UpdateProcessor.Singleton!.ProcessUpdate(packet);
-                if (packet.RefreshSpeed > Plugin.Singleton.ServerRefreshTime)
+                if (packet.RefreshSpeed > Plugin.ServerRefreshTime)
                 {
-                    await this.SendResult(httpContext, StatusCodes.Status200OK, "slow refresh time", sender, new Dictionary<string, object> { { "server refresh", Plugin.Singleton.ServerRefreshTime } });
+                    await this.SendResult(httpContext, StatusCodes.Status200OK, "slow refresh time", sender, new Dictionary<string, object> { { "server refresh", Plugin.ServerRefreshTime } });
                     return;
                 }
 

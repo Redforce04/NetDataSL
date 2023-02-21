@@ -38,13 +38,13 @@ public class Plugin
     /// <summary>
     /// The name of the netdata plugin.
     /// </summary>
-    internal static readonly string PluginName = "Scp Secret Laboratory.plugin";
+    internal static readonly string PluginName = "scpsl.plugin";
 
     /// <summary>
     /// How often the server should send updates.
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
-    internal float ServerRefreshTime = 5f;
+    internal static float ServerRefreshTime = 5f;
 
 #pragma warning restore SA1401
 
@@ -61,10 +61,10 @@ public class Plugin
         }
 
         Singleton = this;
-        if (this.ServerRefreshTime > Config.Singleton!.SendRate)
+        if (refreshRate < Plugin.ServerRefreshTime)
         {
-            Log.AddBreadcrumb("New Refresh Rate", "Plugin", new Dictionary<string, string>() { { "refresh rate", Config.Singleton.SendRate.ToString("F") } });
-            this.ServerRefreshTime = Config.Singleton.SendRate;
+            Log.AddBreadcrumb("NetData Slow Refresh Rate", "Plugin", new Dictionary<string, string>() { { "Current Refresh Rate", Config.Singleton!.SendRate.ToString("F") }, { "New Refresh Rate", refreshRate.ToString("F") }, });
+            Plugin.ServerRefreshTime = refreshRate;
         }
 
         Log.AddBreadcrumb("Loading Plugin", "Plugin", new Dictionary<string, string>());
@@ -74,7 +74,6 @@ public class Plugin
         Log.AddBreadcrumb("Loading Network Handler", "Plugin", new Dictionary<string, string>() { { "host", $"{host}" } });
         var unused2 = new NetworkHandler(host);
         Log.AddBreadcrumb("Network Handler Loaded", "Plugin", new Dictionary<string, string>() { { "host", $"{host}" } });
-        this.ServerRefreshTime = refreshRate;
         Log.AddBreadcrumb("Init Integration", "Plugin", new Dictionary<string, string>());
         this.InitNetDataIntegration();
         Log.AddBreadcrumb("Integration Initialized", "Plugin", new Dictionary<string, string>());
@@ -113,7 +112,7 @@ public class Plugin
         while (DateTime.UtcNow < restartEveryHour)
         {
             var now = DateTime.UtcNow.TimeOfDay;
-            now = now.Add(new TimeSpan(0, 0, (int)this.ServerRefreshTime));
+            now = now.Add(new TimeSpan(0, 0, (int)Plugin.ServerRefreshTime));
 
             // Get the delay necessary.
             // foreach (var filePath in Directory.GetFiles(_tempDirectory)) _processFile(filePath);

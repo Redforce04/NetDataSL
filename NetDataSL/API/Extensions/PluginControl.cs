@@ -22,7 +22,7 @@ public static class PluginControl
     /// </summary>
     internal static void DisablePlugin()
     {
-        Log.Debug($"Disabling Plugin.");
+        Log.AddBreadcrumb("Disabling Plugin", "Plugin Control", new Dictionary<string, string>());
         Log.Line("DISABLE");
     }
 }

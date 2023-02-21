@@ -67,6 +67,19 @@ public class Log
     /// <param name="type">Should be default.</param>
     public static void AddBreadcrumb(string message, string category, Dictionary<string, string>? dictionary = null, BreadcrumbLevel level = BreadcrumbLevel.Debug, string type = "default")
     {
+        string value = string.Empty;
+        if (dictionary != null && dictionary.Count > 0)
+        {
+            value = "\n{";
+            foreach (var x in dictionary)
+            {
+                value += $"\n  {{ \"{x.Key}\": \"{x.Value}\" }}";
+            }
+
+            value += "\n}";
+        }
+
+        Log.Debug($"{category} - {message} {value}");
         if (_debugModeEnabled && level == BreadcrumbLevel.Debug)
         {
             SentrySdk.AddBreadcrumb(message, category, type, dictionary, level);
@@ -74,6 +87,7 @@ public class Log
         else if ((int)level >= 0)
         {
             SentrySdk.AddBreadcrumb(message, category, type, dictionary, level);
+            SentrySdk.CaptureMessage(message, Enum.Parse<SentryLevel>(level.ToString(), true));
         }
     }
 
@@ -81,10 +95,11 @@ public class Log
     /// Logs a debug message.
     /// </summary>
     /// <param name="x">The debug message to log.</param>
-    public static void Debug(string x)
+    /// <param name="level">The level of the debug.</param>
+    public static void Debug(string x, string level = "Debug")
     {
         // ReSharper disable once RedundantAssignment
-        string log = $"[{DateTime.Now:G}] [Debug] {x}    ";
+        string log = $"[{DateTime.Now:G}] [{level}] {x}    ";
 #pragma warning disable CS0162
         if (_debugModeEnabled)
         {
@@ -100,8 +115,6 @@ public class Log
             {
                 // Console.Write(log);
             }
-
-            SentrySdk.CaptureMessage(log, SentryLevel.Debug);
         }
 
 #pragma warning restore CS0162
@@ -138,7 +151,7 @@ public class Log
     {
         // Singleton!._stdOut.Write($"{x}    ".Replace("\n", string.Empty).Replace(Environment.NewLine, string.Empty));
         Singleton!._stdOut.Write($"{x}\n");
-        Singleton!._stdOut.Flush();
+        Singleton._stdOut.Flush();
 
         // Singleton._stdOut.Flush();
         // Thread.Sleep(10);

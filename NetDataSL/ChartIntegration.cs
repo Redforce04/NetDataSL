@@ -133,7 +133,7 @@ public class ChartIntegration
             return;
         }
 
-        Log.Debug($"Sending Data for chart {chart} ({dataSets.Count})");
+        Log.AddBreadcrumb("Sending Data", "Chart Integration", new Dictionary<string, string>() { { "Chart", chart.Name }, { "Data Set Count", dataSets.Count.ToString() } });
         var unused = new Data(chart, dataSets.ToList());
     }
 

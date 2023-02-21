@@ -70,7 +70,6 @@ public class Sender
     /// <returns>An instance of the sender.</returns>
     public static Sender Get(string ip, int? port)
     {
-        Log.Debug($"Getting ip {ip}, port {port}");
         if (_senders.Any(x => x.Ip == ip || (port != null && x.Port == port)))
         {
             var sender = _senders.FirstOrDefault(x => x.Ip == ip || (port != null && x.Port == port));

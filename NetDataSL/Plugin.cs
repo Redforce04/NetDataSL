@@ -10,8 +10,6 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
-using Microsoft.Extensions.Logging;
-
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -65,6 +63,7 @@ public class Plugin
         Singleton = this;
         if (this.ServerRefreshTime > Config.Singleton!.SendRate)
         {
+            Log.AddBreadcrumb("New Refresh Rate", "Plugin", new Dictionary<string, string>() { { "refresh rate", Config.Singleton.SendRate.ToString("F") } });
             this.ServerRefreshTime = Config.Singleton.SendRate;
         }
 
@@ -79,7 +78,6 @@ public class Plugin
         Log.AddBreadcrumb("Init Integration", "Plugin", new Dictionary<string, string>());
         this.InitNetDataIntegration();
         Log.AddBreadcrumb("Integration Initialized", "Plugin", new Dictionary<string, string>());
-        Log.Debug($"Starting Net-data Integration");
         Log.AddBreadcrumb("Start Main Loop", "Plugin", new Dictionary<string, string>());
         this.StartMainRunningLoop();
     }
@@ -90,11 +88,9 @@ public class Plugin
         this.GetServers(out var servers);
         Log.AddBreadcrumb("Got Servers", "Plugin", new Dictionary<string, string>() { { "server count", servers.Count.ToString() } });
         Log.AddBreadcrumb("Creating Chart Integration", "Plugin", new Dictionary<string, string>());
-        Log.Debug($"Starting Chart Integration");
         var unused = new ChartIntegration(servers);
         Log.AddBreadcrumb("Chart Integration Created", "Plugin", new Dictionary<string, string>());
         Log.AddBreadcrumb("Creating Update Processor", "Plugin", new Dictionary<string, string>());
-        Log.Debug($"Starting Update Processor");
         var unused2 = new UpdateProcessor();
         Log.AddBreadcrumb("Update Processor Created", "Plugin", new Dictionary<string, string>());
     }
@@ -113,11 +109,9 @@ public class Plugin
     private void StartMainRunningLoop()
     {
         DateTime restartEveryHour = DateTime.UtcNow.AddHours(1);
-        Log.Debug($"Starting Main Update Loop");
+        Log.AddBreadcrumb("Starting NetData Integration Loop", "Update", new Dictionary<string, string>() { { "DateTime", DateTime.Now.ToLongTimeString() } });
         while (DateTime.UtcNow < restartEveryHour)
         {
-            Log.AddBreadcrumb("Hourly Restart", "Update", new Dictionary<string, string>() { { "DateTime", DateTime.Now.ToLongTimeString() } });
-
             var now = DateTime.UtcNow.TimeOfDay;
             now = now.Add(new TimeSpan(0, 0, (int)this.ServerRefreshTime));
 
@@ -136,8 +130,7 @@ public class Plugin
             // Log.Debug($"Iteration Time: {new TimeSpan(0, 0, 0, 0, (int)(this.UsableRefresh() * 1000) - (int)delay):g}");
         }
 
-        Log.Debug($"Hourly Restart For Memory Preservation (As Recommended by Netdata API)");
-        Log.AddBreadcrumb("Hourly Restart", "Plugin", new Dictionary<string, string>());
+        Log.AddBreadcrumb("Hourly Restart For Memory Preservation (As Recommended by NetData API", "Plugin", new Dictionary<string, string>());
         if (NetworkHandler.Singleton is not null)
         {
             NetworkHandler.Singleton.Stop();

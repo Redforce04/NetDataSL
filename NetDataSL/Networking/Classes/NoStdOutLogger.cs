@@ -64,7 +64,6 @@ public class NoStdOutLogger : ILogger
             return;
         }
 
-        NetDataSL.Log.Debug("log");
         if (NetDataSL.Log.Singleton != null)
         {
             if (exception != null)

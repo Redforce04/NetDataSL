@@ -76,7 +76,7 @@ public class NetworkHandler
             return;
         }
 
-        Log.Debug($"Starting App");
+        Log.AddBreadcrumb("Starting Web Application Thread", "Network Handler", new Dictionary<string, string>());
 
         Singleton = this;
 #pragma warning disable IL2026
@@ -85,7 +85,7 @@ public class NetworkHandler
         gRpcThread = new Thread(start);
         gRpcThread.Start();
         gRpcThread.IsBackground = false;
-        Log.Debug($"Running App");
+        Log.AddBreadcrumb("Web Application Thread is Running", "Network Handler", new Dictionary<string, string>());
     }
 
     /// <summary>
@@ -100,7 +100,8 @@ public class NetworkHandler
         "Calls Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGet(String, Delegate)")]
     private void InitSocket(string host = "127.0.0.1:11011")
     {
-        Log.Debug($"Creating Builder with host http://{host}");
+        Log.AddBreadcrumb("Creating Builder with host", "Network Handler", new Dictionary<string, string>() { { "Host", $"http://{host}" } });
+
         var builder = WebApplication.CreateBuilder();
         builder.Logging.ClearProviders();
         this.app = builder.Build();
@@ -128,7 +129,7 @@ public class NetworkHandler
 
             // Get the body.
             var body = await reader.ReadToEndAsync();
-            Log.Debug($"body: {body}");
+            Log.AddBreadcrumb("Body of Packet", $"Network handler", new Dictionary<string, string>() { { "Body", body } });
 
             // Get the packet.
             Debug.Assert(PacketSerializerContext.Default.NetDataPacket != null, "PacketSerializerContext.Default.NetDataPacket != null");
@@ -151,9 +152,15 @@ public class NetworkHandler
 
             try
             {
-                if (packet.Epoch + Plugin.Singleton!.ServerRefreshTime < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                float late = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (packet.Epoch + Plugin.Singleton!.ServerRefreshTime);
+                if (late > 1f)
                 {
-                    Log.Debug($"Packet from port {packet.Port} is an old packet (older than {Plugin.Singleton.ServerRefreshTime} seconds). This packet will still be processed.");
+                    Log.AddBreadcrumb("An old packet has been received. It will still be processed.", "Network Handler", new Dictionary<string, string>()
+                    {
+                        { "Port", packet.Port.ToString() },
+                        { "Server Refresh Speed", Plugin.Singleton.ServerRefreshTime.ToString("F") },
+                        { "Late", late.ToString("F") },
+                    });
 
                     // return;
                 }
@@ -180,8 +187,8 @@ public class NetworkHandler
             SentrySdk.CaptureException(e);
 
             // If an error occurs.
+            Log.AddBreadcrumb("Invalid Packet Received", "Network Handler", new Dictionary<string, string>() { { "Packet Body", e.ToString() } });
             Log.Error($"Invalid Packet Received from: {httpContext.Request.Host}.");
-            Log.Debug(e.ToString());
 
             await this.SendResult(httpContext, StatusCodes.Status400BadRequest, "bad packet receieved", sender);
         }
@@ -211,15 +218,20 @@ public class NetworkHandler
             {
                 case 400:
                     await Results.BadRequest(message).ExecuteAsync(httpContext);
-                    Log.Debug($"Bad request from sender {sender}");
+                    Log.AddBreadcrumb("Bad Request", "Packet Handler", new Dictionary<string, string>() { { "Sender", sender.Ip }, });
                     return;
                 case 401:
                     await Results.Unauthorized().ExecuteAsync(httpContext);
-                    Log.Debug($"Unauthorized request from sender {sender}");
+                    Log.AddBreadcrumb("Unauthorized Request", "Packet Handler", new Dictionary<string, string>() { { "Sender", sender.Ip }, });
                     return;
                 default:
                     await Results.Problem(message, null, response).ExecuteAsync(httpContext);
-                    Log.Debug($"Invalid request (status {response}, message: {message}), from sender {sender}");
+                    Log.AddBreadcrumb("Invalid Request", "Packet Handler", new Dictionary<string, string>()
+                    {
+                        { "Sender", sender.Ip },
+                        { "Status", response.ToString() },
+                        { "Message", message },
+                    });
                     return;
             }
         }

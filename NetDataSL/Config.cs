@@ -90,7 +90,6 @@ public class Config
                 new ServerConfig(7778, "Server 2", "[insert server 2 key here]"),
             };
             string config = JsonSerializer.Serialize(this, ConfigSerializerContext.Default.Config);
-            Log.Debug($"New config loaded.");
             writer.Write(config);
             writer.Flush();
             writer.Close();

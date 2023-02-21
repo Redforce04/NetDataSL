@@ -10,6 +10,8 @@
 //    Created Date:     01/27/2023 9:23 PM
 // -----------------------------------------
 
+using Microsoft.Extensions.Logging;
+
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -88,9 +90,11 @@ public class Plugin
         this.GetServers(out var servers);
         Log.AddBreadcrumb("Got Servers", "Plugin", new Dictionary<string, string>() { { "server count", servers.Count.ToString() } });
         Log.AddBreadcrumb("Creating Chart Integration", "Plugin", new Dictionary<string, string>());
+        Log.Debug($"Starting Chart Integration");
         var unused = new ChartIntegration(servers);
         Log.AddBreadcrumb("Chart Integration Created", "Plugin", new Dictionary<string, string>());
         Log.AddBreadcrumb("Creating Update Processor", "Plugin", new Dictionary<string, string>());
+        Log.Debug($"Starting Update Processor");
         var unused2 = new UpdateProcessor();
         Log.AddBreadcrumb("Update Processor Created", "Plugin", new Dictionary<string, string>());
     }
@@ -109,8 +113,11 @@ public class Plugin
     private void StartMainRunningLoop()
     {
         DateTime restartEveryHour = DateTime.UtcNow.AddHours(1);
+        Log.Debug($"Starting Main Update Loop");
         while (DateTime.UtcNow < restartEveryHour)
         {
+            Log.AddBreadcrumb("Hourly Restart", "Update", new Dictionary<string, string>() { { "DateTime", DateTime.Now.ToLongTimeString() } });
+
             var now = DateTime.UtcNow.TimeOfDay;
             now = now.Add(new TimeSpan(0, 0, (int)this.ServerRefreshTime));
 

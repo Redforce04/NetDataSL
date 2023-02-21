@@ -27,6 +27,7 @@ namespace NetDataSL
         /// <param name="args">The arguments. Should be one float for the refresh rate.</param>
         public static void Main(string[] args)
         {
+            Console.Write(' ');
             Thread.Sleep(1000);
 
             var refreshTime = 5f;

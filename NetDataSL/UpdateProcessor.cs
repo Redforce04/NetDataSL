@@ -10,6 +10,8 @@
 //    Created Date:     01/29/2023 3:09 PM
 // -----------------------------------------
 
+using Newtonsoft.Json.Linq;
+
 namespace NetDataSL;
 
 using System.Collections.Concurrent;
@@ -69,7 +71,8 @@ public class UpdateProcessor
     internal void SendUpdate()
     {
         Log.AddBreadcrumb("Sending Update", "Update Processor",  new Dictionary<string, string>());
-
+        Log.Line($"BEGIN 'Type.Id'");
+        Log.Line($"SET 'DimensionId' = 0");
         uint timeSinceLastUpdate = (uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - (uint)this._lastUpdate.ToUnixTimeMilliseconds();
         Dictionary<ChartImplementationType, List<int>> servers = new()
         {

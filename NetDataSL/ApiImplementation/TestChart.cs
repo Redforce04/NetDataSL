@@ -18,7 +18,7 @@ using NetDataSL.API.Enums;
 using NetDataSL.API.Members;
 
 /// <inheritdoc />
-public class CpuChart : Chart
+public class TestChart : Chart
 {
     // string type, string id, string title, string name = "",
     // string module = "stats", string units = "percentage", string family = "";
@@ -27,25 +27,25 @@ public class CpuChart : Chart
     private const string ChartInfo = "Cpu";
 
     /// <inheritdoc/>
-    public override string Type => "scpsl";
+    public override string Type => "Type";
 
     /// <inheritdoc/>
-    public override string Id => $"cpu";
+    public override string Id => $"Id";
 
     /// <inheritdoc/>
-    public override string Name => ChartInfo;
+    public override string Name => "Name 1";
 
     /// <inheritdoc/>
-    public override string Title => $"{ChartInfo} Usage";
+    public override string Title => $"Title 1";
 
     /// <inheritdoc/>
-    public override string Units => "percent of cpu cores used";
+    public override string Units => "Units 1";
 
     /// <inheritdoc/>
-    public override string Family => $"Cpu Usage";
+    public override string Family => $"Family 1";
 
     /// <inheritdoc/>
-    public override string Context => "scpsl.cpu";
+    public override string Context => "Context 1";
 
     /// <inheritdoc/>
     public override ChartType ChartType => ChartType.Line;
@@ -60,14 +60,14 @@ public class CpuChart : Chart
     public override ChartOptions Options => ChartOptions.None;
 
     /// <inheritdoc/>
-    public override string Module => "Cpu";
+    public override string Module => "Module";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CpuChart"/> class.
     /// </summary>
     /// <param name="dimensions">The dimensions for this chart.</param>
 #pragma warning disable SA1201
-    internal CpuChart(List<Dimension> dimensions)
+    internal TestChart(List<Dimension> dimensions)
 #pragma warning restore SA1201
     {
         this.Dimensions = dimensions;
@@ -90,7 +90,7 @@ public class CpuChart : Chart
 
 /// <inheritdoc />
 #pragma warning disable SA1402
-internal class CpuChartDimensions : Dimension
+internal class TestChartDimensions : Dimension
 #pragma warning restore SA1402
 {
     /// <summary>
@@ -98,17 +98,17 @@ internal class CpuChartDimensions : Dimension
     /// </summary>
     /// <param name="server">The server port.</param>
     /// <param name="serverName">The server name.</param>
-    public CpuChartDimensions(int server, string serverName)
+    public TestChartDimensions(int server, string serverName)
     {
         this.Server = server;
         this.ServerName = serverName;
     }
 
     /// <inheritdoc/>
-    public override string Id => $"cpu.{this.Server}";
+    public override string Id => $"DimensionId";
 
     /// <inheritdoc/>
-    public override string Name => $"{this.ServerName}";
+    public override string Name => $"Name 1";
 
     /// <inheritdoc/>
     public override Algorithm Algorithm => Algorithm.Absolute;

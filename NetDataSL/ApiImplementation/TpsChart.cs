@@ -33,7 +33,7 @@ public class TpsChart : Chart
 
     private const string ChartInfo = "Average Tps";
 
-    public override string Type => "Scp Secret Laboratory";
+    public override string Type => "scpsl";
 
     public override string Id => $"tps";
 

@@ -33,7 +33,7 @@ public class LowTpsChart : Chart
 
     private const string ChartInfo = "Low Tps";
 
-    public override string Type => "Scp Secret Laboratory";
+    public override string Type => "scpsl";
 
     public override string Id => $"low_tps";
 

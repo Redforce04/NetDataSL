@@ -145,6 +145,7 @@ public class ChartIntegration
         this.BuildCpuCharts();
         this.BuildLowTpsCharts();
         this.BuildIndividualServerCharts();
+        this._charts.Add(ChartImplementationType.Server, new TestChart(new List<Dimension>() { new TestChartDimensions(0, "test")}));
         Log.AddBreadcrumb("Registering Charts", "Chart Integration",  new Dictionary<string, string>());
         Chart.RegisterAllCharts();
     }

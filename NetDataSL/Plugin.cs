@@ -40,7 +40,7 @@ public class Plugin
     /// <summary>
     /// The name of the netdata plugin.
     /// </summary>
-    internal static readonly string PluginName = "ScpSL.plugin";
+    internal static readonly string PluginName = "Scp Secret Laboratory.plugin";
 
     /// <summary>
     /// How often the server should send updates.
